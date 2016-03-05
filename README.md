@@ -1,0 +1,3 @@
+# CrazyTrain
+This is the Operational Systems Threads project, the Crazy Train projetct, in which passengers can take a trip on a train according to the following rules:
+Soon...
