@@ -10,26 +10,30 @@ import br.com.os.model.Train;
 public class Controller {
 
 	// Semaphores
-	private AmazingSemaphore semaphoreLine;
-	private AmazingSemaphore semaphoreTrain;
-	private AmazingSemaphore semaphorePassengers;
-	private AmazingSemaphore semaphoreMutex;
-	
-	
+	private AmazingSemaphore semaphoreLine = new AmazingSemaphore(0);
+	private AmazingSemaphore semaphoreTrain = new AmazingSemaphore(0);
+	private AmazingSemaphore semaphorePassengers = new AmazingSemaphore(0);
+	private AmazingSemaphore semaphoreMutex = new AmazingSemaphore(1);
+
 	// Control variables
-	final int MAX_SEATS = 5;
+	final int MAX_SEATS = 3;
 	private int line = 0;
 
 	// Train and passengers
 	private Train train = new Train(MAX_SEATS, 1000);
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
-	public void setup() {
-
+	public void start() {
+		
 		this.train.setController(this);
+		this.train.start();
 
 		// Mocking passengers
 		this.addPassenger(1, 1000, 2000);
+		this.addPassenger(2, 1000, 2000);
+		this.addPassenger(3, 1000, 2000);
+		this.addPassenger(4, 1000, 2000);
+		this.addPassenger(5, 1000, 2000);
 
 	}
 
@@ -37,8 +41,21 @@ public class Controller {
 	private void addPassenger(int id, int enteringTime, int leavingTime) {
 		Passenger passenger = new Passenger(id, enteringTime, leavingTime);
 		passenger.setController(this);
-		//		passenger.run();
 		this.passengers.add(passenger);
+		passenger.start();
+	}
+
+	public void printReport() {
+		this.semaphoreMutex.down();
+		System.out.println("------------------------------");
+		System.out.println("Semaphore train: " + this.semaphoreTrain.availablePermits());
+		System.out.println("Semaphore passengers: " + this.semaphorePassengers.availablePermits());
+		System.out.println("Semaphore line: " + this.semaphoreLine.availablePermits());
+		System.out.println("Semaphore mutex: " + this.semaphoreMutex.availablePermits());
+		System.out.println("Number of passengers on the train: " + this.train.getSeats());
+		System.out.println("Number of passengers enjoying: " + this.train.getPassengersEnjoying());
+		System.out.println("------------------------------");
+		this.semaphoreMutex.up();
 	}
 
 	/** Getters and Setters */
@@ -66,11 +83,11 @@ public class Controller {
 	public void setLine(int line) {
 		this.line = line;
 	}
-	
+
 	public void incrementLine() {
 		this.line++;
 	}
-	
+
 	public void decrementLine() {
 		this.line--;
 	}

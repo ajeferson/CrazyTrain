@@ -6,10 +6,9 @@ public class Main extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Controller controller = new Controller();
+//	private Controller controller = new Controller();
 
 	public Main() {
-		this.controller.setup();
 //		this.setupViewStuff();
 	}
 	
@@ -26,7 +25,8 @@ public class Main extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		new Main();
+		Controller controller = new Controller();
+		controller.start();
 	}
 	
 }
