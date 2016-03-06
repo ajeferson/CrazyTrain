@@ -1,10 +1,12 @@
 package br.com.os.model;
 
 import java.awt.Color;
+import java.awt.Point;
 
 import javax.swing.JPanel;
 
 import br.com.os.controller.Controller;
+import br.com.os.controller.Main;
 
 /** This class describes the train, take takes passengers along a trail and takes
  * travellingTime (ms) to make an entire lap. */
@@ -17,6 +19,12 @@ public class Train extends Thread {
 	private boolean moving = false;
 
 	private JPanel view = null;
+	
+	//Constants
+	public static final int TRAIN_WIDTH = 100;
+	public static final int TRAIN_HEIGHT = 50;
+	public static final Point TRAIN_POSITION = new Point((Main.WINDOW_WIDTH / 2) - (TRAIN_WIDTH / 2), Main.WINDOW_HEIGHT - 200);
+	
 
 	private Controller controller;
 
@@ -85,21 +93,58 @@ public class Train extends Thread {
 	}
 
 	/** Moves the train with the duration of the travellingTime */
-	private void move() {
-		long elapsedTime = 0;
+	public void move() {
+		
+		double totalSpace = Main.WINDOW_WIDTH + TRAIN_WIDTH;
+		double elapsedTime = 0.0;
 		long startTime = System.currentTimeMillis();
-		while(elapsedTime < this.travelingTime) {
+		
+		int xPosition = (int) TRAIN_POSITION.getX();
+		int yPosition = (int) TRAIN_POSITION.getY();
+		
+		double time = (this.travelingTime / 2.0) * ((Main.WINDOW_WIDTH - TRAIN_POSITION.getX()) / totalSpace);
+		int deltaX = Main.WINDOW_WIDTH - xPosition;
+		while(elapsedTime < time) {
 			elapsedTime = System.currentTimeMillis() - startTime;
+			xPosition = (int) (TRAIN_POSITION.getX() + ((elapsedTime / time) * deltaX));
+			this.asView().setLocation(xPosition, yPosition);
 		}
-		System.out.println("Elapsed time: " + elapsedTime + " ms");
+		
+		int deltaY = 150;
+		yPosition -= deltaY;
+		xPosition = this.view.getX();
+		this.view.setLocation(xPosition, yPosition);
+		time = travelingTime / 2.0;
+		elapsedTime = 0.0;
+		startTime = System.currentTimeMillis();
+		while(elapsedTime < time) {
+			elapsedTime = System.currentTimeMillis() - startTime;
+			xPosition = (int) (Main.WINDOW_WIDTH - ((elapsedTime / time) * totalSpace));
+			this.asView().setLocation(xPosition, yPosition);
+		}
+		
+		yPosition += deltaY;
+		xPosition = this.view.getX();
+		this.view.setLocation(xPosition, yPosition);
+		time = (travelingTime / 2.0) * (((float)(TRAIN_POSITION.getX() + TRAIN_WIDTH)) / totalSpace);
+		elapsedTime = 0.0;
+		startTime = System.currentTimeMillis();
+		while(elapsedTime < time) {
+			elapsedTime = System.currentTimeMillis() - startTime;
+			xPosition = (int) (((elapsedTime / time) * deltaX) - TRAIN_WIDTH);
+			this.asView().setLocation(xPosition, yPosition);
+		}
+		
 	}
 
+	
 	/** View Methods */
+	
 	public JPanel asView() {
 		if(this.view == null) {
 			this.view = new JPanel();
-			this.view.setSize(100, 50);
-			this.view.setLocation(200, 350);
+			this.view.setSize(TRAIN_WIDTH, TRAIN_HEIGHT);
+			this.view.setLocation(TRAIN_POSITION);
 			this.view.setBackground(Color.RED);
 		}
 		return this.view;

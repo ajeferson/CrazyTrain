@@ -14,10 +14,14 @@ public class Main extends JFrame {
 	
 	// View Attributes
 	private Container container;
+	
+	// Contants
+	public static final int WINDOW_WIDTH = 500;
+	public static final int WINDOW_HEIGHT = 500;
 
 	public Main() {
-		this.setup();
 		this.setupViewStuff();
+		this.setup();
 	}
 	
 	private void setupViewStuff() {
@@ -32,16 +36,12 @@ public class Main extends JFrame {
 	}
 	
 	private void setup() {
-//		controller.start();
+		controller.start();
 	}
 	
 	private void addTrain() {
-//		JPanel train = new JPanel();
-//		train.setSize(100, 50);
-//		train.setLocation(200, 350);
-//		train.setBackground(Color.RED);
-//		container.add(train);
 		container.add(this.controller.getTrain().asView());
+		this.controller.getTrain().move();
 	}
 	
 	public void init() {
