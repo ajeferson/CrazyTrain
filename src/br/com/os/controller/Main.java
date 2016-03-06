@@ -1,23 +1,47 @@
 package br.com.os.controller;
 
+import java.awt.Color;
+import java.awt.Container;
+
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class Main extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-//	private Controller controller = new Controller();
+	private Controller controller = new Controller();;
+	
+	// View Attributes
+	private Container container;
 
 	public Main() {
-//		this.setupViewStuff();
+		this.setup();
+		this.setupViewStuff();
 	}
 	
-	@SuppressWarnings("unused")
 	private void setupViewStuff() {
+		this.container = this.getContentPane();
+		this.container.setLayout(null);
 		this.setTitle("Welcome to the Crazy Train!");
 		this.setSize(500, 500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
+		
+		this.addTrain();
+	}
+	
+	private void setup() {
+//		controller.start();
+	}
+	
+	private void addTrain() {
+//		JPanel train = new JPanel();
+//		train.setSize(100, 50);
+//		train.setLocation(200, 350);
+//		train.setBackground(Color.RED);
+//		container.add(train);
+		container.add(this.controller.getTrain().asView());
 	}
 	
 	public void init() {
@@ -25,8 +49,7 @@ public class Main extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		Controller controller = new Controller();
-		controller.start();
+		new Main();
 	}
 	
 }

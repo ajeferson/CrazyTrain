@@ -102,7 +102,7 @@ public class Passenger extends Thread {
 	}
 	
 	private void enjoyLandscape() {
-		System.out.println(this.getName() + " enjoys the landscape...");
+//		System.out.println(this.getName() + " enjoys the landscape...");
 	}
 	
 	private void sit() {

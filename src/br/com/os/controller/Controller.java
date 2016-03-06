@@ -20,7 +20,7 @@ public class Controller {
 	private int line = 0;
 
 	// Train and passengers
-	private Train train = new Train(MAX_SEATS, 1000);
+	private Train train = new Train(MAX_SEATS, 5000);
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
 	public void start() {
