@@ -32,8 +32,8 @@ public class Controller {
 		this.addPassenger(1, 1000, 2000);
 		this.addPassenger(2, 1000, 2000);
 		this.addPassenger(3, 1000, 2000);
-//		this.addPassenger(4, 1000, 2000);
-//		this.addPassenger(5, 1000, 2000);
+		this.addPassenger(4, 1000, 2000);
+		this.addPassenger(5, 1000, 2000);
 
 	}
 

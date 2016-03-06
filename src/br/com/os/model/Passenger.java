@@ -73,26 +73,21 @@ public class Passenger extends Thread {
 			}
 			this.controller.getSemaphoreMutex().up();
 			
-			return;
 			// Waiting for the train to allow the exit
-//			this.controller.getSemaphorePassengers().down();
-//			
-//			this.controller.printReport();
-//			
-//			// Actually getting out the train
-//			this.controller.getSemaphoreMutex().down();
-//			this.getUp();
-//			this.leave();
-//			
-//			this.controller.printReport();
-//			
-//			// Saying to train: "Everybody is out"
-//			if(this.controller.getTrain().isEmpty()) {
-//				this.controller.getSemaphoreTrain().up();
-//			}
-//			this.controller.getSemaphoreMutex().up();
-//			
-//			this.controller.printReport();
+			this.controller.getSemaphorePassengers().down();
+			
+			// Actually getting out the train
+			this.controller.getSemaphoreMutex().down();
+			this.getUp();
+			this.leave();
+			
+			System.out.println(this.getName() + " left the Crazy Train...");
+			
+			// Saying to train: "Everybody is out"
+			if(this.controller.getTrain().isEmpty()) {
+				this.controller.getSemaphoreTrain().up();
+			}
+			this.controller.getSemaphoreMutex().up();
 			
 		}
 
@@ -103,7 +98,7 @@ public class Passenger extends Thread {
 	}
 
 	private void leave() {
-		System.out.println(this.getName() + " leaves the Crazy Train...");
+//		System.out.println(this.getName() + " leaves the Crazy Train...");
 	}
 	
 	private void enjoyLandscape() {

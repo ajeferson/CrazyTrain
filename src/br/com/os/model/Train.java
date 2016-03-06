@@ -60,17 +60,20 @@ public class Train extends Thread {
 			System.out.println("The crazy train finished moving...");
 			this.controller.getSemaphoreMutex().up();
 
-			return;
 			// Waiting for passengers to stop enjoying the landscape
-//			this.controller.getSemaphoreTrain().down();
-//
-//			// Waking up passengers to get out
-//			for(int i = 0; i < this.maxSeats; i++) {
-//				this.controller.getSemaphorePassengers().up();
-//			}
-//
-//			// Waiting for passengers to get out
-//			this.controller.getSemaphoreTrain().down();
+			this.controller.getSemaphoreTrain().down();
+
+			// Waking up passengers to get out
+			for(int i = 0; i < this.maxSeats; i++) {
+				this.controller.getSemaphorePassengers().up();
+			}
+
+			// Waiting for passengers to get out
+			this.controller.getSemaphoreTrain().down();
+			
+			System.out.println("Everybody left the Crazy Train...");
+			
+			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
 		}
 
