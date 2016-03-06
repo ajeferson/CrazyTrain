@@ -1,0 +1,26 @@
+package br.com.os.model;
+
+import java.util.concurrent.Semaphore;
+
+/** Just for not having to handle exceptions. */
+public class AmazingSemaphore extends Semaphore {
+
+	private static final long serialVersionUID = 6679850619550916493L;
+	
+	public AmazingSemaphore(int permits) {
+		super(permits);
+	}
+	
+	public void down() {
+		try {
+			this.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void up() {
+		this.release();
+	}
+
+}

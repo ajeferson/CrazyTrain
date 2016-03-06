@@ -8,7 +8,7 @@ public class Passenger extends Thread {
 	private final int id;
 	private int enteringTime;
 	private int leavingTime;
-	private boolean inside = false;
+	private boolean enjoyingLandscape = false;
 
 	private Controller controller;
 
@@ -24,39 +24,83 @@ public class Passenger extends Thread {
 
 		while(true) {
 
-			if(this.inside) {
-				if(this.controller.getTrain().isMoving()) {
-					this.enjoyLandscape();
-				} else {
-					this.controller.getsPassengers().release(); // Up passengers
-					try {
-						this.controller.getsPassengers().acquire(); // Down Mutex
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-
-					this.controller.incrementLine();
-					
-					this.leaveTrain();
-					
-					this.controller.getMutex().release();
-					
-				}		
-			} else {
-				// TODO
+			// Waiting for the permission to get in on the train
+			this.controller.getSemaphoreLine().down();
+			
+			// Entering on the train
+			this.controller.getSemaphoreMutex().down();
+			this.enter();
+			this.controller.getSemaphoreMutex().up();
+			
+			// Entering on train
+			this.controller.getSemaphoreMutex().down();
+			this.sit(); //numPass++;
+			if(this.controller.getTrain().isFull()) {
+				this.controller.getSemaphoreTrain().up();
 			}
-
+			this.controller.getSemaphoreMutex().up();
+			
+			// Waiting for the permission to enjoy the landscape
+			this.controller.getSemaphorePassengers().down();
+			
+			// Enjoying the landscape
+			this.controller.getSemaphoreMutex().down();
+			this.enjoyingLandscape = true;
+			this.controller.getTrain().increasePassengersEnjoying();
+			this.controller.getSemaphoreMutex().up();
+			while(this.enjoyingLandscape) {
+				this.controller.getSemaphoreMutex().down();
+				this.enjoyingLandscape = this.controller.getTrain().isMoving();
+				this.controller.getSemaphoreMutex().up();
+				this.enjoyLandscape();
+			}
+			
+			// Stopping enjoying the landscape
+			this.controller.getSemaphoreMutex().down();
+			this.controller.getTrain().decreasePassengersEnjoying(); //numPass--;
+			
+			// Saying to train: "Everybody stopped enjoying the landscape"
+			if(this.controller.getTrain().getPassengersEnjoying() == 0) {
+				this.controller.getSemaphoreTrain().up();
+			}
+			this.controller.getSemaphoreMutex().up();
+			
+			// Waiting for the train to allow the exit
+			this.controller.getSemaphorePassengers().down();
+			
+			// Actually getting out the train
+			this.controller.getSemaphoreMutex().down();
+			this.getUp();
+			this.leave();
+			
+			// Saying to train: "Everybody is out"
+			if(this.controller.getTrain().isEmpty()) {
+				this.controller.getSemaphoreTrain().up();
+			}
+			this.controller.getSemaphoreMutex().up();
+			
 		}
 
 	}
+	
+	private void enter() {
+		System.out.println("Entering the Crazy Train...");
+	}
 
-
+	private void leave() {
+		System.out.println("Leaving the Crazy Train...");
+	}
+	
 	private void enjoyLandscape() {
 		System.out.println("Enjoying landscape...");
 	}
-
-	private void leaveTrain() {
-		System.out.println("Leaving the Crazy Train...");
+	
+	private void sit() {
+		this.controller.getTrain().increaseSeats();;
+	}
+	
+	private void getUp() {
+		this.controller.getTrain().decreaseSeats();
 	}
 
 	/** Getters and Setters */
@@ -80,17 +124,6 @@ public class Passenger extends Thread {
 	public void setLeavingTime(int leavingTime) {
 		this.leavingTime = leavingTime;
 	}
-
-
-	public boolean isInside() {
-		return inside;
-	}
-
-
-	public void setInside(boolean inside) {
-		this.inside = inside;
-	}
-
 
 	public Controller getController() {
 		return controller;

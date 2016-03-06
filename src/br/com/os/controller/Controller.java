@@ -1,8 +1,8 @@
 package br.com.os.controller;
 
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
+import br.com.os.model.AmazingSemaphore;
 import br.com.os.model.Passenger;
 import br.com.os.model.Train;
 
@@ -10,10 +10,12 @@ import br.com.os.model.Train;
 public class Controller {
 
 	// Semaphores
-	private Semaphore sPassengers = new Semaphore(1);
-	private Semaphore sTrain = new Semaphore(0);
-	private Semaphore mutex = new Semaphore(1);
-
+	private AmazingSemaphore semaphoreLine;
+	private AmazingSemaphore semaphoreTrain;
+	private AmazingSemaphore semaphorePassengers;
+	private AmazingSemaphore semaphoreMutex;
+	
+	
 	// Control variables
 	final int MAX_SEATS = 5;
 	private int line = 0;
@@ -40,30 +42,6 @@ public class Controller {
 	}
 
 	/** Getters and Setters */
-
-	public Semaphore getsPassengers() {
-		return sPassengers;
-	}
-	
-	public void setsPassengers(Semaphore sPassengers) {
-		this.sPassengers = sPassengers;
-	}
-	
-	public Semaphore getsTrain() {
-		return sTrain;
-	}
-	
-	public void setsTrain(Semaphore sTrain) {
-		this.sTrain = sTrain;
-	}
-	
-	public Semaphore getMutex() {
-		return mutex;
-	}
-	
-	public void setMutex(Semaphore mutex) {
-		this.mutex = mutex;
-	}
 
 	public Train getTrain() {
 		return train;
@@ -95,6 +73,38 @@ public class Controller {
 	
 	public void decrementLine() {
 		this.line--;
+	}
+
+	public AmazingSemaphore getSemaphoreLine() {
+		return semaphoreLine;
+	}
+
+	public void setSemaphoreLine(AmazingSemaphore semaphoreLine) {
+		this.semaphoreLine = semaphoreLine;
+	}
+
+	public AmazingSemaphore getSemaphoreTrain() {
+		return semaphoreTrain;
+	}
+
+	public void setSemaphoreTrain(AmazingSemaphore semaphoreTrain) {
+		this.semaphoreTrain = semaphoreTrain;
+	}
+
+	public AmazingSemaphore getSemaphoreMutex() {
+		return semaphoreMutex;
+	}
+
+	public void setSemaphoreMutex(AmazingSemaphore semaphoreMutex) {
+		this.semaphoreMutex = semaphoreMutex;
+	}
+
+	public AmazingSemaphore getSemaphorePassengers() {
+		return semaphorePassengers;
+	}
+
+	public void setSemaphorePassengers(AmazingSemaphore semaphorePassengers) {
+		this.semaphorePassengers = semaphorePassengers;
 	}
 
 }

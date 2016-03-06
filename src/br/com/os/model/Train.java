@@ -4,9 +4,11 @@ import br.com.os.controller.Controller;
 
 /** This class describes the train, take takes passengers along a trail and takes
  * travellingTime (ms) to make an entire lap. */
-public class Train extends Thread{
+public class Train extends Thread {
 	
 	private final int maxSeats;
+	private int seats = 0;
+	private int passengersEnjoying = 0;
 	private int travelingTime;
 	private boolean moving = false;
 	
@@ -22,31 +24,49 @@ public class Train extends Thread{
 		
 		while(true) {
 			
-			if(this.controller.getsPassengers().availablePermits() < this.maxSeats) {
-				
-				try {
-					this.controller.getsTrain().acquire();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			// Saying: "Available seats"
+			if(this.controller.getLine() < this.maxSeats) {
+				for(int i = 0; i < this.maxSeats; i++) {
+					this.controller.getSemaphoreLine().up();
 				}
-				
-			} else {
-				
-				try {
-					this.controller.getMutex().acquire(); // Down
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				if(!this.moving) {
-					this.move();
-				}
-				
-				this.controller.getMutex().release(); // Up
-				
 			}
 			
+			// Sleeping while passengers do not enter
+			if(this.seats < this.maxSeats) {
+				this.controller.getSemaphoreTrain().down();
+			}
+			
+			// Set moving
+			this.controller.getSemaphoreMutex().down();
+			this.moving = true;
+			this.controller.getSemaphoreMutex().up();
+			
+			// Waking up passenger for enjoying the landscape
+			for(int i = 0; i < this.maxSeats; i++) {
+				this.controller.getSemaphorePassengers().up();
+			}
+			
+			// Actually moving
+			this.move();
+			
+			// Stop moving
+			this.controller.getSemaphoreMutex().down();
+			this.moving = false;
+			this.controller.getSemaphoreMutex().up();
+			
+			// Waiting for passengers to stop enjoying the landscape
+			this.controller.getSemaphoreTrain().down();
+			
+			// Waking up passengers to get out
+			for(int i = 0; i < this.maxSeats; i++) {
+				this.controller.getSemaphorePassengers().up();
+			}
+			
+			// Waiting for passengers to get out
+			this.controller.getSemaphoreTrain().down();
+			
 		}
+		
 	}
 	
 	private void move() {
@@ -82,6 +102,46 @@ public class Train extends Thread{
 
 	public void setController(Controller controller) {
 		this.controller = controller;
+	}
+
+	public int getSeats() {
+		return seats;
+	}
+
+	public void setSeats(int seats) {
+		this.seats = seats;
+	}
+	
+	public void increaseSeats() {
+		this.seats++;
+	}
+	
+	public void decreaseSeats() {
+		this.seats--;
+	}
+	
+	public boolean isFull() {
+		return this.seats == this.maxSeats;
+	}
+	
+	public boolean isEmpty() {
+		return this.seats == 0;
+	}
+
+	public int getPassengersEnjoying() {
+		return passengersEnjoying;
+	}
+
+	public void setPassengersEnjoying(int passengersEnjoying) {
+		this.passengersEnjoying = passengersEnjoying;
+	}
+	
+	public void increasePassengersEnjoying() {
+		this.passengersEnjoying++;
+	}
+	
+	public void decreasePassengersEnjoying() {
+		this.passengersEnjoying--;
 	}
 
 }
