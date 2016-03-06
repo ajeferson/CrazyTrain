@@ -51,31 +51,36 @@ public class Train extends Thread {
 			System.out.println("Crazy Train finished waking all passengers for enjoying the landscape...");
 
 			// Actually moving
+			System.out.println("The crazy train started moving...");
 			this.move();
 			
 			// Stop moving
 			this.controller.getSemaphoreMutex().down();
 			this.moving = false;
+			System.out.println("The crazy train finished moving...");
 			this.controller.getSemaphoreMutex().up();
 
+			return;
 			// Waiting for passengers to stop enjoying the landscape
-			this.controller.getSemaphoreTrain().down();
-
-			// Waking up passengers to get out
-			for(int i = 0; i < this.maxSeats; i++) {
-				this.controller.getSemaphorePassengers().up();
-			}
-
-			// Waiting for passengers to get out
-			this.controller.getSemaphoreTrain().down();
+//			this.controller.getSemaphoreTrain().down();
+//
+//			// Waking up passengers to get out
+//			for(int i = 0; i < this.maxSeats; i++) {
+//				this.controller.getSemaphorePassengers().up();
+//			}
+//
+//			// Waiting for passengers to get out
+//			this.controller.getSemaphoreTrain().down();
 
 		}
 
 	}
 
 	private void move() {
-		this.moving = true;
-		System.out.println("The crazy train is moving...");
+		long a = 0;
+		for(long i = 0; i < 1000000000L; i++) {
+			a++;
+		}
 	}
 
 	/** Getters and Setters */
