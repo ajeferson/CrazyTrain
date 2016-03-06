@@ -41,7 +41,6 @@ public class Main extends JFrame {
 	
 	private void addTrain() {
 		container.add(this.controller.getTrain().asView());
-		this.controller.getTrain().move();
 	}
 	
 	public void init() {
