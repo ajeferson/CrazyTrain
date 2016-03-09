@@ -42,9 +42,7 @@ public class Train extends Thread {
 		while(true) {
 
 			// Saying: "Available seats"
-			for(int i = 0; i < this.maxSeats; i++) {
-				this.controller.getSemaphoreLine().up();
-			}
+			this.controller.getSemaphoreLine().up(this.maxSeats);
 
 			// Sleeping while passengers do not enter
 			this.controller.getSemaphoreTrain().down();
@@ -57,9 +55,7 @@ public class Train extends Thread {
 			System.out.println("Crazy Train is full with passengers...");
 
 			// Waking up passenger for enjoying the landscape
-			for(int i = 0; i < this.maxSeats; i++) {
-				this.controller.getSemaphorePassengers().up();
-			}
+			this.controller.getSemaphorePassengers().up(this.maxSeats);
 
 			System.out.println("Crazy Train finished waking all passengers for enjoying the landscape...");
 
@@ -77,9 +73,7 @@ public class Train extends Thread {
 			this.controller.getSemaphoreTrain().down();
 
 			// Waking up passengers to get out
-			for(int i = 0; i < this.maxSeats; i++) {
-				this.controller.getSemaphorePassengers().up();
-			}
+			this.controller.getSemaphorePassengers().up(this.maxSeats);
 
 			// Waiting for passengers to get out
 			this.controller.getSemaphoreTrain().down();

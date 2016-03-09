@@ -29,17 +29,18 @@ public class Controller {
 		this.train.start();
 
 		// Mocking passengers
-		this.addPassenger(1, 1000, 2000);
-		this.addPassenger(2, 1000, 2000);
-		this.addPassenger(3, 1000, 2000);
-		this.addPassenger(4, 1000, 2000);
-		this.addPassenger(5, 1000, 2000);
+		this.addPassenger(1000, 2000);
+		this.addPassenger(1000, 2000);
+		this.addPassenger(1000, 2000);
+		this.addPassenger(1000, 2000);
+		this.addPassenger(1000, 2000);
+		this.addPassenger(1000, 2000);
 
 	}
 
 	/** Adds a new passenger to the ArrayList of passengers and runs it. */
-	private void addPassenger(int id, int enteringTime, int leavingTime) {
-		Passenger passenger = new Passenger(id, enteringTime, leavingTime);
+	private void addPassenger(int enteringTime, int leavingTime) {
+		Passenger passenger = new Passenger(enteringTime, leavingTime);
 		passenger.setController(this);
 		this.passengers.add(passenger);
 		passenger.start();

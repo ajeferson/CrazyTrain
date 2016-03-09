@@ -8,7 +8,7 @@ public class AmazingSemaphore extends Semaphore {
 	private static final long serialVersionUID = 6679850619550916493L;
 	
 	public AmazingSemaphore(int permits) {
-		super(permits);
+		super(permits, true);
 	}
 	
 	public void down() {
@@ -21,6 +21,10 @@ public class AmazingSemaphore extends Semaphore {
 	
 	public void up() {
 		this.release();
+	}
+	
+	public void up(int permits) {
+		this.release(permits);
 	}
 
 }

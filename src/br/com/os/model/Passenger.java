@@ -5,6 +5,7 @@ import br.com.os.controller.Controller;
 /** This class represents a passenger that can take a trip on the train. */
 public class Passenger extends Thread {
 
+	private static int lastId = 0;
 	private final int id;
 	private int enteringTime;
 	private int leavingTime;
@@ -12,9 +13,9 @@ public class Passenger extends Thread {
 
 	private Controller controller;
 
-	public Passenger(int id, int enteringTime, int leavingTime) {
-		super("P" + id);
-		this.id = id;
+	public Passenger(int enteringTime, int leavingTime) {
+		super("P" + (++lastId));
+		this.id = lastId;
 		this.setEnteringTime(enteringTime);
 		this.setLeavingTime(leavingTime);
 	}
