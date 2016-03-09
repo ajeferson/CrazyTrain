@@ -20,7 +20,7 @@ public class Controller {
 	private int line = 0;
 
 	// Train and passengers
-	private Train train = new Train(MAX_SEATS, 5000);
+	private Train train = new Train(MAX_SEATS, 10000);
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
 	public void start() {
@@ -54,7 +54,6 @@ public class Controller {
 		System.out.println("Semaphore line: " + this.semaphoreLine.availablePermits());
 		System.out.println("Semaphore mutex: " + this.semaphoreMutex.availablePermits());
 		System.out.println("Number of passengers on the train: " + this.train.getSeats());
-		System.out.println("Number of passengers enjoying: " + this.train.getPassengersEnjoying());
 		System.out.println("------------------------------");
 		this.semaphoreMutex.up();
 	}

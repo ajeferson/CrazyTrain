@@ -48,10 +48,9 @@ public class Passenger extends Thread {
 			// Enjoying the landscape
 			this.controller.getSemaphoreMutex().down();
 			
-			System.out.println(this.getName() + " has permission to enjoy the landscape...");
+			System.out.println(this.getName() + " has will start enjoying the landscape...");
 			
 			this.shouldEnjoyLandscape = true;
-			this.controller.getTrain().increasePassengersEnjoying();
 			this.controller.getSemaphoreMutex().up();
 			
 			while(this.shouldEnjoyLandscape) {
@@ -63,23 +62,9 @@ public class Passenger extends Thread {
 				this.controller.getSemaphoreMutex().up();
 			}
 			
-			// Stopping enjoying the landscape
-			this.controller.getSemaphoreMutex().down();
-			this.controller.getTrain().decreasePassengersEnjoying(); //numPass--;
-			System.out.println(this.getName() + " stopped enjoying the landscape...");
-			
-			// Saying to train: "Everybody stopped enjoying the landscape"
-			if(this.controller.getTrain().getPassengersEnjoying() == 0) {
-				this.controller.getSemaphoreTrain().up();
-			}
-			this.controller.getSemaphoreMutex().up();
-			
-			// Waiting for the train to allow the exit
-			this.controller.getSemaphorePassengers().down();
-			
 			// Actually getting out the train
 			this.controller.getSemaphoreMutex().down();
-			this.getUp();
+			this.getUp(); //numPas--
 			this.leave();
 			
 			System.out.println(this.getName() + " left the Crazy Train...");
@@ -88,6 +73,7 @@ public class Passenger extends Thread {
 			if(this.controller.getTrain().isEmpty()) {
 				this.controller.getSemaphoreTrain().up();
 			}
+			
 			this.controller.getSemaphoreMutex().up();
 			
 		}
@@ -95,10 +81,12 @@ public class Passenger extends Thread {
 	}
 	
 	private void enter() {
+		// Spend some time here
 		System.out.println(this.getName() + " enters the Crazy Train...");
 	}
 
 	private void leave() {
+		// Spend some time here
 //		System.out.println(this.getName() + " leaves the Crazy Train...");
 	}
 	

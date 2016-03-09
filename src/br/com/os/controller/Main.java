@@ -12,7 +12,7 @@ public class Main extends JFrame {
 	// View Attributes
 	private Container container;
 	
-	// Contants
+	// Constants
 	public static final int WINDOW_WIDTH = 500;
 	public static final int WINDOW_HEIGHT = 500;
 

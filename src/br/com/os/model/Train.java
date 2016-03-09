@@ -14,7 +14,6 @@ public class Train extends Thread {
 
 	private final int maxSeats;
 	private int seats = 0;
-	private int passengersEnjoying = 0;
 	private long travelingTime;
 	private boolean moving = false;
 
@@ -47,12 +46,12 @@ public class Train extends Thread {
 			// Sleeping while passengers do not enter
 			this.controller.getSemaphoreTrain().down();
 
+			System.out.println("Crazy Train is full with passengers...");
+			
 			// Set moving
 			this.controller.getSemaphoreMutex().down();
 			this.moving = true;
 			this.controller.getSemaphoreMutex().up();
-
-			System.out.println("Crazy Train is full with passengers...");
 
 			// Waking up passenger for enjoying the landscape
 			this.controller.getSemaphorePassengers().up(this.maxSeats);
@@ -66,21 +65,13 @@ public class Train extends Thread {
 			// Stop moving
 			this.controller.getSemaphoreMutex().down();
 			this.moving = false;
-			System.out.println("The crazy train finished moving...");
+			System.out.println("The crazy train stopped moving...");
 			this.controller.getSemaphoreMutex().up();
-
-			// Waiting for passengers to stop enjoying the landscape
-			this.controller.getSemaphoreTrain().down();
-
-			// Waking up passengers to get out
-			this.controller.getSemaphorePassengers().up(this.maxSeats);
 
 			// Waiting for passengers to get out
 			this.controller.getSemaphoreTrain().down();
 
-			System.out.println("Everybody left the Crazy Train...");
-
-			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			System.out.println("Everybody left the Crazy Train...\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
 		}
 
@@ -197,22 +188,6 @@ public class Train extends Thread {
 
 	public boolean isEmpty() {
 		return this.seats == 0;
-	}
-
-	public int getPassengersEnjoying() {
-		return passengersEnjoying;
-	}
-
-	public void setPassengersEnjoying(int passengersEnjoying) {
-		this.passengersEnjoying = passengersEnjoying;
-	}
-
-	public void increasePassengersEnjoying() {
-		this.passengersEnjoying++;
-	}
-
-	public void decreasePassengersEnjoying() {
-		this.passengersEnjoying--;
 	}
 
 }
