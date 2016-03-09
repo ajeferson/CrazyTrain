@@ -38,14 +38,6 @@ public class Controller {
 
 	}
 
-	/** Adds a new passenger to the ArrayList of passengers and runs it. */
-	private void addPassenger(int enteringTime, int leavingTime) {
-		Passenger passenger = new Passenger(enteringTime, leavingTime);
-		passenger.setController(this);
-		this.passengers.add(passenger);
-		passenger.start();
-	}
-
 	public void printReport() {
 		this.semaphoreMutex.down();
 		System.out.println("------------------------------");
@@ -57,8 +49,18 @@ public class Controller {
 		System.out.println("------------------------------");
 		this.semaphoreMutex.up();
 	}
+	
+	// Passengers' methods
+	
+	/** Adds a new passenger to the ArrayList of passengers and runs it. */
+	private void addPassenger(int enteringTime, int leavingTime) {
+		Passenger passenger = new Passenger(enteringTime, leavingTime);
+		passenger.setController(this);
+		this.passengers.add(passenger);
+		passenger.start();
+	}
 
-	/** Getters and Setters */
+	// Getters and Setters
 
 	public Train getTrain() {
 		return train;

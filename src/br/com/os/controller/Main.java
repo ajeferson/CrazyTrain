@@ -3,6 +3,8 @@ package br.com.os.controller;
 import java.awt.Container;
 import javax.swing.JFrame;
 
+import br.com.os.ui.RollerCoasterController;
+
 public class Main extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
@@ -45,7 +47,8 @@ public class Main extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		new Main();
+//		new Main();
+		new RollerCoasterController();
 	}
 	
 }

@@ -1,9 +1,15 @@
 package br.com.os.model;
 
+import java.awt.Component;
+import java.awt.Point;
+
+import javax.swing.JLabel;
+
 import br.com.os.controller.Controller;
+import br.com.os.interfaces.View;
 
 /** This class represents a passenger that can take a trip on the train. */
-public class Passenger extends Thread {
+public class Passenger extends Thread implements View {
 
 	private static int lastId = 0;
 	private final int id;
@@ -12,6 +18,13 @@ public class Passenger extends Thread {
 	private boolean shouldEnjoyLandscape = false;
 
 	private Controller controller;
+	
+	// View attributes
+	private JLabel view;
+	
+	// Constants
+	private static final int PASSENGER_WIDTH = 50;
+	private static final int PASSENGER_HEIGHT = 50;
 
 	public Passenger(int enteringTime, int leavingTime) {
 		super("P" + (++lastId));
@@ -102,7 +115,7 @@ public class Passenger extends Thread {
 		this.controller.getTrain().decreaseSeats();
 	}
 
-	/** Getters and Setters */
+	// Getters and Setters
 
 	public int getPassengerId() {
 		return id;
@@ -130,6 +143,24 @@ public class Passenger extends Thread {
 
 	public void setController(Controller controller) {
 		this.controller = controller;
+	}
+
+
+	// View implementations
+	
+	@Override
+	public Component asView() {
+		if(this.view == null) {
+			this.view = new JLabel(this.id + "");
+			this.view.setSize(PASSENGER_WIDTH, PASSENGER_HEIGHT);
+		}
+		return view;
+	}
+
+
+	@Override
+	public void moveTo(Point point) {
+		this.view.setLocation(point);
 	}
 
 }

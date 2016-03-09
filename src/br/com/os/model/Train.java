@@ -1,16 +1,18 @@
 package br.com.os.model;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Point;
 
 import javax.swing.JPanel;
 
 import br.com.os.controller.Controller;
 import br.com.os.controller.Main;
+import br.com.os.interfaces.View;
 
 /** This class describes the train, take takes passengers along a trail and takes
  * travellingTime (ms) to make an entire lap. */
-public class Train extends Thread {
+public class Train extends Thread implements View {
 
 	private final int maxSeats;
 	private int seats = 0;
@@ -122,21 +124,8 @@ public class Train extends Thread {
 		
 	}
 
-	
-	/** View Methods */
-	
-	public JPanel asView() {
-		if(this.view == null) {
-			this.view = new JPanel();
-			this.view.setSize(TRAIN_WIDTH, TRAIN_HEIGHT);
-			this.view.setLocation(TRAIN_POSITION);
-			this.view.setBackground(Color.RED);
-		}
-		return this.view;
-	}
 
-
-	/** Getters and Setters */
+	// Getters and Setters
 
 	public int getMaxSeats() {
 		return maxSeats;
@@ -188,6 +177,25 @@ public class Train extends Thread {
 
 	public boolean isEmpty() {
 		return this.seats == 0;
+	}
+
+	
+	// View Methods
+	
+	@Override
+	public Component asView() {
+		if(this.view == null) {
+			this.view = new JPanel();
+			this.view.setSize(TRAIN_WIDTH, TRAIN_HEIGHT);
+			this.view.setLocation(TRAIN_POSITION);
+			this.view.setBackground(Color.RED);
+		}
+		return this.view;
+	}
+	
+	@Override
+	public void moveTo(Point point) {
+		this.view.setLocation(point);
 	}
 
 }
