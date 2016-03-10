@@ -16,7 +16,9 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class RollerCoasterController extends JFrame implements ChangeListener, ActionListener {
+import br.com.os.interfaces.ViewController;
+
+public class RollerCoasterViewController extends JFrame implements ViewController, ChangeListener, ActionListener {
 
 	private static final long serialVersionUID = -914864416118572007L;
 
@@ -27,15 +29,14 @@ public class RollerCoasterController extends JFrame implements ChangeListener, A
 	private static final int WINDOW_WIDTH = 600;
 	private static final int WINDOW_HEIGHT = 130;
 
-	public RollerCoasterController() {
-		this.setup();
+	public RollerCoasterViewController() {
+		super("Controlador de Montanha Russa");
 	}
-
-	private void setup() {
+	
+	@Override
+	public void init() {
 		this.container = this.getContentPane();
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Controlador de Montanha Russa");
 		this.addElements();
 		this.setVisible(true);
 	}
@@ -74,7 +75,7 @@ public class RollerCoasterController extends JFrame implements ChangeListener, A
 	}
 
 	public static void main(String[] args) {
-		new RollerCoasterController();
+		new RollerCoasterViewController();
 	}
 
 	// Change Listener

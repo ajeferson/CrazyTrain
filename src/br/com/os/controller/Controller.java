@@ -2,9 +2,9 @@ package br.com.os.controller;
 
 import java.util.ArrayList;
 
-import br.com.os.model.AmazingSemaphore;
 import br.com.os.model.Passenger;
 import br.com.os.model.Train;
+import br.com.os.model.amazing.AmazingSemaphore;
 
 /** Class that centralizes the semaphores and some other shared variables. */
 public class Controller {

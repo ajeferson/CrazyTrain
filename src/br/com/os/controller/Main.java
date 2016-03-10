@@ -3,7 +3,7 @@ package br.com.os.controller;
 import java.awt.Container;
 import javax.swing.JFrame;
 
-import br.com.os.ui.RollerCoasterController;
+import br.com.os.ui.RollerCoasterViewController;
 
 public class Main extends JFrame {
 	
@@ -48,7 +48,7 @@ public class Main extends JFrame {
 	
 	public static void main(String[] args) {
 //		new Main();
-		new RollerCoasterController();
+		new RollerCoasterViewController();
 	}
 	
 }

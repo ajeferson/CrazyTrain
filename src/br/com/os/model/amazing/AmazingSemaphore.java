@@ -1,4 +1,4 @@
-package br.com.os.model;
+package br.com.os.model.amazing;
 
 import java.util.concurrent.Semaphore;
 
