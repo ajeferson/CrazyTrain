@@ -25,11 +25,13 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	private static final long serialVersionUID = -914864416118572007L;
 
 	private Container container;
-	private JTextField textFieldTravellingtime;
+	private JTextField textFieldTravellingTime;
+	private JSlider sliderTravellingTime;
 
 	// Constants
 	private static final int WINDOW_WIDTH = 600;
 	private static final int WINDOW_HEIGHT = 130;
+	private static final int INITIAL_TRAVELLING_TIME = 5;
 
 	private ItemHandler itemHandler;
 
@@ -37,6 +39,8 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		super("Controlador de Montanha Russa");
 	}
 
+	// ViewController implement
+	
 	@Override
 	public void build(ItemHandler itemHandler) {
 		this.container = this.getContentPane();
@@ -49,6 +53,12 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	public void open() {
 		this.setVisible(true);
 	}
+	
+	@Override
+	public void reset() {
+		this.textFieldTravellingTime.setText(INITIAL_TRAVELLING_TIME + "s");
+		this.sliderTravellingTime.setValue(INITIAL_TRAVELLING_TIME);
+	}
 
 	private void addComponents() {
 
@@ -60,26 +70,27 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 
 		topTopPanel.add(new JLabel("Tempo de viagem:"));
 
-		this.textFieldTravellingtime = new JTextField(5);
-		this.textFieldTravellingtime.setEditable(false);
-		this.textFieldTravellingtime.setText("5s");
-		topTopPanel.add(this.textFieldTravellingtime);
+		this.textFieldTravellingTime = new JTextField(5);
+		this.textFieldTravellingTime.setEditable(false);
+		topTopPanel.add(this.textFieldTravellingTime);
 
 		topPanel.add(topTopPanel);
 
-		JSlider slider = new JSlider(5, 60);
-		slider.setPaintTicks(true);
-		slider.setMajorTickSpacing(5);
-		slider.setMinorTickSpacing(5);
-		slider.setPaintLabels(true);
-		slider.addChangeListener(this);
-		topPanel.add(slider);
+		sliderTravellingTime = new JSlider(5, 60);
+		sliderTravellingTime.setPaintTicks(true);
+		sliderTravellingTime.setMajorTickSpacing(5);
+		sliderTravellingTime.setMinorTickSpacing(5);
+		sliderTravellingTime.setPaintLabels(true);
+		sliderTravellingTime.addChangeListener(this);
+		topPanel.add(sliderTravellingTime);
 
 		this.container.add(topPanel, BorderLayout.CENTER);
 
 		JButton addButton = new JButton("Criar");
 		addButton.addActionListener(this);
 		this.container.add(addButton, BorderLayout.SOUTH);
+		
+		this.reset();
 
 	}
 
@@ -92,7 +103,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		JSlider source = (JSlider) e.getSource();
-		this.textFieldTravellingtime.setText("" + source.getValue() + "s");
+		this.textFieldTravellingTime.setText("" + source.getValue() + "s");
 	}
 
 	// Action Listener
@@ -100,8 +111,8 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		this.itemHandler.didProduceItem(new RollerCoaster(3,
-				1000 * Integer.parseInt(this.textFieldTravellingtime.getText()
-						.substring(0, this.textFieldTravellingtime.getText().length() - 1)
+				1000 * Integer.parseInt(this.textFieldTravellingTime.getText()
+						.substring(0, this.textFieldTravellingTime.getText().length() - 1)
 						)
 				));
 	}

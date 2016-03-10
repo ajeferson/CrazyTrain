@@ -16,6 +16,8 @@ public class AmazingJMenuItem extends JMenuItem implements ActionListener {
 	private static final long serialVersionUID = 3247851999765489253L;
 
 	private ViewController viewController;
+	private String viewControllerName;
+	private ItemHandler itemHandler;
 
 	/** Builds an AmazingJMenuItem.
 	 * @param text The text that is going to appear on the menu.
@@ -23,8 +25,9 @@ public class AmazingJMenuItem extends JMenuItem implements ActionListener {
 	 * @param itemHandler The ItemHandler that the ViewController will use. */
 	public AmazingJMenuItem(String text, String viewControllerName, ItemHandler itemHandler) {
 		super(text);
-		this.buildTargetClassWithName(viewControllerName, itemHandler);
 		this.addActionListener(this);
+		this.viewControllerName = viewControllerName;
+		this.itemHandler = itemHandler;
 	}
 	
 	/** Builds the ViewController associated with this menu.
@@ -46,6 +49,12 @@ public class AmazingJMenuItem extends JMenuItem implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(this.viewController == null) {
+			this.buildTargetClassWithName(this.viewControllerName, this.itemHandler);
+			this.viewControllerName = null;
+			this.itemHandler = null;
+		}
+		this.viewController.reset();
 		this.viewController.open();
 	}
 

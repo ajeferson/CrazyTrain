@@ -1,18 +1,14 @@
 package br.com.os.ui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import br.com.os.interfaces.Item;
@@ -127,6 +123,10 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	@Override
 	public void open() {
 		this.setVisible(true);
+	}
+	
+	@Override
+	public void reset() {
 	}
 
 	// ItemHandler implement
