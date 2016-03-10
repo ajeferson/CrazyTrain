@@ -1,12 +1,18 @@
 package br.com.os.ui;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import br.com.os.interfaces.Item;
@@ -23,6 +29,10 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	// Constants
 	public static final int WINDOW_WIDTH = 500;
 	public static final int WINDOW_HEIGHT = 500;
+	
+	
+	private Container container;
+	private RollerCoaster rollerCoaster;
 
 	public MainViewController() {
 		super("Montanha Russa");
@@ -90,9 +100,16 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 
 	}
 
+	/** Adds a roller coaster to the canvas and sets it as the current roller coaster. */
 	private void handleCreationOfRollerCoaster(RollerCoaster rollerCoaster) {
-		System.out.println("A Roller Coaster was created:");
-		System.out.println(rollerCoaster.toString());
+		this.rollerCoaster = rollerCoaster;
+		this.addComponent(this.rollerCoaster.asView());
+	}
+	
+	/** Adds a component to the main container and repaints the JFrame. */
+	private void addComponent(Component component) {
+		this.add(component);
+		this.repaint();
 	}
 	
 	// ViewController implement
@@ -102,6 +119,8 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
+		this.container = this.getContentPane();
+		this.container.setLayout(null);
 		this.addComponents();
 	}
 
