@@ -54,7 +54,11 @@ public class AmazingJMenuItem extends JMenuItem implements ActionListener {
 			this.viewControllerName = null;
 			this.itemHandler = null;
 		}
-		this.viewController.reset();
+		if(this.viewController.getFrame().isVisible()) {
+			this.viewController.getFrame().requestFocus();
+		} else {
+			this.viewController.reset();
+		}
 		this.viewController.open();
 	}
 

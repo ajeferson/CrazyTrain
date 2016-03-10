@@ -25,13 +25,14 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	private static final long serialVersionUID = -914864416118572007L;
 
 	private Container container;
-	private JTextField textFieldTravellingTime;
-	private JSlider sliderTravellingTime;
+	private JTextField textFieldTravellingTime, textFieldSeats;
+	private JSlider sliderTravellingTime, sliderSeats;
 
 	// Constants
 	private static final int WINDOW_WIDTH = 600;
-	private static final int WINDOW_HEIGHT = 130;
+	private static final int WINDOW_HEIGHT = 230;
 	private static final int INITIAL_TRAVELLING_TIME = 5;
+	private static final int INITIAL_SEATS = 4;
 
 	private ItemHandler itemHandler;
 
@@ -46,6 +47,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		this.container = this.getContentPane();
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		this.itemHandler = itemHandler;
+		this.setResizable(false);
 		this.addComponents();
 	}
 
@@ -58,33 +60,72 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	public void reset() {
 		this.textFieldTravellingTime.setText(INITIAL_TRAVELLING_TIME + "s");
 		this.sliderTravellingTime.setValue(INITIAL_TRAVELLING_TIME);
+		this.textFieldSeats.setText("" + INITIAL_SEATS);
+		this.sliderSeats.setValue(INITIAL_SEATS);
+	}
+	
+	@Override
+	public JFrame getFrame() {
+		return this;
 	}
 
+	/** Addss all the components to the JFrame. */
 	private void addComponents() {
+		
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new GridLayout(2, 1, 0, 20));
+		
+		// Panel travelling time
+		JPanel panelTravellingTime = new JPanel();
+		panelTravellingTime.setLayout(new GridLayout(2, 1, 0, 0));
 
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new GridLayout(2, 1, 0, 0));
+		JPanel panelTopTravellingTime = new JPanel();
+		panelTopTravellingTime.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		JPanel topTopPanel = new JPanel();
-		topTopPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-		topTopPanel.add(new JLabel("Tempo de viagem:"));
+		panelTopTravellingTime.add(new JLabel("Tempo de viagem:"));
 
 		this.textFieldTravellingTime = new JTextField(5);
 		this.textFieldTravellingTime.setEditable(false);
-		topTopPanel.add(this.textFieldTravellingTime);
+		panelTopTravellingTime.add(this.textFieldTravellingTime);
 
-		topPanel.add(topTopPanel);
+		panelTravellingTime.add(panelTopTravellingTime);
 
-		sliderTravellingTime = new JSlider(5, 60);
-		sliderTravellingTime.setPaintTicks(true);
-		sliderTravellingTime.setMajorTickSpacing(5);
-		sliderTravellingTime.setMinorTickSpacing(5);
-		sliderTravellingTime.setPaintLabels(true);
-		sliderTravellingTime.addChangeListener(this);
-		topPanel.add(sliderTravellingTime);
-
-		this.container.add(topPanel, BorderLayout.CENTER);
+		this.sliderTravellingTime = new JSlider(5, 60);
+		this.sliderTravellingTime.setPaintTicks(true);
+		this.sliderTravellingTime.setMajorTickSpacing(5);
+		this.sliderTravellingTime.setMinorTickSpacing(5);
+		this.sliderTravellingTime.setPaintLabels(true);
+		this.sliderTravellingTime.addChangeListener(this);
+		panelTravellingTime.add(this.sliderTravellingTime);
+		
+		// Panel Seats
+		JPanel panelSeats = new JPanel();
+		panelSeats.setLayout(new GridLayout(2, 1, 0, 0));
+		
+		JPanel panelSeatsTop = new JPanel();
+		panelSeatsTop.setLayout(new FlowLayout(FlowLayout.CENTER));
+		
+		panelSeatsTop.add(new JLabel("Quantidade de assentos:"));
+		
+		this.textFieldSeats = new JTextField(5);
+		this.textFieldSeats.setEditable(false);
+		panelSeatsTop.add(this.textFieldSeats);
+		
+		panelSeats.add(panelSeatsTop);
+		
+		this.sliderSeats = new JSlider(4, 20);
+		this.sliderSeats.setPaintTicks(true);
+		this.sliderSeats.setMajorTickSpacing(4);
+		this.sliderSeats.setMinorTickSpacing(4);
+		this.sliderSeats.setSnapToTicks(true);
+		this.sliderSeats.setPaintLabels(true);
+		this.sliderSeats.addChangeListener(this);
+		panelSeats.add(this.sliderSeats);
+		
+		centerPanel.add(panelTravellingTime);
+		centerPanel.add(panelSeats);
+		
+		this.container.add(centerPanel, BorderLayout.CENTER);
 
 		JButton addButton = new JButton("Criar");
 		addButton.addActionListener(this);
@@ -103,14 +144,18 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		JSlider source = (JSlider) e.getSource();
-		this.textFieldTravellingTime.setText("" + source.getValue() + "s");
+		if(source == this.sliderTravellingTime) {
+			this.textFieldTravellingTime.setText("" + source.getValue() + "s");
+		} else {
+			this.textFieldSeats.setText("" + source.getValue());
+		}
 	}
 
 	// Action Listener
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.itemHandler.didProduceItem(new RollerCoaster(3,
+		this.itemHandler.didProduceItem(new RollerCoaster(Integer.parseInt(this.textFieldSeats.getText()),
 				1000 * Integer.parseInt(this.textFieldTravellingTime.getText()
 						.substring(0, this.textFieldTravellingTime.getText().length() - 1)
 						)

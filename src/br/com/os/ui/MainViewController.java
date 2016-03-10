@@ -128,6 +128,11 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	@Override
 	public void reset() {
 	}
+	
+	@Override
+	public JFrame getFrame() {
+		return this;
+	}
 
 	// ItemHandler implement
 
