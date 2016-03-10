@@ -9,10 +9,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
+import br.com.os.interfaces.Item;
+import br.com.os.interfaces.ItemHandler;
 import br.com.os.interfaces.ViewController;
+import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingJMenuItem;
 
-public class MainViewController extends JFrame implements ViewController {
+/** Represents the main window of the program. It contains the landscape and the menu items to do things. */
+public class MainViewController extends JFrame implements ViewController, ItemHandler {
 
 	private static final long serialVersionUID = -598156911230782190L;
 
@@ -24,16 +28,9 @@ public class MainViewController extends JFrame implements ViewController {
 		super("Montanha Russa");
 	}
 
-	@Override
-	public void init() {	
-		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(false);
-		this.addComponents();
-		this.setVisible(true);
-	}
-
+	/** Adds the menu items. */
 	private void addComponents() {
+
 		JMenuBar menuBar = new JMenuBar();
 
 		// File menu
@@ -43,9 +40,8 @@ public class MainViewController extends JFrame implements ViewController {
 		JMenu subMenuNew = new JMenu("Novo");
 
 		// New Roller Coaster item
-		AmazingJMenuItem itemNewRollerCoaster = new AmazingJMenuItem("Montanha Russa");
+		AmazingJMenuItem itemNewRollerCoaster = new AmazingJMenuItem("Montanha Russa", "RollerCoasterViewController", this);
 		itemNewRollerCoaster.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
-		itemNewRollerCoaster.setTargetClassName("RollerCoasterViewController");
 		subMenuNew.add(itemNewRollerCoaster);
 
 		// New Passenger item
@@ -91,10 +87,42 @@ public class MainViewController extends JFrame implements ViewController {
 		menuBar.add(menuHelp);
 
 		this.setJMenuBar(menuBar);
+
+	}
+
+	private void handleCreationOfRollerCoaster(RollerCoaster rollerCoaster) {
+		System.out.println("A Roller Coaster was created:");
+		System.out.println(rollerCoaster.toString());
+	}
+	
+	// ViewController implement
+
+	@Override
+	public void build(ItemHandler itemHandler) {
+		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
+		this.addComponents();
+	}
+
+	@Override
+	public void open() {
+		this.setVisible(true);
+	}
+
+	// ItemHandler implement
+
+	@Override
+	public void didProduceItem(Item item) {
+		if(item instanceof RollerCoaster) {
+			this.handleCreationOfRollerCoaster((RollerCoaster) item);
+		}
 	}
 
 	public static void main(String[] args) {
-		new MainViewController().init();
+		MainViewController main = new MainViewController();
+		main.build(null);
+		main.open();
 	}
 
 }

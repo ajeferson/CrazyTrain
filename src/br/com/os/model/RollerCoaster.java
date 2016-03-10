@@ -8,11 +8,12 @@ import javax.swing.JPanel;
 
 import br.com.os.controller.Controller;
 import br.com.os.controller.Main;
+import br.com.os.interfaces.Item;
 import br.com.os.interfaces.View;
 
 /** This class describes the train, take takes passengers along a trail and takes
  * travellingTime (ms) to make an entire lap. */
-public class Train extends Thread implements View {
+public class RollerCoaster extends Thread implements View, Item {
 
 	private final int maxSeats;
 	private int seats = 0;
@@ -32,7 +33,7 @@ public class Train extends Thread implements View {
 	/** Creates a train
 	 * @param maxSeats Max amount of seats on the train
 	 * @param travelingTime The amount of time that the train takes to make a lap (in milliseconds)*/
-	public Train(int maxSeats, long travelingTime) {
+	public RollerCoaster(int maxSeats, long travelingTime) {
 		this.maxSeats = maxSeats;
 		this.setTravelingTime(travelingTime);
 	}
@@ -178,9 +179,17 @@ public class Train extends Thread implements View {
 	public boolean isEmpty() {
 		return this.seats == 0;
 	}
+	
+	@Override
+	public String toString() {
+		String str = "";
+		str += ("Max seats: " + this.seats);
+		str += ("\nTravelling time: " + this.travelingTime + "ms");
+		return str;
+	}
 
 	
-	// View Methods
+	// View implement
 	
 	@Override
 	public Component asView() {

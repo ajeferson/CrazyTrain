@@ -16,7 +16,9 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import br.com.os.interfaces.ItemHandler;
 import br.com.os.interfaces.ViewController;
+import br.com.os.model.RollerCoaster;
 
 public class RollerCoasterViewController extends JFrame implements ViewController, ChangeListener, ActionListener {
 
@@ -29,35 +31,42 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	private static final int WINDOW_WIDTH = 600;
 	private static final int WINDOW_HEIGHT = 130;
 
+	private ItemHandler itemHandler;
+
 	public RollerCoasterViewController() {
 		super("Controlador de Montanha Russa");
 	}
-	
+
 	@Override
-	public void init() {
+	public void build(ItemHandler itemHandler) {
 		this.container = this.getContentPane();
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		this.addElements();
+		this.itemHandler = itemHandler;
+		this.addComponents();
+	}
+
+	@Override
+	public void open() {
 		this.setVisible(true);
 	}
 
-	private void addElements() {
+	private void addComponents() {
 
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new GridLayout(2, 1, 0, 0));
-		
+
 		JPanel topTopPanel = new JPanel();
 		topTopPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		
+
 		topTopPanel.add(new JLabel("Tempo de viagem:"));
-		
+
 		this.textFieldTravellingtime = new JTextField(5);
 		this.textFieldTravellingtime.setEditable(false);
 		this.textFieldTravellingtime.setText("5s");
 		topTopPanel.add(this.textFieldTravellingtime);
-		
+
 		topPanel.add(topTopPanel);
-		
+
 		JSlider slider = new JSlider(5, 60);
 		slider.setPaintTicks(true);
 		slider.setMajorTickSpacing(5);
@@ -65,13 +74,13 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		slider.setPaintLabels(true);
 		slider.addChangeListener(this);
 		topPanel.add(slider);
-	
+
 		this.container.add(topPanel, BorderLayout.CENTER);
-		
+
 		JButton addButton = new JButton("Criar");
 		addButton.addActionListener(this);
 		this.container.add(addButton, BorderLayout.SOUTH);
-	
+
 	}
 
 	public static void main(String[] args) {
@@ -79,7 +88,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	}
 
 	// Change Listener
-	
+
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		JSlider source = (JSlider) e.getSource();
@@ -87,10 +96,14 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	}
 
 	// Action Listener
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("Create roller coaster here...");
+		this.itemHandler.didProduceItem(new RollerCoaster(3,
+				1000 * Integer.parseInt(this.textFieldTravellingtime.getText()
+						.substring(0, this.textFieldTravellingtime.getText().length() - 1)
+						)
+				));
 	}
 
 }

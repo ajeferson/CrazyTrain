@@ -3,7 +3,7 @@ package br.com.os.controller;
 import java.util.ArrayList;
 
 import br.com.os.model.Passenger;
-import br.com.os.model.Train;
+import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingSemaphore;
 
 /** Class that centralizes the semaphores and some other shared variables. */
@@ -20,7 +20,7 @@ public class Controller {
 	private int line = 0;
 
 	// Train and passengers
-	private Train train = new Train(MAX_SEATS, 10000);
+	private RollerCoaster train = new RollerCoaster(MAX_SEATS, 10000);
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
 	public void start() {
@@ -62,11 +62,11 @@ public class Controller {
 
 	// Getters and Setters
 
-	public Train getTrain() {
+	public RollerCoaster getTrain() {
 		return train;
 	}
 
-	public void setTrain(Train train) {
+	public void setTrain(RollerCoaster train) {
 		this.train = train;
 	}
 
