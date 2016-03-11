@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -15,6 +16,7 @@ import br.com.os.interfaces.Item;
 import br.com.os.interfaces.ItemHandler;
 import br.com.os.interfaces.SemaphoreController;
 import br.com.os.interfaces.ViewController;
+import br.com.os.model.Passenger;
 import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingJMenuItem;
 import br.com.os.model.amazing.AmazingSemaphore;
@@ -30,13 +32,9 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	private AmazingSemaphore semaphorePassengers = new AmazingSemaphore(0);
 	private AmazingSemaphore semaphoreMutex = new AmazingSemaphore(1);
 
-	// Control variables
-	final int MAX_SEATS = 3;
-//	private int line = 0;
-
 	// Train and passengers
 	private RollerCoaster rollerCoaster;
-//	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
+	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
 	// Constants
 	public static final int WINDOW_WIDTH = 500;
@@ -67,7 +65,7 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 		subMenuNew.add(itemNewRollerCoaster);
 
 		// New Passenger item
-		JMenuItem itemNewPassenger = new JMenuItem("Passageiro");
+		JMenuItem itemNewPassenger = new AmazingJMenuItem("Passageiro", "PassengerViewController", this);
 		itemNewPassenger.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
 		subMenuNew.add(itemNewPassenger);
 
@@ -119,6 +117,14 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 		this.addComponent(this.rollerCoaster.asView());
 		this.rollerCoaster.start();
 	}
+	
+	/** Adds the passenger to the array and make it start. */
+	private void handleCreationOfPassenger(Passenger passenger) {
+		passenger.setController(this);
+		this.passengers.add(passenger);
+		this.addComponent(passenger.asView());
+		passenger.start();
+	}
 
 	/** Adds a component to the main container and repaints the JFrame. */
 	private void addComponent(Component component) {
@@ -158,6 +164,8 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	public void didProduceItem(Item item) {
 		if(item instanceof RollerCoaster) {
 			this.handleCreationOfRollerCoaster((RollerCoaster) item);
+		} else if(item instanceof Passenger) {
+			this.handleCreationOfPassenger((Passenger) item);
 		}
 	}
 

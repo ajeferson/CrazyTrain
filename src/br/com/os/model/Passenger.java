@@ -5,11 +5,12 @@ import java.awt.Point;
 
 import javax.swing.JLabel;
 
+import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
 import br.com.os.interfaces.View;
 
 /** This class represents a passenger that can take a trip on the train. */
-public class Passenger extends Thread implements View {
+public class Passenger extends Thread implements View, Item {
 
 	private static int lastId = 0;
 	private final int id;
@@ -133,6 +134,18 @@ public class Passenger extends Thread implements View {
 		this.leavingTime = leavingTime;
 	}
 
+	/** Returns the id of the next passenger that will eventually be created. */
+	public static int nextPassengerId() {
+		return lastId + 1;
+	}
+	
+	@Override
+	public String toString() {
+		String str = "Id: " + this.id;
+		str += "\nEntering time: " + this.enteringTime;
+		str += "\nLeaving time: " + this.leavingTime;
+		return str;
+	}
 
 	// View implementations
 	

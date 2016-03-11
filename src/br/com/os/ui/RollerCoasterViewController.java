@@ -37,7 +37,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	private ItemHandler itemHandler;
 
 	public RollerCoasterViewController() {
-		super("Controlador de Montanha Russa");
+		super("Nova Montanha Russa");
 	}
 
 	// ViewController implement
