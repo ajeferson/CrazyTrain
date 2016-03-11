@@ -35,7 +35,7 @@ public class RollerCoaster extends Thread implements View, Item {
 	public RollerCoaster(int maxSeats, long travelingTime) {
 		this.maxSeats = maxSeats;
 		this.setTravelingTime(travelingTime);
-		this.occupiedSeats = maxSeats;
+		this.occupiedSeats = 0;
 	}
 
 	@Override
