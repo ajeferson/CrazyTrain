@@ -5,7 +5,7 @@ import java.awt.Point;
 
 import javax.swing.JLabel;
 
-import br.com.os.controller.Controller;
+import br.com.os.interfaces.SemaphoreController;
 import br.com.os.interfaces.View;
 
 /** This class represents a passenger that can take a trip on the train. */
@@ -17,7 +17,7 @@ public class Passenger extends Thread implements View {
 	private int leavingTime;
 	private boolean shouldEnjoyLandscape = false;
 
-	private Controller controller;
+	private SemaphoreController controller;
 	
 	// View attributes
 	private JLabel view;
@@ -40,54 +40,54 @@ public class Passenger extends Thread implements View {
 		while(true) {
 			
 			// Waiting for the permission to get in on the train
-			this.controller.getSemaphoreLine().down();
+			this.controller.downLine();
 			
 			// Entering on the train
-			this.controller.getSemaphoreMutex().down();
+			this.controller.downMutex();
 			this.enter();
-			this.controller.getSemaphoreMutex().up();
+			this.controller.upMutex();
 			
 			// Entering on train
-			this.controller.getSemaphoreMutex().down();
-			this.sit(); //numPass++;
-			if(this.controller.getTrain().isFull()) {
-				this.controller.getSemaphoreTrain().up();
+			this.controller.downMutex();
+			this.controller.incrementNumberOfPassengersOnRollerCoaster(); //numPass++
+			if(this.controller.isRollerCoasterFull()) {
+				this.controller.upRollerCoaster();
 			}
-			this.controller.getSemaphoreMutex().up();
+			this.controller.upMutex();
 			
 			// Waiting for the permission to enjoy the landscape
-			this.controller.getSemaphorePassengers().down();
+			this.controller.downPassengers();
 			
 			// Enjoying the landscape
-			this.controller.getSemaphoreMutex().down();
+			this.controller.downMutex();
 			
 			System.out.println(this.getName() + " has will start enjoying the landscape...");
 			
 			this.shouldEnjoyLandscape = true;
-			this.controller.getSemaphoreMutex().up();
+			this.controller.upMutex();
 			
 			while(this.shouldEnjoyLandscape) {
-				this.controller.getSemaphoreMutex().down();
-				this.shouldEnjoyLandscape = this.controller.getTrain().isMoving();
+				this.controller.downMutex();
+				this.shouldEnjoyLandscape = this.controller.isRollerCoasterMoving();
 				if(this.shouldEnjoyLandscape) {
 					this.enjoyLandscape();
 				}
-				this.controller.getSemaphoreMutex().up();
+				this.controller.upMutex();
 			}
 			
 			// Actually getting out the train
-			this.controller.getSemaphoreMutex().down();
-			this.getUp(); //numPas--
+			this.controller.downMutex();
+			this.controller.decrementNumberOfPassengersOnRollerCoaster(); //numPas--
 			this.leave();
 			
 			System.out.println(this.getName() + " left the Crazy Train...");
 			
 			// Saying to train: "Everybody is out"
-			if(this.controller.getTrain().isEmpty()) {
-				this.controller.getSemaphoreTrain().up();
+			if(this.controller.isRollerCoasterEmpty()) {
+				this.controller.upRollerCoaster();
 			}
 			
-			this.controller.getSemaphoreMutex().up();
+			this.controller.upMutex();
 			
 		}
 
@@ -106,16 +106,12 @@ public class Passenger extends Thread implements View {
 	private void enjoyLandscape() {
 //		System.out.println(this.getName() + " enjoys the landscape...");
 	}
-	
-	private void sit() {
-		this.controller.getTrain().increaseSeats();;
-	}
-	
-	private void getUp() {
-		this.controller.getTrain().decreaseSeats();
-	}
 
 	// Getters and Setters
+	
+	public void setController(SemaphoreController controller) {
+		this.controller = controller;
+	}
 
 	public int getPassengerId() {
 		return id;
@@ -135,14 +131,6 @@ public class Passenger extends Thread implements View {
 
 	public void setLeavingTime(int leavingTime) {
 		this.leavingTime = leavingTime;
-	}
-
-	public Controller getController() {
-		return controller;
-	}
-
-	public void setController(Controller controller) {
-		this.controller = controller;
 	}
 
 

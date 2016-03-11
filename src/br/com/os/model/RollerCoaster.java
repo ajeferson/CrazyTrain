@@ -6,17 +6,17 @@ import java.awt.Point;
 
 import javax.swing.JPanel;
 
-import br.com.os.controller.Controller;
-import br.com.os.controller.Main;
 import br.com.os.interfaces.Item;
+import br.com.os.interfaces.SemaphoreController;
 import br.com.os.interfaces.View;
+import br.com.os.other.Constants;
 
 /** This class describes the train, take takes passengers along a trail and takes
  * travellingTime (ms) to make an entire lap. */
 public class RollerCoaster extends Thread implements View, Item {
 
 	private final int maxSeats;
-	private int seats = 0;
+	private int occupiedSeats;
 	private long travelingTime;
 	private boolean moving = false;
 
@@ -25,10 +25,9 @@ public class RollerCoaster extends Thread implements View, Item {
 	//Constants
 	public static final int TRAIN_WIDTH = 100;
 	public static final int TRAIN_HEIGHT = 50;
-	public static final Point TRAIN_POSITION = new Point((Main.WINDOW_WIDTH / 2) - (TRAIN_WIDTH / 2), Main.WINDOW_HEIGHT - 200);
+	public static final Point TRAIN_POSITION = new Point((Constants.WINDOW_WIDTH / 2) - (TRAIN_WIDTH / 2),Constants.WINDOW_HEIGHT - 200);
 	
-
-	private Controller controller;
+	private SemaphoreController controller;
 
 	/** Creates a train
 	 * @param maxSeats Max amount of seats on the train
@@ -36,6 +35,7 @@ public class RollerCoaster extends Thread implements View, Item {
 	public RollerCoaster(int maxSeats, long travelingTime) {
 		this.maxSeats = maxSeats;
 		this.setTravelingTime(travelingTime);
+		this.occupiedSeats = maxSeats;
 	}
 
 	@Override
@@ -44,20 +44,20 @@ public class RollerCoaster extends Thread implements View, Item {
 		while(true) {
 
 			// Saying: "Available seats"
-			this.controller.getSemaphoreLine().up(this.maxSeats);
+			this.controller.upLine(this.maxSeats);
 
 			// Sleeping while passengers do not enter
-			this.controller.getSemaphoreTrain().down();
+			this.controller.downRollerCoaster();
 
 			System.out.println("Crazy Train is full with passengers...");
 			
 			// Set moving
-			this.controller.getSemaphoreMutex().down();
+			this.controller.downMutex();
 			this.moving = true;
-			this.controller.getSemaphoreMutex().up();
+			this.controller.upMutex();
 
 			// Waking up passenger for enjoying the landscape
-			this.controller.getSemaphorePassengers().up(this.maxSeats);
+			this.controller.upPassengers(this.maxSeats);
 
 			System.out.println("Crazy Train finished waking all passengers for enjoying the landscape...");
 
@@ -66,13 +66,13 @@ public class RollerCoaster extends Thread implements View, Item {
 			this.move();
 
 			// Stop moving
-			this.controller.getSemaphoreMutex().down();
+			this.controller.downMutex();
 			this.moving = false;
 			System.out.println("The crazy train stopped moving...");
-			this.controller.getSemaphoreMutex().up();
+			this.controller.upMutex();
 
 			// Waiting for passengers to get out
-			this.controller.getSemaphoreTrain().down();
+			this.controller.downRollerCoaster();
 
 			System.out.println("Everybody left the Crazy Train...\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
@@ -83,15 +83,15 @@ public class RollerCoaster extends Thread implements View, Item {
 	/** Moves the train with the duration of the travellingTime */
 	public void move() {
 		
-		double totalSpace = Main.WINDOW_WIDTH + TRAIN_WIDTH;
+		double totalSpace = Constants.WINDOW_WIDTH + TRAIN_WIDTH;
 		double elapsedTime = 0.0;
 		long startTime = System.currentTimeMillis();
 		
 		int xPosition = (int) TRAIN_POSITION.getX();
 		int yPosition = (int) TRAIN_POSITION.getY();
 		
-		double time = (this.travelingTime / 2.0) * ((Main.WINDOW_WIDTH - TRAIN_POSITION.getX()) / totalSpace);
-		int deltaX = Main.WINDOW_WIDTH - xPosition;
+		double time = (this.travelingTime / 2.0) * ((Constants.WINDOW_WIDTH - TRAIN_POSITION.getX()) / totalSpace);
+		int deltaX = Constants.WINDOW_WIDTH - xPosition;
 		while(elapsedTime < time) {
 			elapsedTime = System.currentTimeMillis() - startTime;
 			xPosition = (int) (TRAIN_POSITION.getX() + ((elapsedTime / time) * deltaX));
@@ -107,7 +107,7 @@ public class RollerCoaster extends Thread implements View, Item {
 		startTime = System.currentTimeMillis();
 		while(elapsedTime < time) {
 			elapsedTime = System.currentTimeMillis() - startTime;
-			xPosition = (int) (Main.WINDOW_WIDTH - ((elapsedTime / time) * totalSpace));
+			xPosition = (int) (Constants.WINDOW_WIDTH - ((elapsedTime / time) * totalSpace));
 			this.asView().setLocation(xPosition, yPosition);
 		}
 		
@@ -127,6 +127,10 @@ public class RollerCoaster extends Thread implements View, Item {
 
 
 	// Getters and Setters
+	
+	public void setController(SemaphoreController controller) {
+		this.controller = controller;
+	}
 
 	public int getMaxSeats() {
 		return maxSeats;
@@ -148,42 +152,27 @@ public class RollerCoaster extends Thread implements View, Item {
 		this.moving = moving;
 	}
 
-	public Controller getController() {
-		return controller;
-	}
-
-	public void setController(Controller controller) {
-		this.controller = controller;
-	}
-
-	public int getSeats() {
-		return seats;
-	}
-
-	public void setSeats(int seats) {
-		this.seats = seats;
-	}
-
-	public void increaseSeats() {
-		this.seats++;
-	}
-
-	public void decreaseSeats() {
-		this.seats--;
-	}
-
 	public boolean isFull() {
-		return this.seats == this.maxSeats;
+		return this.occupiedSeats == this.maxSeats;
 	}
 
 	public boolean isEmpty() {
-		return this.seats == 0;
+		return this.occupiedSeats == 0;
+	}
+	
+	public void incrementOccupiedSeats() {
+		this.occupiedSeats++;
+	}
+	
+	public void decrementOccupiedSeats() {
+		this.occupiedSeats--;
 	}
 	
 	@Override
 	public String toString() {
 		String str = "";
-		str += ("Max seats: " + this.seats);
+		str += ("Max seats: " + this.maxSeats);
+		str += ("Available seats: " + (this.maxSeats - this.occupiedSeats));
 		str += ("\nTravelling time: " + this.travelingTime + "ms");
 		return str;
 	}

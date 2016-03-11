@@ -13,22 +13,38 @@ import javax.swing.KeyStroke;
 
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.ItemHandler;
+import br.com.os.interfaces.SemaphoreController;
 import br.com.os.interfaces.ViewController;
 import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingJMenuItem;
+import br.com.os.model.amazing.AmazingSemaphore;
 
 /** Represents the main window of the program. It contains the landscape and the menu items to do things. */
-public class MainViewController extends JFrame implements ViewController, ItemHandler {
+public class MainViewController extends JFrame implements ViewController, ItemHandler, SemaphoreController {
 
 	private static final long serialVersionUID = -598156911230782190L;
+
+	// Semaphores
+	private AmazingSemaphore semaphoreLine = new AmazingSemaphore(0);
+	private AmazingSemaphore semaphoreRollerCoaster = new AmazingSemaphore(0);
+	private AmazingSemaphore semaphorePassengers = new AmazingSemaphore(0);
+	private AmazingSemaphore semaphoreMutex = new AmazingSemaphore(1);
+
+	// Control variables
+	final int MAX_SEATS = 3;
+//	private int line = 0;
+
+	// Train and passengers
+	private RollerCoaster rollerCoaster;
+//	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
 	// Constants
 	public static final int WINDOW_WIDTH = 500;
 	public static final int WINDOW_HEIGHT = 500;
-	
-	
+
+
+	// View attrs
 	private Container container;
-	private RollerCoaster rollerCoaster;
 
 	public MainViewController() {
 		super("Montanha Russa");
@@ -99,15 +115,17 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	/** Adds a roller coaster to the canvas and sets it as the current roller coaster. */
 	private void handleCreationOfRollerCoaster(RollerCoaster rollerCoaster) {
 		this.rollerCoaster = rollerCoaster;
+		this.rollerCoaster.setController(this);
 		this.addComponent(this.rollerCoaster.asView());
+		this.rollerCoaster.start();
 	}
-	
+
 	/** Adds a component to the main container and repaints the JFrame. */
 	private void addComponent(Component component) {
 		this.add(component);
 		this.repaint();
 	}
-	
+
 	// ViewController implement
 
 	@Override
@@ -124,11 +142,11 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	public void open() {
 		this.setVisible(true);
 	}
-	
+
 	@Override
 	public void reset() {
 	}
-	
+
 	@Override
 	public JFrame getFrame() {
 		return this;
@@ -147,6 +165,81 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 		MainViewController main = new MainViewController();
 		main.build(null);
 		main.open();
+	}
+
+	@Override
+	public void upLine(int permits) {
+		this.semaphoreLine.up(permits);
+	}
+
+	@Override
+	public void upLine() {
+		this.semaphoreLine.up();
+	}
+
+	@Override
+	public void downLine() {
+		this.semaphoreLine.down();
+	}
+
+	@Override
+	public void upPassengers(int permits) {
+		this.semaphorePassengers.up(permits);
+	}
+
+	@Override
+	public void upPassengers() {
+		this.semaphorePassengers.up();
+	}
+
+	@Override
+	public void downPassengers() {
+		this.semaphorePassengers.down();
+	}
+
+	@Override
+	public void upRollerCoaster() {
+		this.semaphoreRollerCoaster.up();
+	}
+
+	@Override
+	public void downRollerCoaster() {
+		this.semaphoreRollerCoaster.down();
+	}
+
+	@Override
+	public void upMutex() {
+		this.semaphoreMutex.up();
+	}
+
+	@Override
+	public void downMutex() {
+		this.semaphoreMutex.down();
+	}
+
+	@Override
+	public boolean isRollerCoasterFull() {
+		return this.rollerCoaster.isFull();
+	}
+
+	@Override
+	public boolean isRollerCoasterMoving() {
+		return this.rollerCoaster.isMoving();
+	}
+
+	@Override
+	public boolean isRollerCoasterEmpty() {
+		return this.rollerCoaster.isEmpty();
+	}
+
+	@Override
+	public void incrementNumberOfPassengersOnRollerCoaster() {
+		this.rollerCoaster.incrementOccupiedSeats();
+	}
+
+	@Override
+	public void decrementNumberOfPassengersOnRollerCoaster() {
+		this.rollerCoaster.decrementOccupiedSeats();
 	}
 
 }
