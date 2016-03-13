@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Point;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
@@ -173,11 +175,19 @@ public class Passenger extends Thread implements View, Item {
 		int deltaY = (int) (point.getY() - initialY);
 		double elapsedTime = 0.0;
 		double startTime = System.currentTimeMillis();
-		double fraction;
 		while((elapsedTime = System.currentTimeMillis() - startTime) < this.enteringTime) {
-			fraction = elapsedTime/this.enteringTime;
-			this.view.setLocation(initialX + (int) (deltaX * fraction),
-					initialY + (int) (deltaY * fraction));
+			final double fraction = elapsedTime/this.enteringTime;
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						view.setLocation(initialX + (int) (deltaX * fraction),
+								initialY + (int) (deltaY * fraction));
+					}
+				});
+			} catch (InvocationTargetException | InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

@@ -1,9 +1,9 @@
 package br.com.os.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -42,6 +42,7 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 
 	// View attrs
 	private Container container;
+	private Scene scene = new Scene();
 
 	public MainViewController() {
 		super("Montanha Russa");
@@ -138,9 +139,8 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.container = this.getContentPane();
-		this.container.setLayout(null);
 		this.addComponents();
-		this.container.setPreferredSize(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+		this.container.add(this.scene);
 		this.pack();
 	}
 
