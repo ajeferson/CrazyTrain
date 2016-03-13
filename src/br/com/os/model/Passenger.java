@@ -10,6 +10,7 @@ import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
 import br.com.os.interfaces.View;
 import br.com.os.other.Animator;
+import br.com.os.other.Constants;
 import br.com.os.other.SpriteSheet;
 import br.com.os.other.SpriteSheetCooordinate;
 
@@ -237,7 +238,9 @@ public class Passenger extends Thread implements View, Item, Animatable {
 				spriteSheet.getSpritesWithCoordinates(coordinatesLeftwards),
 				spriteSheet.getSpritesWithCoordinates(coordinatesUpwards),
 				spriteSheet.getSpritesWithCoordinates(coordinatesDownwards),
-				200, 100, 100, 40, 40);
+				100, -Constants.PASSENGER_WIDTH,
+				Constants.WINDOW_HEIGHT - 2 * Constants.GROUND_SIZE,
+				Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
 	}
 	
 	@Override

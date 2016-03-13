@@ -11,4 +11,7 @@ public class Constants {
 	public static final int PASSENGER_HEIGHT = 50;
 	public static final int PASSENGER_IDLE_SPRITE_INDEX = 1;
 	
+	// Tiles
+	public static final int GROUND_SIZE= 50;
+	
 }

@@ -13,11 +13,7 @@ public class SpriteSheet {
 	 * @param The number of the sprite sheet file. E.G. spriteSheetNumber = 1 means loading the
 	 * image spriteSheet1.png. */
 	public SpriteSheet(int spriteSheetNumber) {
-		try {
-			this.spriteSheet = BufferedImageLoader.loadImage("spriteSheet" + spriteSheetNumber + ".png");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.spriteSheet = BufferedImageLoader.loadImage("spriteSheet" + spriteSheetNumber + ".png");
 	}
 	
 	/** Clip a spritesheet in a given region.
