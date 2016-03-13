@@ -1,5 +1,7 @@
 package br.com.os.interfaces;
 
+import java.awt.Point;
+
 /** Tells which methods a semaphore controller must have. */
 public interface SemaphoreController {
 
@@ -58,5 +60,8 @@ public interface SemaphoreController {
 	
 	/** Returns the size of the line */
 	public int getLineSize();
+	
+	/** Returns the exact point of the next available position on the roller coaster. */
+	public Point nextAvailablePositionOnRollerCoaster();
 	
 }

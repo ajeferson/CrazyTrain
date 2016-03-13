@@ -11,11 +11,11 @@ import br.com.os.model.amazing.AmazingSemaphore;
 /** Encapsulates a set of sprites an animates them. */
 public class Animator extends Thread {
 
-	private ArrayList<BufferedImage> spritesRightwards;
-	private ArrayList<BufferedImage> spritesLeftwards;
-	private ArrayList<BufferedImage> spritesUpwards;
-	private ArrayList<BufferedImage> spritesDownwards;
-	private BufferedImage lastSprite;
+	protected ArrayList<BufferedImage> spritesRightwards;
+	protected ArrayList<BufferedImage> spritesLeftwards;
+	protected ArrayList<BufferedImage> spritesUpwards;
+	protected ArrayList<BufferedImage> spritesDownwards;
+	protected BufferedImage lastSprite;
 	private AmazingSemaphore mutex = new AmazingSemaphore(1);
 
 	private boolean playing = false; // Should be volatile?

@@ -32,7 +32,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	private static final int WINDOW_WIDTH = 600;
 	private static final int WINDOW_HEIGHT = 230;
 	private static final int INITIAL_TRAVELLING_TIME = 5;
-	private static final int INITIAL_SEATS = 4;
+	private static final int INITIAL_SEATS = 2;
 
 	private ItemHandler itemHandler;
 
@@ -113,10 +113,10 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		
 		panelSeats.add(panelSeatsTop);
 		
-		this.sliderSeats = new JSlider(4, 20);
+		this.sliderSeats = new JSlider(2, 10);
 		this.sliderSeats.setPaintTicks(true);
-		this.sliderSeats.setMajorTickSpacing(4);
-		this.sliderSeats.setMinorTickSpacing(4);
+		this.sliderSeats.setMajorTickSpacing(2);
+		this.sliderSeats.setMinorTickSpacing(2);
 		this.sliderSeats.setSnapToTicks(true);
 		this.sliderSeats.setPaintLabels(true);
 		this.sliderSeats.addChangeListener(this);

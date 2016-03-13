@@ -1,5 +1,6 @@
 package br.com.os.model;
 
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -133,6 +134,15 @@ public class RollerCoaster extends Animator implements Item {
 		ArrayList<BufferedImage> array = new ArrayList<BufferedImage>();
 		array.add(image);
 		super.build(array, null, null, null, 100, Constants.WINDOW_WIDTH/2 - Constants.ROLLER_COASTER_WIDTH/2, Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT, Constants.ROLLER_COASTER_WIDTH, Constants.ROLLER_COASTER_HEIGHT);
+	}
+	
+	@Override
+	public void draw(Graphics g) {
+		int positionX = Constants.WINDOW_WIDTH/2 - (this.maxSeats/2 * (Constants.ROLLER_COASTER_WIDTH) / 2);
+		int positionY = Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT;
+		for(int i = 0; i < this.maxSeats/2; i++) {
+			g.drawImage(this.spritesRightwards.get(0), positionX + i * Constants.ROLLER_COASTER_WIDTH, positionY, null);
+		}
 	}
 
 }

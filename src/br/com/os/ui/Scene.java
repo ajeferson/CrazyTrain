@@ -2,6 +2,7 @@ package br.com.os.ui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -269,6 +270,11 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	@Override
 	public int getLineSize() {
 		return this.passengers.size();
+	}
+
+	@Override
+	public Point nextAvailablePositionOnRollerCoaster() {
+		return null;
 	}
 
 }
