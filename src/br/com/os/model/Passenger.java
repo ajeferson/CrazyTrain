@@ -239,7 +239,7 @@ public class Passenger extends Thread implements View, Item, Animatable {
 				spriteSheet.getSpritesWithCoordinates(coordinatesUpwards),
 				spriteSheet.getSpritesWithCoordinates(coordinatesDownwards),
 				100, -Constants.PASSENGER_WIDTH,
-				Constants.WINDOW_HEIGHT - 2 * Constants.GROUND_SIZE,
+				Constants.WINDOW_HEIGHT - 2 * Constants.TILE_SIZE,
 				Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
 	}
 	
