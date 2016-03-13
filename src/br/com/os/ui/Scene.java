@@ -3,6 +3,7 @@ package br.com.os.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -14,11 +15,14 @@ import br.com.os.other.Constants;
 public class Scene extends JPanel {
 	
 	private static final long serialVersionUID = 8905347569137169009L;
+	
 	private Passenger passenger = new Passenger(3000, 3000);
+	
 	public Scene() {
 		this.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
 		this.passenger.build();
 		this.passenger.play();
+		this.passenger.move(new Point(500, 0), 5000);
 	}
 	
 	// JPanel override

@@ -1,6 +1,7 @@
 package br.com.os.other;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -10,14 +11,26 @@ public class Animator {
 	private ArrayList<BufferedImage> sprites;
 
 	private boolean playing = false; // Should be volatile?
+	private boolean moving = false;
 	private long previousTime;
+
 	private long interval;
+	private long movingDuration;
+	private double movingPreviousTime;
+	private double movingElapsedTime;
+
 	private int currentSpriteIndex;
-	
+
 	private int x;
 	private int y;
 	private int width;
 	private int height;
+	private int targetX;
+	private int targetY;
+	private int initialX;
+	private int initialY;
+	private int deltaX;
+	private int deltaY;
 
 	/** Builds an animator.
 	 * @param sprites The ArrayList of BufferedImages to animate.
@@ -43,14 +56,26 @@ public class Animator {
 				this.previousTime = time;
 			}
 		}
+		if(this.moving) {
+			this.movingElapsedTime = time - this.movingPreviousTime;
+			if(this.movingElapsedTime < this.movingDuration) {
+				double fraction = this.movingElapsedTime / this.movingDuration;
+				this.x = this.initialX + (int) (this.deltaX * fraction);
+				this.y = this.initialY + (int) (this.deltaY * fraction);
+			} else {
+				this.x = this.targetX;
+				this.y = this.targetY;
+				this.moving = false;
+			}
+		}
 	}
-	
+
 	/** Draws the the current sprite.
 	 * @param g The Graphics in which to draw the current sprite. */
 	private void draw(Graphics g) {
 		g.drawImage(this.sprites.get(this.currentSpriteIndex), this.x, this.y, this.width, this.height, null);
 	}
-	
+
 	/** Updates and draw the current sprite.
 	 * @param time The current time, for testing if the current sprite has to change.
 	 * @param g The Graphics object in which to draw the current sprite. */
@@ -65,8 +90,8 @@ public class Animator {
 		this.previousTime = 0;
 		this.currentSpriteIndex = 0;
 	}
-	
-	
+
+
 	// Getters and setters
 
 	public int getX() {
@@ -99,6 +124,19 @@ public class Animator {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	public void move(Point target, long time) {
+		this.movingDuration = time;
+		this.targetX = (int) target.getX();
+		this.targetY = (int) target.getY();
+		this.initialX = this.x;
+		this.initialY = this.y;
+		this.deltaX = this.targetX - this.initialX;
+		this.deltaY = this.targetY - this.initialY;
+		this.movingPreviousTime = System.currentTimeMillis();
+		this.moving = true;
+
 	}
 
 }

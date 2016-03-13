@@ -231,4 +231,9 @@ public class Passenger extends Thread implements View, Item, Animatable {
 		this.animator.play();
 	}
 
+	@Override
+	public void move(Point target, long time) {
+		this.animator.move(target, time);
+	}
+
 }
