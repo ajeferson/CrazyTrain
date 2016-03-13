@@ -38,6 +38,8 @@ public class Passenger extends Thread implements View, Item {
 	@Override
 	public void run() {
 		
+		this.moveInLine();
+		
 		while(true) {
 			
 			// Waiting for the permission to get in on the train
@@ -176,6 +178,23 @@ public class Passenger extends Thread implements View, Item {
 			fraction = elapsedTime/this.enteringTime;
 			this.view.setLocation(initialX + (int) (deltaX * fraction),
 					initialY + (int) (deltaY * fraction));
+		}
+	}
+	
+	/** Moves this passenger on line leading to the roller coaster. */
+	private void moveInLine() {
+		int count = this.controller.getLineSize() - 3;
+		int factor = this.controller.getLineSize() - 1;
+		if(count < 0) {
+			count = 0;
+		} else {
+			factor = -1;
+		}
+		int posX = Constants.WINDOW_WIDTH - (count + 1) * (10 + Constants.PASSENGER_WIDTH);
+		this.moveTo(new Point(posX, (int) this.view.getLocation().getY()));
+		if(factor >= 0) {
+			int posY = (int) (this.view.getLocation().getY() - (2 - factor) * (10 + Constants.PASSENGER_HEIGHT));
+			this.moveTo(new Point((int) this.view.getLocation().getX(), posY));
 		}
 	}
 

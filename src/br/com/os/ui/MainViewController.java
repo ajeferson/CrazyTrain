@@ -3,6 +3,7 @@ package br.com.os.ui;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -247,6 +248,11 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	@Override
 	public void decrementNumberOfPassengersOnRollerCoaster() {
 		this.rollerCoaster.decrementOccupiedSeats();
+	}
+	
+	@Override
+	public int getLineSize() {
+		return this.passengers.size();
 	}
 
 }

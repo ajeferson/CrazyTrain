@@ -56,4 +56,7 @@ public interface SemaphoreController {
 	/** Decrements the number of passengers on the roller coaster by 1. */
 	public void decrementNumberOfPassengersOnRollerCoaster();
 	
+	/** Returns the size of the line */
+	public int getLineSize();
+	
 }
