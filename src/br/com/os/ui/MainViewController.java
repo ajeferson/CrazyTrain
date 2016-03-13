@@ -2,6 +2,7 @@ package br.com.os.ui;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import br.com.os.model.Passenger;
 import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingJMenuItem;
 import br.com.os.model.amazing.AmazingSemaphore;
+import br.com.os.other.Constants;
 
 /** Represents the main window of the program. It contains the landscape and the menu items to do things. */
 public class MainViewController extends JFrame implements ViewController, ItemHandler, SemaphoreController {
@@ -35,10 +37,6 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	// Train and passengers
 	private RollerCoaster rollerCoaster;
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
-
-	// Constants
-	public static final int WINDOW_WIDTH = 500;
-	public static final int WINDOW_HEIGHT = 500;
 
 
 	// View attrs
@@ -136,12 +134,13 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 
 	@Override
 	public void build(ItemHandler itemHandler) {
-		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.container = this.getContentPane();
 		this.container.setLayout(null);
 		this.addComponents();
+		this.container.setPreferredSize(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+		this.pack();
 	}
 
 	@Override

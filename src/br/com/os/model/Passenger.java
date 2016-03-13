@@ -1,13 +1,17 @@
 package br.com.os.model;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Point;
 
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
 import br.com.os.interfaces.View;
+import br.com.os.other.Constants;
 
 /** This class represents a passenger that can take a trip on the train. */
 public class Passenger extends Thread implements View, Item {
@@ -22,10 +26,6 @@ public class Passenger extends Thread implements View, Item {
 	
 	// View attributes
 	private JLabel view;
-	
-	// Constants
-	private static final int PASSENGER_WIDTH = 50;
-	private static final int PASSENGER_HEIGHT = 50;
 
 	public Passenger(int enteringTime, int leavingTime) {
 		super("P" + (++lastId));
@@ -37,7 +37,7 @@ public class Passenger extends Thread implements View, Item {
 
 	@Override
 	public void run() {
-
+		
 		while(true) {
 			
 			// Waiting for the permission to get in on the train
@@ -153,15 +153,30 @@ public class Passenger extends Thread implements View, Item {
 	public Component asView() {
 		if(this.view == null) {
 			this.view = new JLabel(this.id + "");
-			this.view.setSize(PASSENGER_WIDTH, PASSENGER_HEIGHT);
+			this.view.setSize(Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
+			this.view.setOpaque(true);
+			this.view.setBackground(Color.ORANGE);
+			this.view.setFont(new Font("Verdana", Font.BOLD, 30));
+			this.view.setHorizontalAlignment(SwingConstants.CENTER);
+			this.view.setLocation(-Constants.PASSENGER_WIDTH, Constants.WINDOW_HEIGHT - 2 * (Constants.PASSENGER_HEIGHT));
 		}
 		return view;
 	}
 
-
 	@Override
 	public void moveTo(Point point) {
-		this.view.setLocation(point);
+		int initialY = this.view.getY();
+		int initialX = this.view.getX();
+		int deltaX = (int) (point.getX() - initialX);
+		int deltaY = (int) (point.getY() - initialY);
+		double elapsedTime = 0.0;
+		double startTime = System.currentTimeMillis();
+		double fraction;
+		while((elapsedTime = System.currentTimeMillis() - startTime) < this.enteringTime) {
+			fraction = elapsedTime/this.enteringTime;
+			this.view.setLocation(initialX + (int) (deltaX * fraction),
+					initialY + (int) (deltaY * fraction));
+		}
 	}
 
 }
