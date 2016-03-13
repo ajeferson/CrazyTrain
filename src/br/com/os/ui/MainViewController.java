@@ -11,6 +11,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.ItemHandler;
@@ -114,12 +115,12 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 		this.addComponent(this.rollerCoaster.asView());
 		this.rollerCoaster.start();
 	}
-	
+
 	/** Adds the passenger to the array and make it start. */
 	private void handleCreationOfPassenger(Passenger passenger) {
 		passenger.setController(this);
 		this.passengers.add(passenger);
-		this.addComponent(passenger.asView());
+		//		this.addComponent(passenger.asView());
 		passenger.start();
 	}
 
@@ -167,9 +168,15 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	}
 
 	public static void main(String[] args) {
-		MainViewController main = new MainViewController();
-		main.build(null);
-		main.open();
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				MainViewController main = new MainViewController();
+				main.build(null);
+				main.open();
+			}
+		});
 	}
 
 	@Override
@@ -246,7 +253,7 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	public void decrementNumberOfPassengersOnRollerCoaster() {
 		this.rollerCoaster.decrementOccupiedSeats();
 	}
-	
+
 	@Override
 	public int getLineSize() {
 		return this.passengers.size();

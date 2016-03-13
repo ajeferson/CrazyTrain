@@ -6,21 +6,23 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import br.com.os.enums.Direction;
+import br.com.os.model.amazing.AmazingSemaphore;
 
 /** Encapsulates a set of sprites an animates them. */
-public class Animator {
+public class Animator extends Thread {
 
 	private ArrayList<BufferedImage> spritesRightwards;
 	private ArrayList<BufferedImage> spritesLeftwards;
 	private ArrayList<BufferedImage> spritesUpwards;
 	private ArrayList<BufferedImage> spritesDownwards;
 	private BufferedImage lastSprite;
+	private AmazingSemaphore mutex = new AmazingSemaphore(1);
 
 	private boolean playing = false; // Should be volatile?
 	private boolean moving = false;
 	private long previousTime;
 
-	private long interval;
+	protected long interval;
 	private long movingDuration;
 	private double movingPreviousTime;
 	private double movingElapsedTime;
@@ -39,6 +41,9 @@ public class Animator {
 	private int deltaY;
 
 	private Direction direction = Direction.NONE;
+	
+	public Animator() {
+	}
 
 	/** Builds an animator.
 	 * @param spritesRightwards The sprites for when it's moving rightwards.
@@ -50,7 +55,7 @@ public class Animator {
 	 * @param y The initial y position.
 	 * @param width The width of the animator.
 	 * @param height The height of the animator. */
-	public Animator(ArrayList<BufferedImage> spritesRightwards,
+	public void build(ArrayList<BufferedImage> spritesRightwards,
 			ArrayList<BufferedImage> spritesLeftwards,
 			ArrayList<BufferedImage> spritesUpwards,
 			ArrayList<BufferedImage> spritesDownwards,
@@ -68,7 +73,8 @@ public class Animator {
 	}
 
 	/** Updates the animation. It changes the current sprite if the interval has passed. */
-	private void update(long time) {
+	public void update(long time) {
+		this.mutex.down();
 		if(this.playing) {
 			if(this.direction != Direction.NONE && time - this.previousTime >= this.interval) {
 				this.currentSpriteIndex = (this.currentSpriteIndex + 1 < this.spritesRightwards.size()) ? (this.currentSpriteIndex + 1) : 0;
@@ -89,12 +95,15 @@ public class Animator {
 				this.direction = Direction.NONE;
 			}
 		}
+		this.mutex.up();
 	}
 
 	/** Draws the the current sprite.
 	 * @param g The Graphics in which to draw the current sprite. */
-	private void draw(Graphics g) {
+	public void draw(Graphics g) {
+		this.mutex.down();
 		g.drawImage(this.getSprite(), this.x, this.y, this.width, this.height, null);
+		this.mutex.up();
 	}
 
 	/** Updates and draw the current sprite.

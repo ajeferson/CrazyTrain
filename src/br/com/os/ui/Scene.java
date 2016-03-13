@@ -1,14 +1,11 @@
 package br.com.os.ui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import br.com.os.enums.Direction;
@@ -21,15 +18,17 @@ public class Scene extends JPanel {
 	
 	private static final long serialVersionUID = 8905347569137169009L;
 	
-	private Passenger passenger = new Passenger(3000, 3000);
+//	private Passenger passenger = new Passenger();
 	
 	private BufferedImage background;
 	private ArrayList<BufferedImage> ground;
 	
 	public Scene() {
-		this.passenger.build();
-		this.passenger.play();
-		this.passenger.move(new Point(Constants.WINDOW_WIDTH - 5 * Constants.TILE_SIZE, 600), Direction.RIGHTWARDS, 5000);
+//		this.passenger.build();
+//		this.passenger.play();
+//		this.passenger.start();
+//		this.passenger.move(new Point(Constants.WINDOW_WIDTH - 5 * Constants.TILE_SIZE, this.passenger.getY()),
+//				Direction.RIGHTWARDS, 3000);
 	}
 	
 	// JPanel override
@@ -44,8 +43,8 @@ public class Scene extends JPanel {
 		super.paintComponent(g);
 		this.drawBackground(g);
 //		this.drawGround(g);
-		this.passenger.updateAndDraw(System.currentTimeMillis(), g);
-		this.repaint();
+//		this.passenger.draw(g);
+//		this.repaint();
 	}
 	
 	private void drawBackground(Graphics g) {
@@ -55,6 +54,7 @@ public class Scene extends JPanel {
 		g.drawImage(this.background, 0, 0, this.getWidth(), this.getHeight(), null);
 	}
 	
+	@SuppressWarnings("unused")
 	private void drawGround(Graphics g) {
 		if(this.ground == null) {
 			this.ground = new ArrayList<BufferedImage>();

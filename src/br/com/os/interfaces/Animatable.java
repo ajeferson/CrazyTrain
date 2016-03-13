@@ -11,6 +11,10 @@ public interface Animatable {
 	/** Must set the sprites and interval for the animation. */
 	public void build();
 	
+	/** Updates the variables to animate.
+	 * @param time The current time. */
+	public void update(long time);
+	
 	/** Updates and draw the current sprite.
 	 * @param time The current time, for testing if the current sprite has to change.
 	 * @param g The Graphics object in which to draw the current sprite. */
