@@ -148,9 +148,7 @@ public class PassengerViewController extends JFrame implements ViewController, A
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.intemHandler.didProduceItem(
-				new Passenger(this.sliderEntering.getValue() * 1000,
-						this.sliderLeaving.getValue() * 1000));
+		this.intemHandler.didProduceItem(new Passenger());
 	}
 
 	@Override

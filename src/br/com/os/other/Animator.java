@@ -20,6 +20,13 @@ public class Animator extends Thread {
 
 	private boolean playing = false; // Should be volatile?
 	private boolean moving = false;
+	public boolean isMoving() {
+		this.mutex.down();
+		boolean m = this.moving;
+		this.mutex.up();
+		return m;
+	}
+
 	private long previousTime;
 
 	protected long interval;

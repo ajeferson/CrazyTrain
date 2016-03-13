@@ -23,15 +23,9 @@ import br.com.os.model.amazing.AmazingJMenuItem;
 import br.com.os.model.amazing.AmazingSemaphore;
 
 /** Represents the main window of the program. It contains the landscape and the menu items to do things. */
-public class MainViewController extends JFrame implements ViewController, ItemHandler, SemaphoreController {
+public class MainViewController extends JFrame implements ViewController {
 
 	private static final long serialVersionUID = -598156911230782190L;
-
-	// Semaphores
-	private AmazingSemaphore semaphoreLine = new AmazingSemaphore(0);
-	private AmazingSemaphore semaphoreRollerCoaster = new AmazingSemaphore(0);
-	private AmazingSemaphore semaphorePassengers = new AmazingSemaphore(0);
-	private AmazingSemaphore semaphoreMutex = new AmazingSemaphore(1);
 
 	// Train and passengers
 	private RollerCoaster rollerCoaster;
@@ -58,12 +52,12 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 		JMenu subMenuNew = new JMenu("Novo");
 
 		// New Roller Coaster item
-		AmazingJMenuItem itemNewRollerCoaster = new AmazingJMenuItem("Montanha Russa", "RollerCoasterViewController", this);
+		AmazingJMenuItem itemNewRollerCoaster = new AmazingJMenuItem("Montanha Russa", "RollerCoasterViewController", this.scene);
 		itemNewRollerCoaster.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
 		subMenuNew.add(itemNewRollerCoaster);
 
 		// New Passenger item
-		JMenuItem itemNewPassenger = new AmazingJMenuItem("Passageiro", "PassengerViewController", this);
+		JMenuItem itemNewPassenger = new AmazingJMenuItem("Passageiro", "PassengerViewController", this.scene);
 		itemNewPassenger.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
 		subMenuNew.add(itemNewPassenger);
 
@@ -111,17 +105,9 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 	/** Adds a roller coaster to the canvas and sets it as the current roller coaster. */
 	private void handleCreationOfRollerCoaster(RollerCoaster rollerCoaster) {
 		this.rollerCoaster = rollerCoaster;
-		this.rollerCoaster.setController(this);
+//		this.rollerCoaster.setController(this);
 		this.addComponent(this.rollerCoaster.asView());
 		this.rollerCoaster.start();
-	}
-
-	/** Adds the passenger to the array and make it start. */
-	private void handleCreationOfPassenger(Passenger passenger) {
-		passenger.setController(this);
-		this.passengers.add(passenger);
-		//		this.addComponent(passenger.asView());
-		passenger.start();
 	}
 
 	/** Adds a component to the main container and repaints the JFrame. */
@@ -156,17 +142,6 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 		return this;
 	}
 
-	// ItemHandler implement
-
-	@Override
-	public void didProduceItem(Item item) {
-		if(item instanceof RollerCoaster) {
-			this.handleCreationOfRollerCoaster((RollerCoaster) item);
-		} else if(item instanceof Passenger) {
-			this.handleCreationOfPassenger((Passenger) item);
-		}
-	}
-
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -177,86 +152,6 @@ public class MainViewController extends JFrame implements ViewController, ItemHa
 				main.open();
 			}
 		});
-	}
-
-	@Override
-	public void upLine(int permits) {
-		this.semaphoreLine.up(permits);
-	}
-
-	@Override
-	public void upLine() {
-		this.semaphoreLine.up();
-	}
-
-	@Override
-	public void downLine() {
-		this.semaphoreLine.down();
-	}
-
-	@Override
-	public void upPassengers(int permits) {
-		this.semaphorePassengers.up(permits);
-	}
-
-	@Override
-	public void upPassengers() {
-		this.semaphorePassengers.up();
-	}
-
-	@Override
-	public void downPassengers() {
-		this.semaphorePassengers.down();
-	}
-
-	@Override
-	public void upRollerCoaster() {
-		this.semaphoreRollerCoaster.up();
-	}
-
-	@Override
-	public void downRollerCoaster() {
-		this.semaphoreRollerCoaster.down();
-	}
-
-	@Override
-	public void upMutex() {
-		this.semaphoreMutex.up();
-	}
-
-	@Override
-	public void downMutex() {
-		this.semaphoreMutex.down();
-	}
-
-	@Override
-	public boolean isRollerCoasterFull() {
-		return this.rollerCoaster.isFull();
-	}
-
-	@Override
-	public boolean isRollerCoasterMoving() {
-		return this.rollerCoaster.isMoving();
-	}
-
-	@Override
-	public boolean isRollerCoasterEmpty() {
-		return this.rollerCoaster.isEmpty();
-	}
-
-	@Override
-	public void incrementNumberOfPassengersOnRollerCoaster() {
-		this.rollerCoaster.incrementOccupiedSeats();
-	}
-
-	@Override
-	public void decrementNumberOfPassengersOnRollerCoaster() {
-		this.rollerCoaster.decrementOccupiedSeats();
-	}
-
-	@Override
-	public int getLineSize() {
-		return this.passengers.size();
 	}
 
 }

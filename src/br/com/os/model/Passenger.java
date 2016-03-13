@@ -19,8 +19,17 @@ public class Passenger extends Animator implements Item {
 	private int leavingTime;
 	@SuppressWarnings("unused")
 	private boolean shouldEnjoyLandscape = false;
+	private boolean shouldBeOnTheLine = true;
+	private int position = 0;
 
-	@SuppressWarnings("unused")
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
 	private SemaphoreController controller;
 
 	public Passenger() {
@@ -34,7 +43,7 @@ public class Passenger extends Animator implements Item {
 		
 		while(true) {
 			
-			this.update(System.currentTimeMillis());
+			this.stayOnTheLine();
 			
 //			// Waiting for the permission to get in on the train
 //			this.controller.downLine();
@@ -88,6 +97,16 @@ public class Passenger extends Animator implements Item {
 			
 		}
 
+	}
+	
+	private void stayOnTheLine() {
+		while(this.shouldBeOnTheLine) {
+			this.move(new Point(Constants.WINDOW_WIDTH - (4 + this.position) * Constants.TILE_SIZE,
+					this.getY()),
+					Direction.RIGHTWARDS, Constants.PASSENGER_DEFAULT_MOVE_TIME);
+			this.update();
+			this.controller.downLine();
+		}
 	}
 	
 	@SuppressWarnings("unused")
@@ -178,6 +197,12 @@ public class Passenger extends Animator implements Item {
 				80, -Constants.TILE_SIZE, Constants.WINDOW_HEIGHT - 2 * Constants.TILE_SIZE,
 				Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
 		
+	}
+	
+	private void update() {
+		while(this.isMoving()) {
+			super.update(System.currentTimeMillis());
+		}
 	}
 
 }
