@@ -3,6 +3,8 @@ package br.com.os.interfaces;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import br.com.os.enums.Direction;
+
 /** Represents an element that can be animated. */
 public interface Animatable {
 	
@@ -19,7 +21,8 @@ public interface Animatable {
 	
 	/** Moves the animatable.
 	 * @param target The target point to reach.
+	 * @param direction The direction the animatable should do.
 	 * @param time The time the animatable should take to reach the target point. */
-	public void move(Point target, long time);
+	public void move(Point target, Direction direction, long time);
 	
 }

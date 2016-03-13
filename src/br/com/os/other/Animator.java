@@ -5,10 +5,16 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import br.com.os.enums.Direction;
+
 /** Encapsulates a set of sprites an animates them. */
 public class Animator {
 
-	private ArrayList<BufferedImage> sprites;
+	private ArrayList<BufferedImage> spritesRightwards;
+	private ArrayList<BufferedImage> spritesLeftwards;
+	private ArrayList<BufferedImage> spritesUpwards;
+	private ArrayList<BufferedImage> spritesDownwards;
+	private BufferedImage lastSprite;
 
 	private boolean playing = false; // Should be volatile?
 	private boolean moving = false;
@@ -32,15 +38,28 @@ public class Animator {
 	private int deltaX;
 	private int deltaY;
 
+	private Direction direction = Direction.NONE;
+
 	/** Builds an animator.
-	 * @param sprites The ArrayList of BufferedImages to animate.
+	 * @param spritesRightwards The sprites for when it's moving rightwards.
+	 * @param spritesLeftwards The sprites for when it's moving leftwards.
+	 * @param spritesUpwards The sprites for when it's moving upwards.
+	 * @param spritesDownwards The sprites for when it's moving downwards.
 	 * @param interval The time interval between each sprite.
 	 * @param x The initial x position.
 	 * @param y The initial y position.
 	 * @param width The width of the animator.
 	 * @param height The height of the animator. */
-	public Animator(ArrayList<BufferedImage> sprites, long interval, int x, int y, int width, int height) {
-		this.sprites = sprites;
+	public Animator(ArrayList<BufferedImage> spritesRightwards,
+			ArrayList<BufferedImage> spritesLeftwards,
+			ArrayList<BufferedImage> spritesUpwards,
+			ArrayList<BufferedImage> spritesDownwards,
+			long interval, int x, int y, int width, int height) {
+		this.spritesRightwards = spritesRightwards;
+		this.spritesLeftwards = spritesLeftwards;
+		this.spritesUpwards = spritesUpwards;
+		this.spritesDownwards = spritesDownwards;
+		this.lastSprite = spritesRightwards.get(0);
 		this.interval = interval;
 		this.x = x;
 		this.y = y;
@@ -51,8 +70,8 @@ public class Animator {
 	/** Updates the animation. It changes the current sprite if the interval has passed. */
 	private void update(long time) {
 		if(this.playing) {
-			if(time - this.previousTime >= this.interval) {
-				this.currentSpriteIndex = (this.currentSpriteIndex + 1 < this.sprites.size()) ? (this.currentSpriteIndex + 1) : 0;
+			if(this.direction != Direction.NONE && time - this.previousTime >= this.interval) {
+				this.currentSpriteIndex = (this.currentSpriteIndex + 1 < this.spritesRightwards.size()) ? (this.currentSpriteIndex + 1) : 0;
 				this.previousTime = time;
 			}
 		}
@@ -66,6 +85,8 @@ public class Animator {
 				this.x = this.targetX;
 				this.y = this.targetY;
 				this.moving = false;
+				this.lastSprite = this.getIdleSprite();
+				this.direction = Direction.NONE;
 			}
 		}
 	}
@@ -73,7 +94,7 @@ public class Animator {
 	/** Draws the the current sprite.
 	 * @param g The Graphics in which to draw the current sprite. */
 	private void draw(Graphics g) {
-		g.drawImage(this.sprites.get(this.currentSpriteIndex), this.x, this.y, this.width, this.height, null);
+		g.drawImage(this.getSprite(), this.x, this.y, this.width, this.height, null);
 	}
 
 	/** Updates and draw the current sprite.
@@ -91,6 +112,37 @@ public class Animator {
 		this.currentSpriteIndex = 0;
 	}
 
+	/** Chooses the appropriate sprite according to the current direction. */
+	private BufferedImage getSprite() {
+		switch (this.direction) {
+		case RIGHTWARDS:
+			return this.spritesRightwards.get(this.currentSpriteIndex);
+		case LEFTWARDS:
+			return this.spritesLeftwards.get(this.currentSpriteIndex);
+		case UPWARDS:
+			return this.spritesUpwards.get(this.currentSpriteIndex);
+		case DOWNWARDS:
+			return this.spritesDownwards.get(this.currentSpriteIndex);
+		default:
+			return this.lastSprite;
+		}
+	}
+
+	/** Returns the idle sprite according to the direction. */
+	private BufferedImage getIdleSprite() {
+		switch(this.direction) {
+		case RIGHTWARDS:
+			return this.spritesRightwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
+		case LEFTWARDS:
+			return this.spritesLeftwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
+		case UPWARDS:
+			return this.spritesUpwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
+		case DOWNWARDS:
+			return this.spritesDownwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
+		default:
+			return this.spritesRightwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
+		}
+	}
 
 	// Getters and setters
 
@@ -126,7 +178,7 @@ public class Animator {
 		this.height = height;
 	}
 
-	public void move(Point target, long time) {
+	public void move(Point target, Direction direction, long time) {
 		this.movingDuration = time;
 		this.targetX = (int) target.getX();
 		this.targetY = (int) target.getY();
@@ -134,6 +186,7 @@ public class Animator {
 		this.initialY = this.y;
 		this.deltaX = this.targetX - this.initialX;
 		this.deltaY = this.targetY - this.initialY;
+		this.direction = direction;
 		this.movingPreviousTime = System.currentTimeMillis();
 		this.moving = true;
 

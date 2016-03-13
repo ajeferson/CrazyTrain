@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import br.com.os.enums.Direction;
 import br.com.os.interfaces.Animatable;
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
@@ -212,12 +213,31 @@ public class Passenger extends Thread implements View, Item, Animatable {
 	@Override
 	public void build() {
 		SpriteSheet spriteSheet = new SpriteSheet(1);
-		SpriteSheetCooordinate[] coordinates = {
-				new SpriteSheetCooordinate(4, 66, 25, 31),
-				new SpriteSheetCooordinate(36, 66, 25, 32),
-				new SpriteSheetCooordinate(68, 66, 25, 32)
+		SpriteSheetCooordinate[] coordinatesRightwards = {
+				new SpriteSheetCooordinate(4, 64, 25, 32),
+				new SpriteSheetCooordinate(36, 64, 25, 32),
+				new SpriteSheetCooordinate(68, 64, 25, 32)
 		};
-		this.animator = new Animator(spriteSheet.getSpritesWithCoordinates(coordinates), 200, 100, 100, 40, 40);
+		SpriteSheetCooordinate[] coordinatesLeftwards = {
+				new SpriteSheetCooordinate(2, 32, 27, 32),
+				new SpriteSheetCooordinate(34, 32, 27, 32),
+				new SpriteSheetCooordinate(66, 32, 27, 32)
+		};
+		SpriteSheetCooordinate[] coordinatesUpwards = {
+				new SpriteSheetCooordinate(2, 96, 26, 32),
+				new SpriteSheetCooordinate(34, 96, 26, 32),
+				new SpriteSheetCooordinate(66, 96, 25, 32)
+		};
+		SpriteSheetCooordinate[] coordinatesDownwards = {
+				new SpriteSheetCooordinate(3, 0, 28, 32),
+				new SpriteSheetCooordinate(34, 0, 28, 32),
+				new SpriteSheetCooordinate(67, 0, 28, 32)
+		};
+		this.animator = new Animator(spriteSheet.getSpritesWithCoordinates(coordinatesRightwards),
+				spriteSheet.getSpritesWithCoordinates(coordinatesLeftwards),
+				spriteSheet.getSpritesWithCoordinates(coordinatesUpwards),
+				spriteSheet.getSpritesWithCoordinates(coordinatesDownwards),
+				200, 100, 100, 40, 40);
 	}
 	
 	@Override
@@ -232,8 +252,8 @@ public class Passenger extends Thread implements View, Item, Animatable {
 	}
 
 	@Override
-	public void move(Point target, long time) {
-		this.animator.move(target, time);
+	public void move(Point target, Direction direction, long time) {
+		this.animator.move(target, direction, time);
 	}
 
 }

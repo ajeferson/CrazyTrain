@@ -8,6 +8,7 @@ import java.awt.Point;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import br.com.os.enums.Direction;
 import br.com.os.model.Passenger;
 import br.com.os.other.Constants;
 
@@ -22,7 +23,7 @@ public class Scene extends JPanel {
 		this.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
 		this.passenger.build();
 		this.passenger.play();
-		this.passenger.move(new Point(500, 0), 5000);
+		this.passenger.move(new Point(500, 0), Direction.RIGHTWARDS, 5000);
 	}
 	
 	// JPanel override
