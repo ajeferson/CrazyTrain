@@ -1,22 +1,19 @@
 package br.com.os.model;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Point;
-import java.lang.reflect.InvocationTargetException;
 
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-
+import br.com.os.interfaces.Animatable;
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
 import br.com.os.interfaces.View;
-import br.com.os.other.Constants;
+import br.com.os.other.Animator;
+import br.com.os.other.SpriteSheet;
+import br.com.os.other.SpriteSheetCooordinate;
 
 /** This class represents a passenger that can take a trip on the train. */
-public class Passenger extends Thread implements View, Item {
+public class Passenger extends Thread implements View, Item, Animatable {
 
 	private static int lastId = 0;
 	private final int id;
@@ -27,7 +24,7 @@ public class Passenger extends Thread implements View, Item {
 	private SemaphoreController controller;
 	
 	// View attributes
-	private JLabel view;
+	private Animator animator;
 
 	public Passenger(int enteringTime, int leavingTime) {
 		super("P" + (++lastId));
@@ -155,57 +152,83 @@ public class Passenger extends Thread implements View, Item {
 	
 	@Override
 	public Component asView() {
-		if(this.view == null) {
-			this.view = new JLabel(this.id + "");
-			this.view.setSize(Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
-			this.view.setOpaque(true);
-			this.view.setBackground(Color.ORANGE);
-			this.view.setFont(new Font("Verdana", Font.BOLD, 30));
-			this.view.setHorizontalAlignment(SwingConstants.CENTER);
-			this.view.setLocation(-Constants.PASSENGER_WIDTH, Constants.WINDOW_HEIGHT - 2 * (Constants.PASSENGER_HEIGHT));
-		}
-		return view;
+//		if(this.view == null) {
+//			this.view = new JLabel(this.id + "");
+//			this.view.setSize(Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
+//			this.view.setOpaque(true);
+//			this.view.setBackground(Color.ORANGE);
+//			this.view.setFont(new Font("Verdana", Font.BOLD, 30));
+//			this.view.setHorizontalAlignment(SwingConstants.CENTER);
+//			this.view.setLocation(-Constants.PASSENGER_WIDTH, Constants.WINDOW_HEIGHT - 2 * (Constants.PASSENGER_HEIGHT));
+//		}
+//		return view;
+		return null;
 	}
 
 	@Override
 	public void moveTo(Point point) {
-		int initialY = this.view.getY();
-		int initialX = this.view.getX();
-		int deltaX = (int) (point.getX() - initialX);
-		int deltaY = (int) (point.getY() - initialY);
-		double elapsedTime = 0.0;
-		double startTime = System.currentTimeMillis();
-		while((elapsedTime = System.currentTimeMillis() - startTime) < this.enteringTime) {
-			final double fraction = elapsedTime/this.enteringTime;
-			try {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					@Override
-					public void run() {
-						view.setLocation(initialX + (int) (deltaX * fraction),
-								initialY + (int) (deltaY * fraction));
-					}
-				});
-			} catch (InvocationTargetException | InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+//		int initialY = this.view.getY();
+//		int initialX = this.view.getX();
+//		int deltaX = (int) (point.getX() - initialX);
+//		int deltaY = (int) (point.getY() - initialY);
+//		double elapsedTime = 0.0;
+//		double startTime = System.currentTimeMillis();
+//		while((elapsedTime = System.currentTimeMillis() - startTime) < this.enteringTime) {
+//			final double fraction = elapsedTime/this.enteringTime;
+//			try {
+//				SwingUtilities.invokeAndWait(new Runnable() {
+//					@Override
+//					public void run() {
+//						view.setLocation(initialX + (int) (deltaX * fraction),
+//								initialY + (int) (deltaY * fraction));
+//					}
+//				});
+//			} catch (InvocationTargetException | InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
 	/** Moves this passenger on line leading to the roller coaster. */
 	private void moveInLine() {
-		int count = this.controller.getLineSize() - 3;
-		int factor = this.controller.getLineSize() - 1;
-		if(count < 0) {
-			count = 0;
-		} else {
-			factor = -1;
-		}
-		int posX = Constants.WINDOW_WIDTH - (count + 1) * (10 + Constants.PASSENGER_WIDTH);
-		this.moveTo(new Point(posX, (int) this.view.getLocation().getY()));
-		if(factor >= 0) {
-			int posY = (int) (this.view.getLocation().getY() - (2 - factor) * (10 + Constants.PASSENGER_HEIGHT));
-			this.moveTo(new Point((int) this.view.getLocation().getX(), posY));
-		}
+//		int count = this.controller.getLineSize() - 3;
+//		int factor = this.controller.getLineSize() - 1;
+//		if(count < 0) {
+//			count = 0;
+//		} else {
+//			factor = -1;
+//		}
+//		int posX = Constants.WINDOW_WIDTH - (count + 1) * (10 + Constants.PASSENGER_WIDTH);
+//		this.moveTo(new Point(posX, (int) this.view.getLocation().getY()));
+//		if(factor >= 0) {
+//			int posY = (int) (this.view.getLocation().getY() - (2 - factor) * (10 + Constants.PASSENGER_HEIGHT));
+//			this.moveTo(new Point((int) this.view.getLocation().getX(), posY));
+//		}
+	}
+
+
+	// Animatable implement
+	
+	@Override
+	public void build() {
+		SpriteSheet spriteSheet = new SpriteSheet(1);
+		SpriteSheetCooordinate[] coordinates = {
+				new SpriteSheetCooordinate(4, 66, 25, 31),
+				new SpriteSheetCooordinate(36, 66, 25, 32),
+				new SpriteSheetCooordinate(68, 66, 25, 32)
+		};
+		this.animator = new Animator(spriteSheet.getSpritesWithCoordinates(coordinates), 200, 100, 100, 40, 40);
+	}
+	
+	@Override
+	public void updateAndDraw(long time, Graphics g) {
+		this.animator.updateAndDraw(time, g);
+	}
+
+
+	@Override
+	public void play() {
+		this.animator.play();
 	}
 
 }

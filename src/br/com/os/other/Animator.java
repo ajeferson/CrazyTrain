@@ -9,24 +9,37 @@ public class Animator {
 
 	private ArrayList<BufferedImage> sprites;
 
-	private volatile boolean playing = false;
+	private boolean playing = false; // Should be volatile?
 	private long previousTime;
 	private long interval;
-	private int currentSprite;
+	private int currentSpriteIndex;
+	
+	private int x;
+	private int y;
+	private int width;
+	private int height;
 
 	/** Builds an animator.
 	 * @param sprites The ArrayList of BufferedImages to animate.
-	 * @param interval The time interval between each sprite. */
-	public Animator(ArrayList<BufferedImage> sprites, long interval) {
+	 * @param interval The time interval between each sprite.
+	 * @param x The initial x position.
+	 * @param y The initial y position.
+	 * @param width The width of the animator.
+	 * @param height The height of the animator. */
+	public Animator(ArrayList<BufferedImage> sprites, long interval, int x, int y, int width, int height) {
 		this.sprites = sprites;
 		this.interval = interval;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 
 	/** Updates the animation. It changes the current sprite if the interval has passed. */
 	private void update(long time) {
 		if(this.playing) {
 			if(time - this.previousTime >= this.interval) {
-				this.currentSprite = (this.currentSprite + 1 < this.sprites.size()) ? (this.currentSprite + 1) : 0;
+				this.currentSpriteIndex = (this.currentSpriteIndex + 1 < this.sprites.size()) ? (this.currentSpriteIndex + 1) : 0;
 				this.previousTime = time;
 			}
 		}
@@ -35,7 +48,7 @@ public class Animator {
 	/** Draws the the current sprite.
 	 * @param g The Graphics in which to draw the current sprite. */
 	private void draw(Graphics g) {
-		g.drawImage(this.getCurrentSprite(), 50, 50, 40, 40, null);
+		g.drawImage(this.sprites.get(this.currentSpriteIndex), this.x, this.y, this.width, this.height, null);
 	}
 	
 	/** Updates and draw the current sprite.
@@ -50,13 +63,42 @@ public class Animator {
 	public void play() {
 		this.playing = true;
 		this.previousTime = 0;
-		this.currentSprite = 0;
+		this.currentSpriteIndex = 0;
 	}
 	
-	/** 
-	 * @return The BufferedImage that represents the current sprite. */
-	public BufferedImage getCurrentSprite() {
-		return this.sprites.get(this.currentSprite);
+	
+	// Getters and setters
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 }

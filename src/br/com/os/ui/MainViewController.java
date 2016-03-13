@@ -1,9 +1,7 @@
 package br.com.os.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -22,7 +20,6 @@ import br.com.os.model.Passenger;
 import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingJMenuItem;
 import br.com.os.model.amazing.AmazingSemaphore;
-import br.com.os.other.Constants;
 
 /** Represents the main window of the program. It contains the landscape and the menu items to do things. */
 public class MainViewController extends JFrame implements ViewController, ItemHandler, SemaphoreController {
