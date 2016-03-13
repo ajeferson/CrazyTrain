@@ -33,6 +33,7 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	private BufferedImage background;
 	private ArrayList<BufferedImage> ground;
 
+	private RollerCoaster rollerCoaster;
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
 	private Timer timer;
@@ -54,12 +55,18 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		super.paintComponent(g);
 		this.drawBackground(g);
 		this.drawPassengers(g);
-		//		this.repaint();
+		this.drawRollerCoaster(g);
 	}
 
 	private void drawPassengers(Graphics g) {
 		for(Passenger passenger : this.passengers) {
 			passenger.draw(g);
+		}
+	}
+	
+	private void drawRollerCoaster(Graphics g) {
+		if(this.rollerCoaster != null) {
+			this.rollerCoaster.draw(g);
 		}
 	}
 
@@ -148,12 +155,21 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	@Override
 	public void didProduceItem(Item item) {
 		if(item instanceof RollerCoaster) {
-
+			this.handleCreationOfRollerCoaster((RollerCoaster) item);
 		} else if(item instanceof Passenger) {
 			this.handleCreationOfPassenger((Passenger) item);
 		}
 	}
 
+	/** Adds a roller coaster to the canvas and sets it as the current roller coaster. */
+	private void handleCreationOfRollerCoaster(RollerCoaster rollerCoaster) {
+		this.rollerCoaster = rollerCoaster;
+		this.rollerCoaster.setController(this);
+		this.rollerCoaster.build();
+		this.rollerCoaster.play();
+		this.rollerCoaster.start();
+	}
+	
 	/** Adds the passenger to the array and make it start. */
 	private void handleCreationOfPassenger(Passenger passenger) {
 		this.passengers.add(passenger);

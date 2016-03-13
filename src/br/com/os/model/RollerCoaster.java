@@ -1,26 +1,23 @@
 package br.com.os.model;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Point;
-
-import javax.swing.JPanel;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
-import br.com.os.interfaces.View;
+import br.com.os.other.Animator;
+import br.com.os.other.BufferedImageLoader;
 import br.com.os.other.Constants;
 
 /** This class describes the train, take takes passengers along a trail and takes
  * travellingTime (ms) to make an entire lap. */
-public class RollerCoaster extends Thread implements View, Item {
+public class RollerCoaster extends Animator implements Item {
 
 	private final int maxSeats;
 	private int occupiedSeats;
 	private long travelingTime;
 	private boolean moving = false;
-
-	private JPanel view = null;
 	
 	//Constants
 	public static final int TRAIN_WIDTH = 100;
@@ -63,7 +60,7 @@ public class RollerCoaster extends Thread implements View, Item {
 
 			// Actually moving
 			System.out.println("The crazy train started moving...");
-			this.move();
+//			this.move();
 
 			// Stop moving
 			this.controller.downMutex();
@@ -79,52 +76,6 @@ public class RollerCoaster extends Thread implements View, Item {
 		}
 
 	}
-
-	/** Moves the train with the duration of the travellingTime */
-	public void move() {
-		
-		double totalSpace = Constants.WINDOW_WIDTH + TRAIN_WIDTH;
-		double elapsedTime = 0.0;
-		long startTime = System.currentTimeMillis();
-		
-		int xPosition = (int) TRAIN_POSITION.getX();
-		int yPosition = (int) TRAIN_POSITION.getY();
-		
-		double time = (this.travelingTime / 2.0) * ((Constants.WINDOW_WIDTH - TRAIN_POSITION.getX()) / totalSpace);
-		int deltaX = Constants.WINDOW_WIDTH - xPosition;
-		while(elapsedTime < time) {
-			elapsedTime = System.currentTimeMillis() - startTime;
-			xPosition = (int) (TRAIN_POSITION.getX() + ((elapsedTime / time) * deltaX));
-			this.asView().setLocation(xPosition, yPosition);
-		}
-		
-		int deltaY = 150;
-		yPosition -= deltaY;
-		xPosition = this.view.getX();
-		this.view.setLocation(xPosition, yPosition);
-		time = travelingTime / 2.0;
-		elapsedTime = 0.0;
-		startTime = System.currentTimeMillis();
-		while(elapsedTime < time) {
-			elapsedTime = System.currentTimeMillis() - startTime;
-			xPosition = (int) (Constants.WINDOW_WIDTH - ((elapsedTime / time) * totalSpace));
-			this.asView().setLocation(xPosition, yPosition);
-		}
-		
-		yPosition += deltaY;
-		xPosition = this.view.getX();
-		this.view.setLocation(xPosition, yPosition);
-		time = (travelingTime / 2.0) * (((float)(TRAIN_POSITION.getX() + TRAIN_WIDTH)) / totalSpace);
-		elapsedTime = 0.0;
-		startTime = System.currentTimeMillis();
-		while(elapsedTime < time) {
-			elapsedTime = System.currentTimeMillis() - startTime;
-			xPosition = (int) (((elapsedTime / time) * deltaX) - TRAIN_WIDTH);
-			this.asView().setLocation(xPosition, yPosition);
-		}
-		
-	}
-
 
 	// Getters and Setters
 	
@@ -176,24 +127,12 @@ public class RollerCoaster extends Thread implements View, Item {
 		str += ("\nTravelling time: " + this.travelingTime + "ms");
 		return str;
 	}
-
 	
-	// View implement
-	
-	@Override
-	public Component asView() {
-		if(this.view == null) {
-			this.view = new JPanel();
-			this.view.setSize(TRAIN_WIDTH, TRAIN_HEIGHT);
-			this.view.setLocation(TRAIN_POSITION);
-			this.view.setBackground(Color.RED);
-		}
-		return this.view;
-	}
-	
-	@Override
-	public void moveTo(Point point) {
-		this.view.setLocation(point);
+	public void build() {
+		BufferedImage image = BufferedImageLoader.loadImage("roller-coaster.png");
+		ArrayList<BufferedImage> array = new ArrayList<BufferedImage>();
+		array.add(image);
+		super.build(array, null, null, null, 100, Constants.WINDOW_WIDTH/2 - Constants.ROLLER_COASTER_WIDTH/2, Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT, Constants.ROLLER_COASTER_WIDTH, Constants.ROLLER_COASTER_HEIGHT);
 	}
 
 }

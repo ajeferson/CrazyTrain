@@ -1,7 +1,6 @@
 package br.com.os.other;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /** Represents a whole sprite sheet. */

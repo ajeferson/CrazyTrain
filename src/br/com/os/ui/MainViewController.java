@@ -1,10 +1,8 @@
 package br.com.os.ui;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -13,23 +11,14 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-import br.com.os.interfaces.Item;
 import br.com.os.interfaces.ItemHandler;
-import br.com.os.interfaces.SemaphoreController;
 import br.com.os.interfaces.ViewController;
-import br.com.os.model.Passenger;
-import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingJMenuItem;
-import br.com.os.model.amazing.AmazingSemaphore;
 
 /** Represents the main window of the program. It contains the landscape and the menu items to do things. */
 public class MainViewController extends JFrame implements ViewController {
 
 	private static final long serialVersionUID = -598156911230782190L;
-
-	// Train and passengers
-	private RollerCoaster rollerCoaster;
-	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
 
 	// View attrs
@@ -100,20 +89,6 @@ public class MainViewController extends JFrame implements ViewController {
 
 		this.setJMenuBar(menuBar);
 
-	}
-
-	/** Adds a roller coaster to the canvas and sets it as the current roller coaster. */
-	private void handleCreationOfRollerCoaster(RollerCoaster rollerCoaster) {
-		this.rollerCoaster = rollerCoaster;
-//		this.rollerCoaster.setController(this);
-		this.addComponent(this.rollerCoaster.asView());
-		this.rollerCoaster.start();
-	}
-
-	/** Adds a component to the main container and repaints the JFrame. */
-	private void addComponent(Component component) {
-		this.add(component);
-		this.repaint();
 	}
 
 	// ViewController implement
