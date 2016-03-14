@@ -35,6 +35,7 @@ public class Passenger extends Animator implements Item {
 
 	public Passenger() {
 		this.id = ++lastId;
+		this.setName("P" + this.id);
 		this.enteringTime = 1000;
 		this.leavingTime = 1000;
 	}
@@ -63,6 +64,9 @@ public class Passenger extends Animator implements Item {
 						this.shouldWait = false;
 					} else {
 						this.position -= this.controller.numberOfPassengersOnTheRollerCoaster();
+						if(this.position < 1) {
+							this.position = 1;
+						}
 					}
 				}
 			} while(this.shouldWait);
@@ -70,6 +74,7 @@ public class Passenger extends Animator implements Item {
 //			System.out.println(this.getName() + " can enter on the roller coaster.");
 
 			// Climbing the ladder
+			System.out.println("Subiu: " + this.getName());
 			this.move(new Point(this.getX(), this.getY() - 4 * Constants.TILE_SIZE), Direction.UPWARDS, 5000);
 			this.update();
 			
