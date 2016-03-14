@@ -4,16 +4,6 @@ import java.awt.Point;
 
 /** Tells which methods a semaphore controller must have. */
 public interface SemaphoreController {
-
-	/** Ups the line semaphore
-	 * @param permits The number of ups to make. */
-	public void upLine(int permits);
-	
-	/** Increments the line semaphore by 1. */
-	public void upLine();
-	
-	/** Downs the line semaphore. */
-	public void downLine();
 	
 	/** Ups the passengers semaphore.
 	 * @param permits The number to increment on the semaphore. */
@@ -63,5 +53,19 @@ public interface SemaphoreController {
 	
 	/** Returns the exact point of the next available position on the roller coaster. */
 	public Point nextAvailablePositionOnRollerCoaster();
+	
+	/** Ups the semaphore of the next passenger on the line. */
+	public void wakeUpNextPassenger();
+	
+	public void wakeUpNextPassenger(int index);
+	
+	/** Returns if a roller coaster exists. */
+	public boolean isRollerCoasterAlive();
+	
+	/** Tells the controller that a passenger has just entered the roller coaster. */
+	public void passengerDidEnter();
+	
+	/** Returns the number of occupied seats on the roller coaster. */
+	public int numberOfPassengersOnTheRollerCoaster();
 	
 }

@@ -17,6 +17,10 @@ public class RollerCoaster extends Animator implements Item {
 
 	private final int maxSeats;
 	private int occupiedSeats;
+	public int getOccupiedSeats() {
+		return occupiedSeats;
+	}
+
 	private long travelingTime;
 	private boolean moving = false;
 	
@@ -42,7 +46,8 @@ public class RollerCoaster extends Animator implements Item {
 		while(true) {
 
 			// Saying: "Available seats"
-			this.controller.upLine(this.maxSeats);
+//			this.controller.upLine(this.maxSeats);
+			this.controller.wakeUpNextPassenger();
 
 			// Sleeping while passengers do not enter
 			this.controller.downRollerCoaster();

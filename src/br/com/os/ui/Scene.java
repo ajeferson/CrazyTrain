@@ -26,7 +26,6 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	private static final long serialVersionUID = 8905347569137169009L;
 
 	// Semaphores
-	private AmazingSemaphore semaphoreLine = new AmazingSemaphore(0);
 	private AmazingSemaphore semaphoreRollerCoaster = new AmazingSemaphore(0);
 	private AmazingSemaphore semaphorePassengers = new AmazingSemaphore(0);
 	private AmazingSemaphore semaphoreMutex = new AmazingSemaphore(1);
@@ -36,6 +35,7 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	private RollerCoaster rollerCoaster;
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
+	private ArrayList<Passenger> passengersTravelling = new ArrayList<Passenger>();
 
 	private Timer timer;
 
@@ -63,8 +63,11 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		for(Passenger passenger : this.passengers) {
 			passenger.draw(g);
 		}
+		for(Passenger passenger : this.passengersTravelling) {
+			passenger.draw(g);
+		}
 	}
-	
+
 	private void drawRollerCoaster(Graphics g) {
 		if(this.rollerCoaster != null) {
 			this.rollerCoaster.draw(g);
@@ -170,7 +173,7 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		this.rollerCoaster.play();
 		this.rollerCoaster.start();
 	}
-	
+
 	/** Adds the passenger to the array and make it start. */
 	private void handleCreationOfPassenger(Passenger passenger) {
 		this.passengers.add(passenger);
@@ -187,21 +190,6 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	/** Timer event. Called evertime the timer ends its counting. */
 	public void actionPerformed(ActionEvent e) {
 		this.repaint();
-	}
-
-	@Override
-	public void upLine(int permits) {
-		this.semaphoreLine.up(permits);
-	}
-
-	@Override
-	public void upLine() {
-		this.semaphoreLine.up();
-	}
-
-	@Override
-	public void downLine() {
-		this.semaphoreLine.down();
 	}
 
 	@Override
@@ -241,30 +229,27 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	@Override
 	public boolean isRollerCoasterFull() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.rollerCoaster.isFull();
 	}
 
 	@Override
 	public boolean isRollerCoasterMoving() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.rollerCoaster.isMoving();
 	}
 
 	@Override
 	public boolean isRollerCoasterEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.rollerCoaster.isEmpty();
 	}
 
 	@Override
 	public void incrementNumberOfPassengersOnRollerCoaster() {
-		// TODO Auto-generated method stub
+		this.rollerCoaster.incrementOccupiedSeats();
 	}
 
 	@Override
 	public void decrementNumberOfPassengersOnRollerCoaster() {
-		// TODO Auto-generated method stub
+		this.rollerCoaster.decrementOccupiedSeats();
 	}
 
 	@Override
@@ -275,6 +260,36 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	@Override
 	public Point nextAvailablePositionOnRollerCoaster() {
 		return null;
+	}
+
+	@Override
+	public void wakeUpNextPassenger() {
+		this.wakeUpNextPassenger(0);
+	}
+	
+	@Override
+	public void wakeUpNextPassenger(int index) {
+		if(this.passengers.size() > index) {
+			Passenger passenger = this.passengers.get(index);
+			passenger.wakeUp();
+		}
+	}
+
+	@Override
+	public boolean isRollerCoasterAlive() {
+		return this.rollerCoaster != null;
+	}
+
+	@Override
+	public void passengerDidEnter() {
+		Passenger passenger = this.passengers.remove(0);
+		this.passengersTravelling.add(passenger);
+		this.wakeUpNextPassenger();
+	}
+
+	@Override
+	public int numberOfPassengersOnTheRollerCoaster() {
+		return this.rollerCoaster.getOccupiedSeats();
 	}
 
 }

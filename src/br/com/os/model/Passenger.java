@@ -5,6 +5,7 @@ import java.awt.Point;
 import br.com.os.enums.Direction;
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
+import br.com.os.model.amazing.AmazingSemaphore;
 import br.com.os.other.Animator;
 import br.com.os.other.Constants;
 import br.com.os.other.SpriteSheet;
@@ -17,10 +18,10 @@ public class Passenger extends Animator implements Item {
 	private final int id;
 	private int enteringTime;
 	private int leavingTime;
-	@SuppressWarnings("unused")
-	private boolean shouldEnjoyLandscape = false;
-	private boolean shouldBeOnTheLine = true;
+	private boolean shouldWait = true;
 	private int position = 0;
+	
+	private AmazingSemaphore semaphoreWalking = new AmazingSemaphore(0);
 
 	public int getPosition() {
 		return position;
@@ -41,16 +42,47 @@ public class Passenger extends Animator implements Item {
 	@Override
 	public void run() {
 
+		boolean hasSleptBefore = false;
+		
 		while(true) {
 
-			this.stayOnTheLine();
-
-			// Waiting for the permission to get in on the train
-			this.controller.downLine();
+			// Waiting on the line. Moving forward whenever a new position shows up.
+			do {
+				this.move(new Point(Constants.WINDOW_WIDTH - (4 + this.position) * Constants.TILE_SIZE,
+						this.getY()),
+						Direction.RIGHTWARDS, Constants.PASSENGER_DEFAULT_MOVE_TIME);
+				this.update();
+				this.shouldWait = this.position != 1 || !this.controller.isRollerCoasterAlive() || this.controller.isRollerCoasterFull();
+				if(this.shouldWait) {
+					if(hasSleptBefore) {
+						this.controller.wakeUpNextPassenger(this.position);
+					}
+					hasSleptBefore = true;
+					this.semaphoreWalking.down();
+					if(this.position == 1) {
+						this.shouldWait = false;
+					} else {
+						this.position -= this.controller.numberOfPassengersOnTheRollerCoaster();
+					}
+				}
+			} while(this.shouldWait);
+			
+//			System.out.println(this.getName() + " can enter on the roller coaster.");
 
 			// Climbing the ladder
 			this.move(new Point(this.getX(), this.getY() - 4 * Constants.TILE_SIZE), Direction.UPWARDS, 5000);
 			this.update();
+			
+			this.controller.incrementNumberOfPassengersOnRollerCoaster();
+			
+//			System.out.println(this.getName() + " entered the roller coaster");
+			
+			this.controller.passengerDidEnter();
+			
+			this.semaphoreWalking.down();
+			this.semaphoreWalking.down();
+			this.semaphoreWalking.down();
+			
 			//			
 			//			// Entering on the train
 			//			this.controller.downMutex();
@@ -101,16 +133,6 @@ public class Passenger extends Animator implements Item {
 
 		}
 
-	}
-
-	private void stayOnTheLine() {
-//		while(this.shouldBeOnTheLine) {
-			this.move(new Point(Constants.WINDOW_WIDTH - (4 + this.position) * Constants.TILE_SIZE,
-					this.getY()),
-					Direction.RIGHTWARDS, Constants.PASSENGER_DEFAULT_MOVE_TIME);
-			this.update();
-			this.controller.downLine();
-//		}
 	}
 
 	@SuppressWarnings("unused")
@@ -208,5 +230,11 @@ public class Passenger extends Animator implements Item {
 			super.update(System.currentTimeMillis());
 		}
 	}
+	
+	public void wakeUp() {
+		this.semaphoreWalking.up();
+	}
+	
+	
 
 }
