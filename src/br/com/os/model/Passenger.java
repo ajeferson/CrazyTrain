@@ -20,6 +20,7 @@ public class Passenger extends Animator implements Item {
 	private int leavingTime;
 	private boolean shouldWait = true;
 	private int position = 0;
+	private static int dist = -1;
 	
 	private AmazingSemaphore semaphoreWalking = new AmazingSemaphore(0);
 
@@ -43,43 +44,58 @@ public class Passenger extends Animator implements Item {
 	@Override
 	public void run() {
 
-		boolean hasSleptBefore = false;
+		boolean sleptBefore = false;
 		
 		while(true) {
 
 			// Waiting on the line. Moving forward whenever a new position shows up.
 			do {
+				
+				// Going to end of the line
 				this.move(new Point(Constants.WINDOW_WIDTH - (4 + this.position) * Constants.TILE_SIZE,
 						this.getY()),
 						Direction.RIGHTWARDS, Constants.PASSENGER_DEFAULT_MOVE_TIME);
 				this.update();
+				
 				this.shouldWait = this.position != 1 || !this.controller.isRollerCoasterAlive() || this.controller.isRollerCoasterFull();
 				if(this.shouldWait) {
-					if(hasSleptBefore) {
+					
+					if(sleptBefore) {
 						this.controller.wakeUpNextPassenger(this.position);
 					}
-					hasSleptBefore = true;
+					sleptBefore = true;
+					
 					this.semaphoreWalking.down();
+					
 					if(this.position == 1) {
+						dist = -1;
 						this.shouldWait = false;
 					} else {
-						this.position -= this.controller.numberOfPassengersOnTheRollerCoaster();
-						if(this.position < 1) {
+						if(!this.controller.isRollerCoasterFull()) {
 							this.position = 1;
+						} else {
+							if(dist < 0) {
+								this.position = 1;
+								dist = 1;
+							} else {
+								this.position = ++dist;
+							}
 						}
 					}
+					
 				}
+				
 			} while(this.shouldWait);
 			
 //			System.out.println(this.getName() + " can enter on the roller coaster.");
 
 			// Climbing the ladder
 			System.out.println("Subiu: " + this.getName());
-			this.move(new Point(this.getX(), this.getY() - 4 * Constants.TILE_SIZE), Direction.UPWARDS, 5000);
+			this.move(new Point(this.getX(), this.getY() - 4 * Constants.TILE_SIZE), Direction.UPWARDS, 3000);
 			this.update();
 			
 			// Going in direction of the roller coaster
-			this.move(this.controller.nextAvailablePositionOnRollerCoaster(), Direction.LEFTWARDS, 5000);
+			this.move(this.controller.nextAvailablePositionOnRollerCoaster(), Direction.LEFTWARDS, 3000);
 			this.update();
 			
 			// Entering on the roller coaste
@@ -233,7 +249,7 @@ public class Passenger extends Animator implements Item {
 				spriteSheet.getSpritesWithCoordinates(coordinatesLeftwards),
 				spriteSheet.getSpritesWithCoordinates(coordinatesUpwards),
 				spriteSheet.getSpritesWithCoordinates(coordinatesDownwards),
-				80, -Constants.TILE_SIZE, Constants.WINDOW_HEIGHT - 2 * Constants.TILE_SIZE,
+				200, -Constants.TILE_SIZE, Constants.WINDOW_HEIGHT - 2 * Constants.TILE_SIZE,
 				Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
 
 	}

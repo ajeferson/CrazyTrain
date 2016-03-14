@@ -3,6 +3,7 @@ package br.com.os.ui;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -57,6 +58,7 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		this.drawBackground(g);
 		this.drawPassengers(g);
 		this.drawRollerCoaster(g);
+		Toolkit.getDefaultToolkit().sync();
 	}
 
 	private void drawPassengers(Graphics g) {
@@ -176,8 +178,12 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	/** Adds the passenger to the array and make it start. */
 	private void handleCreationOfPassenger(Passenger passenger) {
+		if(this.passengers.isEmpty()) {
+			passenger.setPosition(1);
+		} else {
+			passenger.setPosition(this.passengers.get(this.passengers.size() - 1).getPosition() + 1);
+		}
 		this.passengers.add(passenger);
-		passenger.setPosition(this.passengers.size());
 		passenger.setController(this);
 		passenger.build();
 		passenger.play();
