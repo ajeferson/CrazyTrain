@@ -36,6 +36,7 @@ public class RollerCoaster extends Animator implements Item {
 	 * @param travelingTime The amount of time that the train takes to make a lap (in milliseconds)*/
 	public RollerCoaster(int maxSeats, long travelingTime) {
 		this.maxSeats = maxSeats;
+		this.setWidth((maxSeats/2) * Constants.ROLLER_COASTER_WIDTH);
 		this.setTravelingTime(travelingTime);
 		this.occupiedSeats = 0;
 	}
@@ -138,12 +139,16 @@ public class RollerCoaster extends Animator implements Item {
 		BufferedImage image = BufferedImageLoader.loadImage("roller-coaster.png");
 		ArrayList<BufferedImage> array = new ArrayList<BufferedImage>();
 		array.add(image);
-		super.build(array, null, null, null, 100, Constants.WINDOW_WIDTH/2 - Constants.ROLLER_COASTER_WIDTH/2, Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT, Constants.ROLLER_COASTER_WIDTH, Constants.ROLLER_COASTER_HEIGHT);
+		super.build(array, null, null, null, 100,
+				Constants.WINDOW_WIDTH/2 - ((this.maxSeats/2) * Constants.ROLLER_COASTER_WIDTH)/2,
+				Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT,
+				(this.maxSeats/2) * Constants.ROLLER_COASTER_WIDTH,
+				Constants.ROLLER_COASTER_HEIGHT);
 	}
 	
 	@Override
 	public void draw(Graphics g) {
-		int positionX = Constants.WINDOW_WIDTH/2 - (this.maxSeats/2 * (Constants.ROLLER_COASTER_WIDTH) / 2);
+		int positionX = Constants.WINDOW_WIDTH/2 - this.getWidth()/2;
 		int positionY = Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT;
 		for(int i = 0; i < this.maxSeats/2; i++) {
 			g.drawImage(this.spritesRightwards.get(0), positionX + i * Constants.ROLLER_COASTER_WIDTH, positionY, null);

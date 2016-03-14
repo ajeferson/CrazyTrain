@@ -193,6 +193,10 @@ public class Animator extends Thread {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+	
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
 
 	public void move(Point target, Direction direction, long time) {
 		this.movingDuration = time;
@@ -205,7 +209,6 @@ public class Animator extends Thread {
 		this.direction = direction;
 		this.movingPreviousTime = System.currentTimeMillis();
 		this.moving = true;
-
 	}
 
 }

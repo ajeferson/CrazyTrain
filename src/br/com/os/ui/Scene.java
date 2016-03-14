@@ -259,7 +259,8 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	@Override
 	public Point nextAvailablePositionOnRollerCoaster() {
-		return null;
+		return new Point(this.rollerCoaster.getX() + (Constants.ROLLER_COASTER_WIDTH / 2) * (this.rollerCoaster.getMaxSeats() - this.rollerCoaster.getOccupiedSeats() - 1),
+				this.rollerCoaster.getY() + Constants.ROLLER_COASTER_HEIGHT - Constants.PASSENGER_HEIGHT);
 	}
 
 	@Override

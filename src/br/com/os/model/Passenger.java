@@ -73,6 +73,14 @@ public class Passenger extends Animator implements Item {
 			this.move(new Point(this.getX(), this.getY() - 4 * Constants.TILE_SIZE), Direction.UPWARDS, 5000);
 			this.update();
 			
+			// Going in direction of the roller coaster
+			this.move(this.controller.nextAvailablePositionOnRollerCoaster(), Direction.LEFTWARDS, 5000);
+			this.update();
+			
+			// Entering on the roller coaste
+			this.setY((this.getY() + this.getHeight()) - Constants.ROLLER_COASTER_HEIGHT - 30);
+			this.setDirection(Direction.RIGHTWARDS);
+			
 			this.controller.incrementNumberOfPassengersOnRollerCoaster();
 			
 //			System.out.println(this.getName() + " entered the roller coaster");
