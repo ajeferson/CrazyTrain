@@ -70,6 +70,9 @@ public interface SemaphoreController {
 	/** Tells the controller that a passenger has just entered the roller coaster. */
 	public void passengerDidEnter();
 	
+	/** Tells the controller that a passenger has just left the roller coaster. */
+	public void passengerDidLeave();
+	
 	/** Returns the number of occupied seats on the roller coaster. */
 	public int numberOfPassengersOnTheRollerCoaster();
 	

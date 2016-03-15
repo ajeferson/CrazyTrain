@@ -298,6 +298,13 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		passenger.setPosition(this.passengersTravelling.size());
 		this.wakeUpNextPassenger();
 	}
+	
+	@Override
+	public void passengerDidLeave() {
+		Passenger passenger = this.passengersTravelling.remove(0);
+		this.passengers.add(passenger);
+		passenger.setPosition(this.passengers.size());
+	}
 
 	@Override
 	public int numberOfPassengersOnTheRollerCoaster() {

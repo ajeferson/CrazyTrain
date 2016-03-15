@@ -22,6 +22,7 @@ public class RollerCoaster extends Sprite implements Item {
 	private long travelingTime;
 
 	private boolean travelling = false;
+	private boolean ready = true;
 
 	//Constants
 	public static final int TRAIN_WIDTH = 100;
