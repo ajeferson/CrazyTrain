@@ -6,6 +6,9 @@ public class Constants {
 	public static final int WINDOW_WIDTH = 1000;
 	public static final int WINDOW_HEIGHT = 700;
 
+	// Sprite
+	public static final int SPRITE_SPEED_MULTIPLIER = 200;
+	
 	// Passenger
 	public static final int PASSENGER_WIDTH = 50;
 	public static final int PASSENGER_HEIGHT = 50;
@@ -18,5 +21,7 @@ public class Constants {
 	
 	// Tiles
 	public static final int TILE_SIZE = 50;
+	public static final int LADDER_X_POSITION = WINDOW_WIDTH - 5 * TILE_SIZE;
+	public static final int LADDER_HEIGHT = 3 * TILE_SIZE;
 	
 }

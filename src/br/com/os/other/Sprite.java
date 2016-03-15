@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import br.com.os.enums.Direction;
-import br.com.os.model.amazing.AmazingSemaphore;
 import br.com.os.ui.Scene;
 
 /** Encapsulates a set of sprites an animates them. */
@@ -17,15 +16,12 @@ public class Sprite extends Thread {
 	protected ArrayList<BufferedImage> spritesUpwards;
 	protected ArrayList<BufferedImage> spritesDownwards;
 	protected BufferedImage lastSprite;
-	private AmazingSemaphore mutex = new AmazingSemaphore(1);
 	private Scene scene;
 
 	private boolean playing = false; // Should be volatile?
 	private boolean moving = false;
 	public boolean isMoving() {
-		this.mutex.down();
 		boolean m = this.moving;
-		this.mutex.up();
 		return m;
 	}
 
@@ -79,8 +75,16 @@ public class Sprite extends Thread {
 	}
 
 	/** Updates the animation. It changes the current sprite if the interval has passed. */
-	public void update(long time) {
-		this.mutex.down();
+	public void update() {
+		long time = System.currentTimeMillis();
+		this.updateSprite(time);
+		this.updateMovement(time);
+	}
+	
+	/** Changes the frames of the sprite in the appropriate time.
+	 * This method repaints the scene if it's time to change a frame.
+	 * @param time The current time of the system. */
+	private void updateSprite(long time) {
 		if(this.playing) {
 			if(this.direction != Direction.NONE && time - this.previousTime >= this.interval) {
 				this.currentSpriteIndex = (this.currentSpriteIndex + 1 < this.spritesRightwards.size()) ? (this.currentSpriteIndex + 1) : 0;
@@ -88,6 +92,12 @@ public class Sprite extends Thread {
 				this.scene.repaint();
 			}
 		}
+	}
+	
+	/** Updates the coordinates of the sprite according to the current movement status.
+	 * This method repaints the screens if some change happens to the coordinates.
+	 * @param time The current time, necessary for updating the movement accordingly. */
+	private void updateMovement(long time) {
 		if(this.moving) {
 			this.movingElapsedTime = time - this.movingPreviousTime;
 			if(this.movingElapsedTime < this.movingDuration) {
@@ -104,23 +114,16 @@ public class Sprite extends Thread {
 				this.scene.repaint();
 			}
 		}
-		this.mutex.up();
+	}
+	
+	public static int awesomeTime(int distance) {
+		return (int) (Constants.SPRITE_SPEED_MULTIPLIER * (distance/50.0));
 	}
 
 	/** Draws the the current sprite.
 	 * @param g The Graphics in which to draw the current sprite. */
 	public void draw(Graphics g) {
-		this.mutex.down();
 		g.drawImage(this.getSprite(), this.x, this.y, this.width, this.height, null);
-		this.mutex.up();
-	}
-
-	/** Updates and draw the current sprite.
-	 * @param time The current time, for testing if the current sprite has to change.
-	 * @param g The Graphics object in which to draw the current sprite. */
-	public void updateAndDraw(long time, Graphics g) {
-		this.update(time);
-		this.draw(g);
 	}
 
 	/** Starts animating the sprites. */
@@ -209,17 +212,9 @@ public class Sprite extends Thread {
 	public int getHeight() {
 		return height;
 	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
 	
 	public void setDirection(Direction direction) {
 		this.direction = direction;
-	}
-	
-	public Scene getScene() {
-		return scene;
 	}
 
 	public void setScene(Scene scene) {
