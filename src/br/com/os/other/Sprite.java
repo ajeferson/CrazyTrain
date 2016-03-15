@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import br.com.os.enums.Direction;
+import br.com.os.interfaces.SpriteDelegate;
 import br.com.os.ui.Scene;
 
 /** Encapsulates a set of sprites an animates them. */
@@ -20,13 +21,12 @@ public class Sprite extends Thread {
 
 	private boolean playing = false; // Should be volatile?
 	private boolean moving = false;
-	public boolean isMoving() {
-		boolean m = this.moving;
-		return m;
-	}
+	protected boolean changeFrames = true;
+	
+	private SpriteDelegate delegate;
+	
 
 	private long previousTime;
-
 	protected long interval;
 	private long movingDuration;
 	private double movingPreviousTime;
@@ -77,7 +77,9 @@ public class Sprite extends Thread {
 	/** Updates the animation. It changes the current sprite if the interval has passed. */
 	public void update() {
 		long time = System.currentTimeMillis();
-		this.updateSprite(time);
+		if(this.changeFrames) {
+			this.updateSprite(time);
+		}
 		this.updateMovement(time);
 	}
 	
@@ -104,13 +106,16 @@ public class Sprite extends Thread {
 				double fraction = this.movingElapsedTime / this.movingDuration;
 				this.x = this.initialX + (int) (this.deltaX * fraction);
 				this.y = this.initialY + (int) (this.deltaY * fraction);
+				if(this.delegate != null) {
+					this.delegate.spriteDidUpdatePositionToPoint(this, new Point(this.x, this.y));
+				}
 				this.scene.repaint();
 			} else {
 				this.x = this.targetX;
 				this.y = this.targetY;
 				this.moving = false;
-				this.lastSprite = this.getIdleSprite();
-				this.direction = Direction.NONE;
+				if(this.changeFrames) this.lastSprite = this.getIdleSprite();
+				this.setDirection(Direction.NONE);
 				this.scene.repaint();
 			}
 		}
@@ -165,8 +170,7 @@ public class Sprite extends Thread {
 		}
 	}
 	
-	/** Does not actually moves the sprite. This class just set the variables
-	 * for the update method to user them.
+	/** Moves this sprite to the target point.
 	 * @param target The target point to which its desired to move.
 	 * @param direction The direction to the point, for setting the appropriate sprite.
 	 * @param time The duration of the movement. */
@@ -178,9 +182,12 @@ public class Sprite extends Thread {
 		this.initialY = this.y;
 		this.deltaX = this.targetX - this.initialX;
 		this.deltaY = this.targetY - this.initialY;
-		this.direction = direction;
+		this.setDirection(direction);
 		this.movingPreviousTime = System.currentTimeMillis();
 		this.moving = true;
+		while(this.isMoving()) {
+			this.update();
+		}
 	}
 
 	// Getters and setters
@@ -215,10 +222,26 @@ public class Sprite extends Thread {
 	
 	public void setDirection(Direction direction) {
 		this.direction = direction;
+		if(this.delegate != null) {
+			this.delegate.spriteDidChangeDirectionTo(this.direction);
+		}
 	}
 
 	public void setScene(Scene scene) {
 		this.scene = scene;
+	}
+
+	public SpriteDelegate getDelegate() {
+		return delegate;
+	}
+
+	public void setDelegate(SpriteDelegate delegate) {
+		this.delegate = delegate;
+	}
+	
+	public boolean isMoving() {
+		boolean m = this.moving;
+		return m;
 	}
 
 }

@@ -68,4 +68,7 @@ public interface SemaphoreController {
 	/** Returns the number of occupied seats on the roller coaster. */
 	public int numberOfPassengersOnTheRollerCoaster();
 	
+	/** Must return the width of the roller coaster */
+	public int getWidthOfRollerCoaster();
+	
 }

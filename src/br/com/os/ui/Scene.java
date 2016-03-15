@@ -11,17 +11,20 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import br.com.os.enums.Direction;
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.ItemHandler;
 import br.com.os.interfaces.SemaphoreController;
+import br.com.os.interfaces.SpriteDelegate;
 import br.com.os.model.Passenger;
 import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingSemaphore;
 import br.com.os.other.BufferedImageLoader;
 import br.com.os.other.Constants;
+import br.com.os.other.Sprite;
 
 /** It's the scenario. */
-public class Scene extends JPanel implements SemaphoreController, ItemHandler, ActionListener {
+public class Scene extends JPanel implements SemaphoreController, ItemHandler, ActionListener, SpriteDelegate {
 
 	private static final long serialVersionUID = 8905347569137169009L;
 
@@ -164,9 +167,11 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		this.rollerCoaster = rollerCoaster;
 		this.rollerCoaster.setController(this);
 		this.rollerCoaster.setScene(this);
+		this.rollerCoaster.setDelegate(this);
 		this.rollerCoaster.build();
 		this.rollerCoaster.play();
 		this.rollerCoaster.start();
+		this.repaint();
 	}
 
 	/** Adds the passenger to the array and make it start. */
@@ -285,12 +290,33 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	public void passengerDidEnter() {
 		Passenger passenger = this.passengers.remove(0);
 		this.passengersTravelling.add(passenger);
+		passenger.setPosition(this.passengersTravelling.size());
 		this.wakeUpNextPassenger();
 	}
 
 	@Override
 	public int numberOfPassengersOnTheRollerCoaster() {
 		return this.rollerCoaster.getOccupiedSeats();
+	}
+
+	@Override
+	public int getWidthOfRollerCoaster() {
+		return this.rollerCoaster.getWidth();
+	}
+
+	@Override
+	public void spriteDidUpdatePositionToPoint(Sprite sprite, Point point) {
+		for(Passenger passenger : this.passengersTravelling) {
+			passenger.setX(this.rollerCoaster.getX() + this.rollerCoaster.getWidth() - passenger.getPosition() * Constants.PASSENGER_WIDTH);
+			passenger.setY(this.rollerCoaster.getY() - 30);
+		}
+	}
+
+	@Override
+	public void spriteDidChangeDirectionTo(Direction direction) {
+		for(Passenger passenger : this.passengersTravelling) {
+			passenger.setDirection(direction);
+		}
 	}
 
 }

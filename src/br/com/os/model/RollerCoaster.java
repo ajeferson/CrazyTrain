@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import br.com.os.enums.Direction;
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
 import br.com.os.other.Sprite;
@@ -17,12 +18,8 @@ public class RollerCoaster extends Sprite implements Item {
 
 	private final int maxSeats;
 	private int occupiedSeats;
-	public int getOccupiedSeats() {
-		return occupiedSeats;
-	}
 
 	private long travelingTime;
-	private boolean moving = false;
 	
 	//Constants
 	public static final int TRAIN_WIDTH = 100;
@@ -39,6 +36,7 @@ public class RollerCoaster extends Sprite implements Item {
 		this.setWidth((maxSeats/2) * Constants.ROLLER_COASTER_WIDTH);
 		this.setTravelingTime(travelingTime);
 		this.occupiedSeats = 0;
+		this.changeFrames = false;
 	}
 
 	@Override
@@ -47,38 +45,38 @@ public class RollerCoaster extends Sprite implements Item {
 		while(true) {
 
 			// Saying: "Available seats"
-//			this.controller.upLine(this.maxSeats);
 			this.controller.wakeUpNextPassenger();
 
 			// Sleeping while passengers do not enter
 			this.controller.downRollerCoaster();
 
-			System.out.println("Crazy Train is full with passengers...");
+//			System.out.println("Crazy Train is full with passengers...");
 			
 			// Set moving
-			this.controller.downMutex();
-			this.moving = true;
-			this.controller.upMutex();
+//			this.controller.downMutex();
+//			this.moving = true;
+//			this.controller.upMutex();
 
 			// Waking up passenger for enjoying the landscape
 			this.controller.upPassengers(this.maxSeats);
 
-			System.out.println("Crazy Train finished waking all passengers for enjoying the landscape...");
+//			System.out.println("Crazy Train finished waking all passengers for enjoying the landscape...");
 
 			// Actually moving
-			System.out.println("The crazy train started moving...");
-//			this.move();
+//			System.out.println("The crazy train started moving...");
+			
+			this.makeCircuit();
 
 			// Stop moving
 			this.controller.downMutex();
-			this.moving = false;
-			System.out.println("The crazy train stopped moving...");
+//			this.moving = false;
+//			System.out.println("The crazy train stopped moving...");
 			this.controller.upMutex();
 
 			// Waiting for passengers to get out
 			this.controller.downRollerCoaster();
 
-			System.out.println("Everybody left the Crazy Train...\n\n\n\n\n\n\n\n\n\n\n\n\n");
+//			System.out.println("Everybody left the Crazy Train...\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
 		}
 
@@ -102,14 +100,6 @@ public class RollerCoaster extends Sprite implements Item {
 		this.travelingTime = travelingTime;
 	}
 
-	public boolean isMoving() {
-		return moving;
-	}
-
-	public void setMoving(boolean moving) {
-		this.moving = moving;
-	}
-
 	public boolean isFull() {
 		return this.occupiedSeats == this.maxSeats;
 	}
@@ -124,6 +114,10 @@ public class RollerCoaster extends Sprite implements Item {
 	
 	public void decrementOccupiedSeats() {
 		this.occupiedSeats--;
+	}
+	
+	public int getOccupiedSeats() {
+		return occupiedSeats;
 	}
 	
 	@Override
@@ -148,11 +142,20 @@ public class RollerCoaster extends Sprite implements Item {
 	
 	@Override
 	public void draw(Graphics g) {
-		int positionX = Constants.WINDOW_WIDTH/2 - this.getWidth()/2;
-		int positionY = Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT;
 		for(int i = 0; i < this.maxSeats/2; i++) {
-			g.drawImage(this.spritesRightwards.get(0), positionX + i * Constants.ROLLER_COASTER_WIDTH, positionY, null);
+			g.drawImage(this.spritesRightwards.get(0), this.getX() + i * Constants.ROLLER_COASTER_WIDTH,
+					this.getY(), Constants.ROLLER_COASTER_WIDTH, Constants.ROLLER_COASTER_HEIGHT, null);
 		}
+	}
+	
+	/** Makes the train to move around the mountains. */
+	private void makeCircuit() {
+		this.move(new Point(Constants.WINDOW_WIDTH + 2*this.getWidth(), this.getY()), Direction.RIGHTWARDS, 5000);
+		this.setY(this.getY() - 3 * Constants.TILE_SIZE);
+		this.move(new Point(-2*this.getWidth(), this.getY()), Direction.LEFTWARDS, 5000);
+		this.setY(this.getY() + 3 * Constants.TILE_SIZE);
+		this.move(new Point((Constants.WINDOW_WIDTH / 2) - (this.getWidth() /2), this.getY()), Direction.RIGHTWARDS, 5000);
+		this.setDirection(Direction.RIGHTWARDS);
 	}
 
 }

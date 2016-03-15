@@ -56,7 +56,6 @@ public class Passenger extends Sprite implements Item {
 				// Going to end of the line
 				this.move(new Point(target, this.getY()),
 						Direction.RIGHTWARDS, Sprite.awesomeTime(target - this.getX()));
-				this.updateSprite();
 				
 				this.shouldWait = this.position != 1 || !this.controller.isRollerCoasterAlive() || this.controller.isRollerCoasterFull();
 				
@@ -92,31 +91,16 @@ public class Passenger extends Sprite implements Item {
 				
 			} while(this.shouldWait);
 			
-//			System.out.println(this.getName() + " can enter on the roller coaster.");
-
-			// Climbing the ladder
-//			System.out.println("Subiu: " + this.getName());
-			target = this.getY() - (Constants.LADDER_HEIGHT + Constants.TILE_SIZE);
-			this.move(new Point(this.getX(), target), Direction.UPWARDS, Sprite.awesomeTime(this.getY() - target));
-			this.updateSprite();
-			
-			// Going in direction of the roller coaster
-			Point targetPoint = this.controller.nextAvailablePositionOnRollerCoaster();
-			this.move(targetPoint, Direction.LEFTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - (int) targetPoint.getX())));
-			this.updateSprite();
-			
-			// Entering on the roller coaste
-			this.setY((this.getY() + this.getHeight()) - Constants.ROLLER_COASTER_HEIGHT - 30);
-			this.setDirection(Direction.RIGHTWARDS);
-			
+			this.climbTheLadder();
+			this.reachSpot();
 			this.controller.incrementNumberOfPassengersOnRollerCoaster();
-			
-//			System.out.println(this.getName() + " entered the roller coaster");
-			
 			this.controller.passengerDidEnter();
 			
-			this.semaphoreWalking.down();
-			this.semaphoreWalking.down();
+			if(this.controller.isRollerCoasterFull()) {
+				this.controller.upRollerCoaster();
+			}
+			
+//			this.controller.downPassengers();
 			this.semaphoreWalking.down();
 			
 			//			
@@ -260,15 +244,25 @@ public class Passenger extends Sprite implements Item {
 				Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
 
 	}
-
-	private void updateSprite() {
-		while(this.isMoving()) {
-			super.update();
-		}
-	}
 	
 	public void wakeUp() {
 		this.semaphoreWalking.up();
+	}
+	
+	private void climbTheLadder() {
+		// Climbing the ladder
+		int target = this.getY() - (Constants.LADDER_HEIGHT + Constants.TILE_SIZE);
+		this.move(new Point(this.getX(), target), Direction.UPWARDS, Sprite.awesomeTime(this.getY() - target));
+	}
+	
+	private void reachSpot() {
+		// Going in direction of the roller coaster
+		Point targetPoint = this.controller.nextAvailablePositionOnRollerCoaster();
+		this.move(targetPoint, Direction.LEFTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - (int) targetPoint.getX())));
+
+		// Entering on the roller coaster
+		this.setY((this.getY() + this.getHeight()) - Constants.ROLLER_COASTER_HEIGHT - 30);
+		this.setDirection(Direction.RIGHTWARDS);
 	}
 	
 	
