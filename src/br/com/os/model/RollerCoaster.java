@@ -48,7 +48,8 @@ public class RollerCoaster extends Sprite implements Item {
 		while(true) {
 
 			// Saying: "Available seats"
-			this.controller.wakeUpNextPassenger();
+//			this.controller.wakeUpNextPassenger();
+			this.controller.upLine(this.maxSeats);
 
 			// Sleeping while passengers do not enter
 			this.controller.downRollerCoaster();
@@ -60,7 +61,7 @@ public class RollerCoaster extends Sprite implements Item {
 			this.makeCircuit();
 
 			// Waking the first passenger to leave
-			this.controller.wakeTravellingPassengerAtIndex(0);
+			this.controller.wakeUpNextTravellingPassenger();
 
 			// Waiting for passengers to get out
 			this.controller.downRollerCoaster();
@@ -146,10 +147,7 @@ public class RollerCoaster extends Sprite implements Item {
 	}
 
 	public boolean isTravelling() {
-		this.controller.downMutex();
-		boolean t = this.travelling;
-		this.controller.upMutex();
-		return t;
+		return this.travelling;
 	}
 
 	@Override

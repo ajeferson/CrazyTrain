@@ -44,9 +44,10 @@ public class Passenger extends Sprite implements Item {
 	@Override
 	public void run() {
 
-		boolean sleptBefore = false;
+//		boolean sleptBefore = false;
 
 		int target;
+		boolean willMoveOnTheLine = false;
 
 		while(true) {
 			
@@ -55,24 +56,20 @@ public class Passenger extends Sprite implements Item {
 			// Waiting on the line. Moving forward whenever a new position shows up.
 			do {
 
+				willMoveOnTheLine = false;
+				
 				// Going to end of the line
 				this.move(new Point(target, this.getY()),
 						Direction.RIGHTWARDS, Sprite.awesomeTime(target - this.getX()));
 
-				this.shouldWait = this.position != 1 || !this.controller.isRollerCoasterAlive() || this.controller.isRollerCoasterFull();
-
-				if(this.shouldWait) {
-
-					if(sleptBefore) {
-						this.controller.wakeUpNextPassenger(this.position);
-					}
-					sleptBefore = true;
-
+				if(this.position > 1) {
+					
+					willMoveOnTheLine = true;
+					
 					this.semaphoreWalking.down();
-
+					
 					if(this.position == 1) {
 						dist = -1;
-						this.shouldWait = false;
 					} else {
 						if(!this.controller.isRollerCoasterFull()) {
 							target = Constants.LADDER_X_POSITION;
@@ -88,10 +85,45 @@ public class Passenger extends Sprite implements Item {
 							}
 						}
 					}
-
-				}
-
-			} while(this.shouldWait);
+					
+				} 
+			} while(willMoveOnTheLine);
+				
+//				this.shouldWait = this.position != 1 || !this.controller.isRollerCoasterAlive() || this.controller.isRollerCoasterFull();
+//
+//				if(this.shouldWait) {
+//
+//					if(sleptBefore) {
+//						this.controller.wakeUpNextPassenger(this.position);
+//					}
+//					sleptBefore = true;
+//
+//					this.semaphoreWalking.down();
+//
+//					if(this.position == 1) {
+//						dist = -1;
+//						this.shouldWait = false;
+//					} else {
+//						if(!this.controller.isRollerCoasterFull()) {
+//							target = Constants.LADDER_X_POSITION;
+//							this.position = 1;
+//						} else {
+//							if(dist < 0) {
+//								target = Constants.LADDER_X_POSITION;
+//								this.position = 1;
+//								dist = 1;
+//							} else {
+//								target = this.getX() + Constants.TILE_SIZE * (this.position - (dist + 1));
+//								this.position = ++dist;
+//							}
+//						}
+//					}
+//
+//				}
+//
+//			} while(this.shouldWait);
+				
+			this.controller.downLine();
 
 			this.climbUpTheLadder();
 			this.enterRollerCoaster();
@@ -117,7 +149,11 @@ public class Passenger extends Sprite implements Item {
 			this.controller.decrementNumberOfPassengersOnRollerCoaster();
 			this.controller.passengerDidLeave();
 			
-			sleptBefore = false;
+			if(this.controller.isRollerCoasterEmpty()) {
+				this.controller.upRollerCoaster();
+			} else {
+				this.controller.wakeUpNextTravellingPassenger();
+			}
 
 		}
 

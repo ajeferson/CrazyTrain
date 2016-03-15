@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JPanel;
 
@@ -32,6 +33,7 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	private AmazingSemaphore semaphoreRollerCoaster = new AmazingSemaphore(0);
 	private AmazingSemaphore semaphorePassengers = new AmazingSemaphore(0);
 	private AmazingSemaphore semaphoreMutex = new AmazingSemaphore(1);
+	private AmazingSemaphore semaphoreLine = new AmazingSemaphore(0);
 
 	private BufferedImage background;
 	private ArrayList<BufferedImage> ground;
@@ -234,22 +236,34 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	@Override
 	public boolean isRollerCoasterFull() {
-		return this.rollerCoaster.isFull();
+		this.semaphoreMutex.down();
+		boolean full = this.rollerCoaster.isFull();
+		this.semaphoreMutex.up();
+		return full;
 	}
 
 	@Override
 	public boolean isRollerCoasterMoving() {
-		return this.rollerCoaster.isMoving();
+		this.semaphoreMutex.down();
+		boolean moving = this.rollerCoaster.isMoving();
+		this.semaphoreMutex.up();
+		return moving;
 	}
 	
 	@Override
 	public boolean isRollerCoasterTravelling() {
-		return this.rollerCoaster.isTravelling();
+		this.semaphoreMutex.down();
+		boolean t = this.rollerCoaster.isTravelling();
+		this.semaphoreMutex.up();
+		return t;
 	}
 
 	@Override
 	public boolean isRollerCoasterEmpty() {
-		return this.rollerCoaster.isEmpty();
+		this.semaphoreMutex.down();
+		boolean e = this.rollerCoaster.isEmpty();
+		this.semaphoreMutex.up();
+		return e;
 	}
 
 	@Override
@@ -342,8 +356,23 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	}
 
 	@Override
-	public void wakeTravellingPassengerAtIndex(int index) {
-		this.passengersTravelling.get(index).wakeUp();
+	public void wakeUpNextTravellingPassenger() {
+		this.passengersTravelling.get(0).wakeUp();
+	}
+
+	@Override
+	public void upLine(int permits) {
+		this.semaphoreLine.up(permits);
+	}
+
+	@Override
+	public void upLine() {
+		this.semaphoreLine.up();
+	}
+
+	@Override
+	public void downLine() {
+		this.semaphoreLine.down();
 	}
 
 }

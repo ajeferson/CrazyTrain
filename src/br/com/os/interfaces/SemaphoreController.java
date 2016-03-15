@@ -5,6 +5,12 @@ import java.awt.Point;
 /** Tells which methods a semaphore controller must have. */
 public interface SemaphoreController {
 	
+	public void upLine(int permits);
+	
+	public void upLine();
+	
+	public void downLine();
+	
 	/** Ups the passengers semaphore.
 	 * @param permits The number to increment on the semaphore. */
 	public void upPassengers(int permits);
@@ -85,8 +91,7 @@ public interface SemaphoreController {
 	/** Must return the current Y position of the roller coaster. */
 	public int getYPositionOfRollerCoaster();
 	
-	/** Must wake up a passenger on the array of traveling passengers.
-	 * @param index The index of the passenger to wake up. */
-	public void wakeTravellingPassengerAtIndex(int index);
+	/** Must wake up the next passenger on the array of traveling passengers. */
+	public void wakeUpNextTravellingPassenger();
 	
 }

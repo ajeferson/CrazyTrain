@@ -246,8 +246,7 @@ public class Sprite extends Thread {
 	}
 	
 	public boolean isMoving() {
-		boolean m = this.moving;
-		return m;
+		return this.moving;
 	}
 
 }
