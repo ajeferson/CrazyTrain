@@ -18,7 +18,6 @@ public class Passenger extends Sprite implements Item {
 	private final int id;
 	private int enteringTime;
 	private int leavingTime;
-	private boolean shouldWait = true;
 	private int position = 0;
 	private static int dist = -1;
 
@@ -39,15 +38,15 @@ public class Passenger extends Sprite implements Item {
 		this.setName("P" + this.id);
 		this.enteringTime = 1000;
 		this.leavingTime = 1000;
+		this.text = "" + this.id;
 	}
 
 	@Override
 	public void run() {
 
-//		boolean sleptBefore = false;
-
 		int target;
 		boolean willMoveOnTheLine = false;
+		boolean sleptBefore = false;
 
 		while(true) {
 			
@@ -64,6 +63,11 @@ public class Passenger extends Sprite implements Item {
 
 				if(this.position > 1) {
 					
+					if(sleptBefore) {
+						this.controller.wakeUpNextPassenger(this.position);
+					}
+					
+					sleptBefore = true;
 					willMoveOnTheLine = true;
 					
 					this.semaphoreWalking.down();
@@ -86,42 +90,12 @@ public class Passenger extends Sprite implements Item {
 						}
 					}
 					
-				} 
+				} else {
+					if(sleptBefore && this.controller.isRollerCoasterFull()) {
+						this.controller.wakeUpNextPassenger(this.position);
+					}
+				}
 			} while(willMoveOnTheLine);
-				
-//				this.shouldWait = this.position != 1 || !this.controller.isRollerCoasterAlive() || this.controller.isRollerCoasterFull();
-//
-//				if(this.shouldWait) {
-//
-//					if(sleptBefore) {
-//						this.controller.wakeUpNextPassenger(this.position);
-//					}
-//					sleptBefore = true;
-//
-//					this.semaphoreWalking.down();
-//
-//					if(this.position == 1) {
-//						dist = -1;
-//						this.shouldWait = false;
-//					} else {
-//						if(!this.controller.isRollerCoasterFull()) {
-//							target = Constants.LADDER_X_POSITION;
-//							this.position = 1;
-//						} else {
-//							if(dist < 0) {
-//								target = Constants.LADDER_X_POSITION;
-//								this.position = 1;
-//								dist = 1;
-//							} else {
-//								target = this.getX() + Constants.TILE_SIZE * (this.position - (dist + 1));
-//								this.position = ++dist;
-//							}
-//						}
-//					}
-//
-//				}
-//
-//			} while(this.shouldWait);
 				
 			this.controller.downLine();
 
@@ -147,14 +121,21 @@ public class Passenger extends Sprite implements Item {
 			this.leaveRollerCoaster();
 			this.climbDownTheLadder();
 			this.controller.decrementNumberOfPassengersOnRollerCoaster();
+			this.controller.downMutex();
 			this.controller.passengerDidLeave();
+			this.controller.upMutex();
 			
 			if(this.controller.isRollerCoasterEmpty()) {
+				dist = -1;
 				this.controller.upRollerCoaster();
 			} else {
+				this.controller.downMutex();
 				this.controller.wakeUpNextTravellingPassenger();
+				this.controller.upMutex();
 			}
-
+			
+			sleptBefore = false;
+			
 		}
 
 	}
@@ -238,12 +219,12 @@ public class Passenger extends Sprite implements Item {
 	/** Enjoys the landscape while the roller coaster is travelling */
 	private void enjoyLandscape() {
 		while(this.controller.isRollerCoasterTravelling()) {
-			this.text = "Enjoying";
+//			this.text = "Enjoying";
 			//			this.setX(this.controller.getXPositionOfRollerCoaster() + this.controller.getWidthOfRollerCoaster() - this.position * Constants.PASSENGER_WIDTH);
 			//			this.setY(this.controller.getYPositionOfRollerCoaster() - 30);
 			//			this.scene.repaint();
 		}
-		this.text = null;
+//		this.text = null;
 	}
 
 	// Getters and Setters
