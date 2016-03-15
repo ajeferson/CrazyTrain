@@ -7,13 +7,13 @@ import java.util.ArrayList;
 
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
-import br.com.os.other.Animator;
+import br.com.os.other.Sprite;
 import br.com.os.other.BufferedImageLoader;
 import br.com.os.other.Constants;
 
 /** This class describes the train, take takes passengers along a trail and takes
  * travellingTime (ms) to make an entire lap. */
-public class RollerCoaster extends Animator implements Item {
+public class RollerCoaster extends Sprite implements Item {
 
 	private final int maxSeats;
 	private int occupiedSeats;

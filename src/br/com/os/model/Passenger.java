@@ -6,13 +6,13 @@ import br.com.os.enums.Direction;
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.SemaphoreController;
 import br.com.os.model.amazing.AmazingSemaphore;
-import br.com.os.other.Animator;
+import br.com.os.other.Sprite;
 import br.com.os.other.Constants;
 import br.com.os.other.SpriteSheet;
 import br.com.os.other.SpriteSheetCooordinate;
 
 /** This class represents a passenger that can take a trip on the train. */
-public class Passenger extends Animator implements Item {
+public class Passenger extends Sprite implements Item {
 
 	private static int lastId = 0;
 	private final int id;

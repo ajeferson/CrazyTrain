@@ -10,7 +10,7 @@ public class Constants {
 	public static final int PASSENGER_WIDTH = 50;
 	public static final int PASSENGER_HEIGHT = 50;
 	public static final int PASSENGER_IDLE_SPRITE_INDEX = 1;
-	public static final int PASSENGER_DEFAULT_MOVE_TIME = 3000;
+	public static final int PASSENGER_DEFAULT_MOVE_TIME = 5000;
 	
 	// Roller Coaster
 	public static final int ROLLER_COASTER_WIDTH = 100;

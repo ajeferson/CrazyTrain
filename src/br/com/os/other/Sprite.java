@@ -7,9 +7,10 @@ import java.util.ArrayList;
 
 import br.com.os.enums.Direction;
 import br.com.os.model.amazing.AmazingSemaphore;
+import br.com.os.ui.Scene;
 
 /** Encapsulates a set of sprites an animates them. */
-public class Animator extends Thread {
+public class Sprite extends Thread {
 
 	protected ArrayList<BufferedImage> spritesRightwards;
 	protected ArrayList<BufferedImage> spritesLeftwards;
@@ -17,6 +18,7 @@ public class Animator extends Thread {
 	protected ArrayList<BufferedImage> spritesDownwards;
 	protected BufferedImage lastSprite;
 	private AmazingSemaphore mutex = new AmazingSemaphore(1);
+	private Scene scene;
 
 	private boolean playing = false; // Should be volatile?
 	private boolean moving = false;
@@ -48,9 +50,6 @@ public class Animator extends Thread {
 	private int deltaY;
 
 	private Direction direction = Direction.NONE;
-	
-	public Animator() {
-	}
 
 	/** Builds an animator.
 	 * @param spritesRightwards The sprites for when it's moving rightwards.
@@ -86,6 +85,7 @@ public class Animator extends Thread {
 			if(this.direction != Direction.NONE && time - this.previousTime >= this.interval) {
 				this.currentSpriteIndex = (this.currentSpriteIndex + 1 < this.spritesRightwards.size()) ? (this.currentSpriteIndex + 1) : 0;
 				this.previousTime = time;
+				this.scene.repaint();
 			}
 		}
 		if(this.moving) {
@@ -94,12 +94,14 @@ public class Animator extends Thread {
 				double fraction = this.movingElapsedTime / this.movingDuration;
 				this.x = this.initialX + (int) (this.deltaX * fraction);
 				this.y = this.initialY + (int) (this.deltaY * fraction);
+				this.scene.repaint();
 			} else {
 				this.x = this.targetX;
 				this.y = this.targetY;
 				this.moving = false;
 				this.lastSprite = this.getIdleSprite();
 				this.direction = Direction.NONE;
+				this.scene.repaint();
 			}
 		}
 		this.mutex.up();
@@ -159,6 +161,24 @@ public class Animator extends Thread {
 			return this.spritesRightwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
 		}
 	}
+	
+	/** Does not actually moves the sprite. This class just set the variables
+	 * for the update method to user them.
+	 * @param target The target point to which its desired to move.
+	 * @param direction The direction to the point, for setting the appropriate sprite.
+	 * @param time The duration of the movement. */
+	public void move(Point target, Direction direction, long time) {
+		this.movingDuration = time;
+		this.targetX = (int) target.getX();
+		this.targetY = (int) target.getY();
+		this.initialX = this.x;
+		this.initialY = this.y;
+		this.deltaX = this.targetX - this.initialX;
+		this.deltaY = this.targetY - this.initialY;
+		this.direction = direction;
+		this.movingPreviousTime = System.currentTimeMillis();
+		this.moving = true;
+	}
 
 	// Getters and setters
 
@@ -197,18 +217,13 @@ public class Animator extends Thread {
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
+	
+	public Scene getScene() {
+		return scene;
+	}
 
-	public void move(Point target, Direction direction, long time) {
-		this.movingDuration = time;
-		this.targetX = (int) target.getX();
-		this.targetY = (int) target.getY();
-		this.initialX = this.x;
-		this.initialY = this.y;
-		this.deltaX = this.targetX - this.initialX;
-		this.deltaY = this.targetY - this.initialY;
-		this.direction = direction;
-		this.movingPreviousTime = System.currentTimeMillis();
-		this.moving = true;
+	public void setScene(Scene scene) {
+		this.scene = scene;
 	}
 
 }

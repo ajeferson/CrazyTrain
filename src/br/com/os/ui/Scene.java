@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.ItemHandler;
@@ -38,20 +37,13 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 	private ArrayList<Passenger> passengersTravelling = new ArrayList<Passenger>();
 
-	private Timer timer;
-
-	public Scene() {
-		this.timer = new Timer(80, this);
-		this.timer.start();
-	}
-
 	// JPanel override
 
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 	}
-
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -171,6 +163,7 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	private void handleCreationOfRollerCoaster(RollerCoaster rollerCoaster) {
 		this.rollerCoaster = rollerCoaster;
 		this.rollerCoaster.setController(this);
+		this.rollerCoaster.setScene(this);
 		this.rollerCoaster.build();
 		this.rollerCoaster.play();
 		this.rollerCoaster.start();
@@ -184,6 +177,7 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 			passenger.setPosition(this.passengers.get(this.passengers.size() - 1).getPosition() + 1);
 		}
 		this.passengers.add(passenger);
+		passenger.setScene(this);
 		passenger.setController(this);
 		passenger.build();
 		passenger.play();
