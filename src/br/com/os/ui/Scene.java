@@ -35,14 +35,13 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	private AmazingSemaphore semaphoreLine = new AmazingSemaphore(0);
 
 	private BufferedImage background;
-	private ArrayList<BufferedImage> ground;
 
 	private RollerCoaster rollerCoaster;
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 	private ArrayList<Passenger> passengersTravelling = new ArrayList<Passenger>();
 
 	// JPanel override
-
+	
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
@@ -79,79 +78,6 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		g.drawImage(this.background, 0, 0, this.getWidth(), this.getHeight(), null);
 	}
 
-	@SuppressWarnings("unused")
-	private void drawGround(Graphics g) {
-		if(this.ground == null) {
-			this.ground = new ArrayList<BufferedImage>();
-			this.ground.add(BufferedImageLoader.loadImage("tiles/ground2.png"));
-			this.ground.add(BufferedImageLoader.loadImage("tiles/ground3.png"));
-			this.ground.add(BufferedImageLoader.loadImage("tiles/ground5.png"));
-			this.ground.add(BufferedImageLoader.loadImage("tiles/water.png"));
-			this.ground.add(BufferedImageLoader.loadImage("tiles/ladder.png"));
-			this.ground.add(BufferedImageLoader.loadImage("tiles/box.png"));
-			this.ground.add(BufferedImageLoader.loadImage("tiles/crystal.png"));
-			this.ground.add(BufferedImageLoader.loadImage("tiles/tree.png"));
-			this.ground.add(BufferedImageLoader.loadImage("tiles/signRight.png"));
-
-		}
-		int i, size = Constants.TILE_SIZE;
-		for(i = 0; i < (Constants.WINDOW_WIDTH / size) - 4; i++) {
-			g.drawImage(this.ground.get(0), i * size, Constants.WINDOW_HEIGHT - size, size, size, null);
-		}
-		g.drawImage(this.ground.get(2), i * size, Constants.WINDOW_HEIGHT - size, size, size, null);
-		g.drawImage(this.ground.get(3), i * size, Constants.WINDOW_HEIGHT - size, size, size, null);
-		g.drawImage(this.ground.get(1), i++ * size, Constants.WINDOW_HEIGHT - size, size, size, null);
-		g.drawImage(this.ground.get(2), i++ * size, Constants.WINDOW_HEIGHT - size, size, size, null);
-		g.drawImage(this.ground.get(2), i++ * size, Constants.WINDOW_HEIGHT - size, size, size, null);
-		g.drawImage(this.ground.get(2), i++ * size, Constants.WINDOW_HEIGHT - size, size, size, null);
-		i-=3;
-
-		// Water
-		int k;
-		for(k = (Constants.WINDOW_WIDTH / size) - i; k > 0; k--) {
-			g.drawImage(this.ground.get(3), i++ * size, Constants.WINDOW_HEIGHT - size, size, size, null);
-		}
-
-		// Behind
-		for(i = 2; i < 5; i++) {
-			for (k = 0; k < Constants.WINDOW_WIDTH / size; k++) {
-				g.drawImage(this.ground.get(2), k * size, Constants.WINDOW_HEIGHT - i * size, size, size, null);
-			}
-		}
-
-		for (k = 0; k < Constants.WINDOW_WIDTH / size; k++) {
-			g.drawImage(this.ground.get(0), k * size, Constants.WINDOW_HEIGHT - i * size, size, size, null);
-		}
-
-		for(i = 6; i < 8; i++) {
-			for (k = 0; k < Constants.WINDOW_WIDTH / size; k++) {
-				g.drawImage(this.ground.get(2), k * size, Constants.WINDOW_HEIGHT - i * size, size, size, null);
-			}
-		}
-
-		for (k = 0; k < Constants.WINDOW_WIDTH / size; k++) {
-			g.drawImage(this.ground.get(0), k * size, Constants.WINDOW_HEIGHT - i * size, size, size, null);
-		}
-
-		// Ladders
-		for(k = 2; k < 6; k++) {
-			g.drawImage(this.ground.get(4), Constants.WINDOW_WIDTH - 5 * size, Constants.WINDOW_HEIGHT - k * size, size, size, null);
-			g.drawImage(this.ground.get(4), 2 * size, Constants.WINDOW_HEIGHT - k * size, size, size, null);
-		}
-
-		// Boxes
-		g.drawImage(this.ground.get(5), 4 * size, Constants.WINDOW_HEIGHT - 2 * size, size, size, null);
-		g.drawImage(this.ground.get(5), 11 * size, Constants.WINDOW_HEIGHT - 2 * size, size, size, null);
-
-		// Trees
-		g.drawImage(this.ground.get(7), 6 * size, Constants.WINDOW_HEIGHT - 2 * size - 73, 100, 123, null);
-		g.drawImage(this.ground.get(7), 8 * size, Constants.WINDOW_HEIGHT - 2 * size - 73, 100, 123, null);
-
-		// Signs
-		g.drawImage(this.ground.get(8), 13 * size, Constants.WINDOW_HEIGHT - 2 * size, size, size, null);
-
-	}
-
 	// ItemHandler implement
 
 	@Override
@@ -177,11 +103,6 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	/** Adds the passenger to the array and make it start. */
 	private void handleCreationOfPassenger(Passenger passenger) {
-		if(this.passengers.isEmpty()) {
-			passenger.setPosition(1);
-		} else {
-			passenger.setPosition(this.passengers.get(this.passengers.size() - 1).getPosition() + 1);
-		}
 		this.passengers.add(passenger);
 		passenger.setScene(this);
 		passenger.setController(this);
@@ -235,34 +156,22 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	@Override
 	public boolean isRollerCoasterFull() {
-		this.semaphoreMutex.down();
-		boolean full = this.rollerCoaster.isFull();
-		this.semaphoreMutex.up();
-		return full;
+		return this.rollerCoaster.isFull();
 	}
 
 	@Override
 	public boolean isRollerCoasterMoving() {
-		this.semaphoreMutex.down();
-		boolean moving = this.rollerCoaster.isMoving();
-		this.semaphoreMutex.up();
-		return moving;
+		return this.rollerCoaster.isMoving();
 	}
 	
 	@Override
 	public boolean isRollerCoasterTravelling() {
-		this.semaphoreMutex.down();
-		boolean t = this.rollerCoaster.isTravelling();
-		this.semaphoreMutex.up();
-		return t;
+		return this.rollerCoaster.isTravelling();
 	}
 
 	@Override
 	public boolean isRollerCoasterEmpty() {
-		this.semaphoreMutex.down();
-		boolean e = this.rollerCoaster.isEmpty();
-		this.semaphoreMutex.up();
-		return e;
+		return this.rollerCoaster.isEmpty();
 	}
 
 	@Override
@@ -276,57 +185,23 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	}
 
 	@Override
-	public int getLineSize() {
-		return this.passengers.size();
-	}
-
-	@Override
-	public Point nextAvailablePositionOnRollerCoaster() {
-		return new Point(this.rollerCoaster.getX() + (Constants.ROLLER_COASTER_WIDTH / 2) * (this.rollerCoaster.getMaxSeats() - this.rollerCoaster.getOccupiedSeats() - 1),
-				this.rollerCoaster.getY() + Constants.ROLLER_COASTER_HEIGHT - Constants.PASSENGER_HEIGHT);
-	}
-
-	@Override
-	public void wakeUpNextPassenger() {
-		this.wakeUpNextPassenger(0);
-	}
-	
-	@Override
-	public void wakeUpNextPassenger(int index) {
-		if(this.passengers.size() > index) {
-			Passenger passenger = this.passengers.get(index);
-			passenger.wakeUp();
-		}
-	}
-
-	@Override
-	public boolean isRollerCoasterAlive() {
-		return this.rollerCoaster != null;
-	}
-
-	@Override
-	public void passengerDidEnter() {
-		Passenger passenger = this.passengers.remove(0);
-		this.passengersTravelling.add(passenger);
-		passenger.setPosition(this.passengersTravelling.size());
-		this.wakeUpNextPassenger();
-	}
-	
-	@Override
-	public void passengerDidLeave() {
-		Passenger passenger = this.passengersTravelling.remove(0);
-		this.passengers.add(passenger);
-		passenger.setPosition(this.passengers.size());
-	}
-
-	@Override
 	public int numberOfPassengersOnTheRollerCoaster() {
 		return this.rollerCoaster.getOccupiedSeats();
+	}
+	
+	@Override
+	public int numberOfSeatsOfTheRollerCoaster() {
+		return this.rollerCoaster.getMaxSeats();
 	}
 
 	@Override
 	public int getWidthOfRollerCoaster() {
 		return this.rollerCoaster.getWidth();
+	}
+	
+	@Override
+	public int getHeightOfRollerCoaster() {
+		return this.rollerCoaster.getHeight();
 	}
 
 	@Override
@@ -352,11 +227,6 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	@Override
 	public int getYPositionOfRollerCoaster() {
 		return this.rollerCoaster.getY();
-	}
-
-	@Override
-	public void wakeUpNextTravellingPassenger() {
-		this.passengersTravelling.get(0).wakeUp();
 	}
 
 	@Override

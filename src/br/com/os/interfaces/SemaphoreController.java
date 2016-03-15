@@ -1,14 +1,15 @@
 package br.com.os.interfaces;
 
-import java.awt.Point;
-
 /** Tells which methods a semaphore controller must have. */
 public interface SemaphoreController {
 	
+	/** Ups the line semaphore. */
 	public void upLine(int permits);
 	
+	/** Ups the line semaphore. */
 	public void upLine();
 	
+	/** Downs the line semaphore */
 	public void downLine();
 	
 	/** Ups the passengers semaphore.
@@ -57,41 +58,22 @@ public interface SemaphoreController {
 	/** Decrements the number of passengers on the roller coaster by 1. */
 	public void decrementNumberOfPassengersOnRollerCoaster();
 	
-	/** Returns the size of the line */
-	public int getLineSize();
-	
-	/** Returns the exact point of the next available position on the roller coaster. */
-	public Point nextAvailablePositionOnRollerCoaster();
-	
-	/** Ups the semaphore of the next passenger on the line. */
-	public void wakeUpNextPassenger();
-	
-	/** Wakes up a passenger on the the line.
-	 * @param index The index of the passenger to wake up. */
-	public void wakeUpNextPassenger(int index);
-	
-	/** Returns if a roller coaster exists. */
-	public boolean isRollerCoasterAlive();
-	
-	/** Tells the controller that a passenger has just entered the roller coaster. */
-	public void passengerDidEnter();
-	
-	/** Tells the controller that a passenger has just left the roller coaster. */
-	public void passengerDidLeave();
-	
 	/** Returns the number of occupied seats on the roller coaster. */
 	public int numberOfPassengersOnTheRollerCoaster();
 	
-	/** Must return the width of the roller coaster */
+	/** Must return the number of seats on the roller coaster. */
+	public int numberOfSeatsOfTheRollerCoaster();
+	
+	/** Must return the width of the roller coaster. */
 	public int getWidthOfRollerCoaster();
+	
+	/** Must return the height of the roller coaster. */
+	public int getHeightOfRollerCoaster();
 	
 	/** Must return the current x position of the roller coaster. */
 	public int getXPositionOfRollerCoaster();
 	
 	/** Must return the current Y position of the roller coaster. */
 	public int getYPositionOfRollerCoaster();
-	
-	/** Must wake up the next passenger on the array of traveling passengers. */
-	public void wakeUpNextTravellingPassenger();
 	
 }

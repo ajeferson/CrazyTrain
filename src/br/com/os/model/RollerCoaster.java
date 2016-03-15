@@ -22,7 +22,6 @@ public class RollerCoaster extends Sprite implements Item {
 	private long travelingTime;
 
 	private boolean travelling = false;
-	private boolean ready = true;
 
 	//Constants
 	public static final int TRAIN_WIDTH = 100;
@@ -48,21 +47,14 @@ public class RollerCoaster extends Sprite implements Item {
 		while(true) {
 
 			// Saying: "Available seats"
-//			this.controller.wakeUpNextPassenger();
 			this.controller.upLine(this.maxSeats);
 
 			// Sleeping while passengers do not enter
 			this.controller.downRollerCoaster();
 
-			// Waking up passenger for enjoying the landscape
-			this.controller.upPassengers(this.maxSeats);
-
 			// Moving
 			this.makeCircuit();
-
-			// Waking the first passenger to leave
-			this.controller.wakeUpNextTravellingPassenger();
-
+			
 			// Waiting for passengers to get out
 			this.controller.downRollerCoaster();
 
@@ -95,6 +87,9 @@ public class RollerCoaster extends Sprite implements Item {
 		this.controller.downMutex();
 		this.travelling = true;
 		this.controller.upMutex();
+		
+		// Waking up passenger for enjoying the landscape
+		this.controller.upPassengers(this.maxSeats);
 
 		this.move(new Point(Constants.WINDOW_WIDTH + 2*this.getWidth(), this.getY()), Direction.RIGHTWARDS, 5000);
 		this.setY(this.getY() - 3 * Constants.TILE_SIZE);
@@ -106,6 +101,7 @@ public class RollerCoaster extends Sprite implements Item {
 		this.controller.downMutex();
 		this.travelling = false;
 		this.controller.upMutex();
+		
 	}
 
 	// Getters and Setters
