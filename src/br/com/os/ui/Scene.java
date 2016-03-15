@@ -241,6 +241,11 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	public boolean isRollerCoasterMoving() {
 		return this.rollerCoaster.isMoving();
 	}
+	
+	@Override
+	public boolean isRollerCoasterTravelling() {
+		return this.rollerCoaster.isTravelling();
+	}
 
 	@Override
 	public boolean isRollerCoasterEmpty() {
@@ -317,6 +322,21 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		for(Passenger passenger : this.passengersTravelling) {
 			passenger.setDirection(direction);
 		}
+	}
+
+	@Override
+	public int getXPositionOfRollerCoaster() {
+		return this.rollerCoaster.getX();
+	}
+
+	@Override
+	public int getYPositionOfRollerCoaster() {
+		return this.rollerCoaster.getY();
+	}
+
+	@Override
+	public void wakeTravellingPassengerAtIndex(int index) {
+		this.passengersTravelling.get(index).wakeUp();
 	}
 
 }

@@ -1,5 +1,6 @@
 package br.com.os.other;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -17,14 +18,15 @@ public class Sprite extends Thread {
 	protected ArrayList<BufferedImage> spritesUpwards;
 	protected ArrayList<BufferedImage> spritesDownwards;
 	protected BufferedImage lastSprite;
-	private Scene scene;
+	protected Scene scene;
+	
+	protected String text;
 
-	private boolean playing = false; // Should be volatile?
-	private boolean moving = false;
+	protected boolean playing = false; // Should be volatile?
+	protected boolean moving = false;
 	protected boolean changeFrames = true;
 	
 	private SpriteDelegate delegate;
-	
 
 	private long previousTime;
 	protected long interval;
@@ -129,6 +131,10 @@ public class Sprite extends Thread {
 	 * @param g The Graphics in which to draw the current sprite. */
 	public void draw(Graphics g) {
 		g.drawImage(this.getSprite(), this.x, this.y, this.width, this.height, null);
+		if(this.text != null) {
+			g.setColor(Color.WHITE);
+			g.drawString(this.text, this.x - 20, this.y);
+		}
 	}
 
 	/** Starts animating the sprites. */

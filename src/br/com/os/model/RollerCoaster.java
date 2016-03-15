@@ -20,12 +20,14 @@ public class RollerCoaster extends Sprite implements Item {
 	private int occupiedSeats;
 
 	private long travelingTime;
-	
+
+	private boolean travelling = false;
+
 	//Constants
 	public static final int TRAIN_WIDTH = 100;
 	public static final int TRAIN_HEIGHT = 50;
 	public static final Point TRAIN_POSITION = new Point((Constants.WINDOW_WIDTH / 2) - (TRAIN_WIDTH / 2),Constants.WINDOW_HEIGHT - 200);
-	
+
 	private SemaphoreController controller;
 
 	/** Creates a train
@@ -50,40 +52,62 @@ public class RollerCoaster extends Sprite implements Item {
 			// Sleeping while passengers do not enter
 			this.controller.downRollerCoaster();
 
-//			System.out.println("Crazy Train is full with passengers...");
-			
-			// Set moving
-//			this.controller.downMutex();
-//			this.moving = true;
-//			this.controller.upMutex();
-
 			// Waking up passenger for enjoying the landscape
 			this.controller.upPassengers(this.maxSeats);
 
-//			System.out.println("Crazy Train finished waking all passengers for enjoying the landscape...");
-
-			// Actually moving
-//			System.out.println("The crazy train started moving...");
-			
+			// Moving
 			this.makeCircuit();
 
-			// Stop moving
-			this.controller.downMutex();
-//			this.moving = false;
-//			System.out.println("The crazy train stopped moving...");
-			this.controller.upMutex();
+			// Waking the first passenger to leave
+			this.controller.wakeTravellingPassengerAtIndex(0);
 
 			// Waiting for passengers to get out
 			this.controller.downRollerCoaster();
-
-//			System.out.println("Everybody left the Crazy Train...\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
 		}
 
 	}
 
+	public void build() {
+		BufferedImage image = BufferedImageLoader.loadImage("roller-coaster.png");
+		ArrayList<BufferedImage> array = new ArrayList<BufferedImage>();
+		array.add(image);
+		super.build(array, null, null, null, 100,
+				Constants.WINDOW_WIDTH/2 - ((this.maxSeats/2) * Constants.ROLLER_COASTER_WIDTH)/2,
+				Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT,
+				(this.maxSeats/2) * Constants.ROLLER_COASTER_WIDTH,
+				Constants.ROLLER_COASTER_HEIGHT);
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		for(int i = 0; i < this.maxSeats/2; i++) {
+			g.drawImage(this.spritesRightwards.get(0), this.getX() + i * Constants.ROLLER_COASTER_WIDTH,
+					this.getY(), Constants.ROLLER_COASTER_WIDTH, Constants.ROLLER_COASTER_HEIGHT, null);
+		}
+	}
+
+	/** Makes the train to move around the mountains. */
+	private void makeCircuit() {
+
+		this.controller.downMutex();
+		this.travelling = true;
+		this.controller.upMutex();
+
+		this.move(new Point(Constants.WINDOW_WIDTH + 2*this.getWidth(), this.getY()), Direction.RIGHTWARDS, 5000);
+		this.setY(this.getY() - 3 * Constants.TILE_SIZE);
+		this.move(new Point(-2*this.getWidth(), this.getY()), Direction.LEFTWARDS, 5000);
+		this.setY(this.getY() + 3 * Constants.TILE_SIZE);
+		this.move(new Point((Constants.WINDOW_WIDTH / 2) - (this.getWidth() /2), this.getY()), Direction.RIGHTWARDS, 5000);
+		this.setDirection(Direction.RIGHTWARDS);
+
+		this.controller.downMutex();
+		this.travelling = false;
+		this.controller.upMutex();
+	}
+
 	// Getters and Setters
-	
+
 	public void setController(SemaphoreController controller) {
 		this.controller = controller;
 	}
@@ -107,19 +131,26 @@ public class RollerCoaster extends Sprite implements Item {
 	public boolean isEmpty() {
 		return this.occupiedSeats == 0;
 	}
-	
+
 	public void incrementOccupiedSeats() {
 		this.occupiedSeats++;
 	}
-	
+
 	public void decrementOccupiedSeats() {
 		this.occupiedSeats--;
 	}
-	
+
 	public int getOccupiedSeats() {
 		return occupiedSeats;
 	}
-	
+
+	public boolean isTravelling() {
+		this.controller.downMutex();
+		boolean t = this.travelling;
+		this.controller.upMutex();
+		return t;
+	}
+
 	@Override
 	public String toString() {
 		String str = "";
@@ -127,35 +158,6 @@ public class RollerCoaster extends Sprite implements Item {
 		str += ("Available seats: " + (this.maxSeats - this.occupiedSeats));
 		str += ("\nTravelling time: " + this.travelingTime + "ms");
 		return str;
-	}
-	
-	public void build() {
-		BufferedImage image = BufferedImageLoader.loadImage("roller-coaster.png");
-		ArrayList<BufferedImage> array = new ArrayList<BufferedImage>();
-		array.add(image);
-		super.build(array, null, null, null, 100,
-				Constants.WINDOW_WIDTH/2 - ((this.maxSeats/2) * Constants.ROLLER_COASTER_WIDTH)/2,
-				Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT,
-				(this.maxSeats/2) * Constants.ROLLER_COASTER_WIDTH,
-				Constants.ROLLER_COASTER_HEIGHT);
-	}
-	
-	@Override
-	public void draw(Graphics g) {
-		for(int i = 0; i < this.maxSeats/2; i++) {
-			g.drawImage(this.spritesRightwards.get(0), this.getX() + i * Constants.ROLLER_COASTER_WIDTH,
-					this.getY(), Constants.ROLLER_COASTER_WIDTH, Constants.ROLLER_COASTER_HEIGHT, null);
-		}
-	}
-	
-	/** Makes the train to move around the mountains. */
-	private void makeCircuit() {
-		this.move(new Point(Constants.WINDOW_WIDTH + 2*this.getWidth(), this.getY()), Direction.RIGHTWARDS, 5000);
-		this.setY(this.getY() - 3 * Constants.TILE_SIZE);
-		this.move(new Point(-2*this.getWidth(), this.getY()), Direction.LEFTWARDS, 5000);
-		this.setY(this.getY() + 3 * Constants.TILE_SIZE);
-		this.move(new Point((Constants.WINDOW_WIDTH / 2) - (this.getWidth() /2), this.getY()), Direction.RIGHTWARDS, 5000);
-		this.setDirection(Direction.RIGHTWARDS);
 	}
 
 }

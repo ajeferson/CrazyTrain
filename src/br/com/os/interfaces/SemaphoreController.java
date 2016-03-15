@@ -37,6 +37,9 @@ public interface SemaphoreController {
 	 * @return false otherwise. */
 	public boolean isRollerCoasterMoving();
 	
+	/** Must tells whether or not the roller coaster is making its circuits. */
+	public boolean isRollerCoasterTravelling();
+	
 	/** Tells whether or not the roller coaster is empty.
 	 * @return true if the roller coaster is empty.
 	 * @return false otherwise. */
@@ -57,6 +60,8 @@ public interface SemaphoreController {
 	/** Ups the semaphore of the next passenger on the line. */
 	public void wakeUpNextPassenger();
 	
+	/** Wakes up a passenger on the the line.
+	 * @param index The index of the passenger to wake up. */
 	public void wakeUpNextPassenger(int index);
 	
 	/** Returns if a roller coaster exists. */
@@ -70,5 +75,15 @@ public interface SemaphoreController {
 	
 	/** Must return the width of the roller coaster */
 	public int getWidthOfRollerCoaster();
+	
+	/** Must return the current x position of the roller coaster. */
+	public int getXPositionOfRollerCoaster();
+	
+	/** Must return the current Y position of the roller coaster. */
+	public int getYPositionOfRollerCoaster();
+	
+	/** Must wake up a passenger on the array of traveling passengers.
+	 * @param index The index of the passenger to wake up. */
+	public void wakeTravellingPassengerAtIndex(int index);
 	
 }
