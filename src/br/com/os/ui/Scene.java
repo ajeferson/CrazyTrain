@@ -2,6 +2,7 @@ package br.com.os.ui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -10,12 +11,14 @@ import javax.swing.JPanel;
 
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.ItemHandler;
+import br.com.os.enums.Direction;
 import br.com.os.interfaces.Controller;
 import br.com.os.model.Passenger;
 import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingSemaphore;
 import br.com.os.other.Constants;
 import br.com.os.sprite.BufferedImageLoader;
+import br.com.os.sprite.Sprite;
 
 /** It's the scenario. */
 public class Scene extends JPanel implements Controller, ItemHandler {
@@ -216,6 +219,25 @@ public class Scene extends JPanel implements Controller, ItemHandler {
 	@Override
 	public void downLine() {
 		this.semaphoreLine.down();
+	}
+
+	@Override
+	public int numberOfPassengersOnTheLine() {
+		if(this.rollerCoaster == null) {
+			return this.passengers.size() - 1;
+		}
+		return this.passengers.size() - this.rollerCoaster.getOccupiedSeats() - 1;
+	}
+
+	@Override
+	public void organizeLineWithPosition(int position) {
+		for(Passenger passenger : this.passengers) {
+			if(!passenger.isTravelling() && passenger.getPosition() > position) {
+				passenger.setPosition(passenger.getPosition() - 1);
+				passenger.move(new Point(passenger.getX() + Constants.TILE_SIZE, passenger.getY()),
+						Direction.RIGHTWARDS, Sprite.awesomeTime(Constants.TILE_SIZE));
+			}
+		}
 	}
 
 }

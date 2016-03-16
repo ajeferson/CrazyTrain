@@ -81,4 +81,11 @@ public interface Controller {
 	/** Must return the current Y position of the roller coaster. */
 	public int getYPositionOfRollerCoaster();
 	
+	/** Must return the size of the line towards to the roller coaster. */
+	public int numberOfPassengersOnTheLine();
+	
+	/** Makes after the given position to advance one space.
+	 * @param position The reference position from which all passengers will move. */
+	public void organizeLineWithPosition(int position);
+	
 }
