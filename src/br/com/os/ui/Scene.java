@@ -7,12 +7,14 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import br.com.os.interfaces.Item;
-import br.com.os.interfaces.ItemHandler;
 import br.com.os.enums.Direction;
 import br.com.os.interfaces.Controller;
+import br.com.os.interfaces.Item;
+import br.com.os.interfaces.ViewController;
+import br.com.os.interfaces.ViewControllerDelegate;
 import br.com.os.model.Passenger;
 import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingSemaphore;
@@ -21,7 +23,7 @@ import br.com.os.sprite.BufferedImageLoader;
 import br.com.os.sprite.Sprite;
 
 /** It's the scenario. */
-public class Scene extends JPanel implements Controller, ItemHandler {
+public class Scene extends JPanel implements Controller, ViewControllerDelegate {
 
 	private static final long serialVersionUID = 8905347569137169009L;
 
@@ -35,6 +37,7 @@ public class Scene extends JPanel implements Controller, ItemHandler {
 	private BufferedImage background;
 	private RollerCoaster rollerCoaster;
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
+	private JButton createRollerCoasterButton;
 
 	
 	// JPanel override
@@ -79,8 +82,9 @@ public class Scene extends JPanel implements Controller, ItemHandler {
 	// ItemHandler implement
 
 	@Override
-	public void didProduceItem(Item item) {
+	public void didProduceItem(ViewController viewController, Item item) {
 		if(item instanceof RollerCoaster) {
+			this.createRollerCoasterButton = viewController.getActionButton();
 			this.handleCreationOfRollerCoaster((RollerCoaster) item);
 		} else if(item instanceof Passenger) {
 			this.handleCreationOfPassenger((Passenger) item);
@@ -89,6 +93,7 @@ public class Scene extends JPanel implements Controller, ItemHandler {
 
 	/** Adds a roller coaster to the canvas and sets it as the current roller coaster. */
 	private void handleCreationOfRollerCoaster(RollerCoaster rollerCoaster) {
+		this.createRollerCoasterButton.setEnabled(false);
 		this.rollerCoaster = rollerCoaster;
 		this.rollerCoaster.setController(this);
 		this.rollerCoaster.setScene(this);

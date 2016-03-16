@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import br.com.os.interfaces.ItemHandler;
+import br.com.os.interfaces.ViewControllerDelegate;
 import br.com.os.interfaces.ViewController;
 import br.com.os.model.RollerCoaster;
 
@@ -27,6 +27,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	private Container container;
 	private JTextField textFieldTravellingTime, textFieldSeats;
 	private JSlider sliderTravellingTime, sliderSeats;
+	private JButton createButton;
 
 	// Constants
 	private static final int WINDOW_WIDTH = 600;
@@ -34,7 +35,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	private static final int INITIAL_TRAVELLING_TIME = 5;
 	private static final int INITIAL_SEATS = 2;
 
-	private ItemHandler itemHandler;
+	private ViewControllerDelegate itemHandler;
 
 	public RollerCoasterViewController() {
 		super("Nova Montanha Russa");
@@ -43,7 +44,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	// ViewController implement
 	
 	@Override
-	public void build(ItemHandler itemHandler) {
+	public void build(ViewControllerDelegate itemHandler) {
 		this.container = this.getContentPane();
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		this.itemHandler = itemHandler;
@@ -127,9 +128,9 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		
 		this.container.add(centerPanel, BorderLayout.CENTER);
 
-		JButton addButton = new JButton("Criar");
-		addButton.addActionListener(this);
-		this.container.add(addButton, BorderLayout.SOUTH);
+		this.createButton = new JButton("Criar");
+		this.createButton.addActionListener(this);
+		this.container.add(this.createButton, BorderLayout.SOUTH);
 		
 		this.reset();
 
@@ -155,11 +156,16 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.itemHandler.didProduceItem(new RollerCoaster(Integer.parseInt(this.textFieldSeats.getText()),
+		this.itemHandler.didProduceItem(this, new RollerCoaster(Integer.parseInt(this.textFieldSeats.getText()),
 				1000 * Integer.parseInt(this.textFieldTravellingTime.getText()
 						.substring(0, this.textFieldTravellingTime.getText().length() - 1)
 						)
 				));
+	}
+
+	@Override
+	public JButton getActionButton() {
+		return this.createButton;
 	}
 
 }

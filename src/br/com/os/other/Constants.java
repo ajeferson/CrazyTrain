@@ -14,10 +14,14 @@ public class Constants {
 	public static final int PASSENGER_HEIGHT = 50;
 	public static final int PASSENGER_IDLE_SPRITE_INDEX = 1;
 	public static final int PASSENGER_DEFAULT_MOVE_TIME = 5000;
+	public static final boolean PASSENGER_DEFAULT_TIMES = true;
+	public static final int PASSENGER_DEFAULT_ENTERING_TIME = 1000;
+	public static final int PASSENGER_DEFAULT_LEAIVING_TIME = 1000;
 	
 	// Roller Coaster
 	public static final int ROLLER_COASTER_WIDTH = 100;
 	public static final int ROLLER_COASTER_HEIGHT = 71;
+	public static final int ALLOWED_ROLLER_COASTERS = 1;
 	
 	// Tiles
 	public static final int TILE_SIZE = 50;

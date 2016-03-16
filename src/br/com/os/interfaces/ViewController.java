@@ -1,11 +1,12 @@
 package br.com.os.interfaces;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public interface ViewController {
 
 	/** Sets up the ViewController. Must be called only once. */
-	public void build(ItemHandler itemHandler);
+	public void build(ViewControllerDelegate itemHandler);
 	
 	/** Must show the UI. */
 	public void open();
@@ -15,5 +16,8 @@ public interface ViewController {
 	
 	/** Returns the JFrame associated with the ViewController. */
 	public JFrame getFrame();
+	
+	/** Returns the button that does all the action on the ViewController. */
+	public JButton getActionButton();
 	
 }

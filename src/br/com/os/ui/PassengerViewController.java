@@ -18,9 +18,10 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import br.com.os.interfaces.ItemHandler;
+import br.com.os.interfaces.ViewControllerDelegate;
 import br.com.os.interfaces.ViewController;
 import br.com.os.model.Passenger;
+import br.com.os.other.Constants;
 
 /** ViewController for adding new passengers. */
 public class PassengerViewController extends JFrame implements ViewController, ActionListener, ChangeListener {
@@ -38,15 +39,16 @@ public class PassengerViewController extends JFrame implements ViewController, A
 	private Container container;
 	private JSlider sliderEntering, sliderLeaving;
 	private JTextField textFieldId, textFieldEntering, textFieldLeaving;
+	private JButton createButton;
 
-	private ItemHandler intemHandler;
+	private ViewControllerDelegate intemHandler;
 
 	public PassengerViewController() {
 		super("Novo Passageiro");
 	}
 
 	@Override
-	public void build(ItemHandler itemHandler) {
+	public void build(ViewControllerDelegate itemHandler) {
 		this.intemHandler = itemHandler;
 		this.container = this.getContentPane();
 		this.addComponents();
@@ -102,9 +104,9 @@ public class PassengerViewController extends JFrame implements ViewController, A
 		this.container.add(panel, BorderLayout.CENTER);
 
 		// Create Passenger Button
-		JButton createButton = new JButton("Criar Passageiro");
-		createButton.addActionListener(this);
-		this.container.add(createButton, BorderLayout.SOUTH);
+		this.createButton = new JButton("Criar Passageiro");
+		this.createButton.addActionListener(this);
+		this.container.add(this.createButton, BorderLayout.SOUTH);
 
 	}
 
@@ -148,7 +150,13 @@ public class PassengerViewController extends JFrame implements ViewController, A
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.intemHandler.didProduceItem(new Passenger());
+		int enteringTime = this.sliderEntering.getValue();
+		int leavingTime = this.sliderLeaving.getValue();
+		if(Constants.PASSENGER_DEFAULT_TIMES) {
+			enteringTime = Constants.PASSENGER_DEFAULT_ENTERING_TIME;
+			leavingTime = Constants.PASSENGER_DEFAULT_LEAIVING_TIME;
+		}
+		this.intemHandler.didProduceItem(this, new Passenger(enteringTime, leavingTime));
 	}
 
 	@Override
@@ -159,6 +167,11 @@ public class PassengerViewController extends JFrame implements ViewController, A
 		} else {
 			this.textFieldLeaving.setText(slider.getValue() + "s");
 		}
+	}
+
+	@Override
+	public JButton getActionButton() {
+		return this.createButton;
 	}
 
 }

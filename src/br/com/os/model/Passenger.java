@@ -27,11 +27,11 @@ public class Passenger extends Sprite implements Item {
 
 	private Controller controller;
 
-	public Passenger() {
+	public Passenger(int enteringTime, int leavingTime) {
 		this.id = ++lastId;
 		this.setName("P" + this.id);
-		this.enteringTime = 1000;
-		this.leavingTime = 1000;
+		this.enteringTime = enteringTime;
+		this.leavingTime = leavingTime;
 		this.text = "" + this.id;
 	}
 

@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -11,7 +12,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-import br.com.os.interfaces.ItemHandler;
+import br.com.os.interfaces.ViewControllerDelegate;
 import br.com.os.interfaces.ViewController;
 import br.com.os.model.amazing.AmazingJMenuItem;
 
@@ -94,7 +95,7 @@ public class MainViewController extends JFrame implements ViewController {
 	// ViewController implement
 
 	@Override
-	public void build(ItemHandler itemHandler) {
+	public void build(ViewControllerDelegate itemHandler) {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.container = this.getContentPane();
@@ -117,6 +118,11 @@ public class MainViewController extends JFrame implements ViewController {
 		return this;
 	}
 
+	@Override
+	public JButton getActionButton() {
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 
