@@ -21,7 +21,6 @@ import javax.swing.event.ChangeListener;
 import br.com.os.interfaces.ViewControllerDelegate;
 import br.com.os.interfaces.ViewController;
 import br.com.os.model.Passenger;
-import br.com.os.other.Constants;
 
 /** ViewController for adding new passengers. */
 public class PassengerViewController extends JFrame implements ViewController, ActionListener, ChangeListener {
@@ -150,13 +149,8 @@ public class PassengerViewController extends JFrame implements ViewController, A
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		int enteringTime = this.sliderEntering.getValue();
-		int leavingTime = this.sliderLeaving.getValue();
-		if(Constants.PASSENGER_DEFAULT_TIMES) {
-			enteringTime = Constants.PASSENGER_DEFAULT_ENTERING_TIME;
-			leavingTime = Constants.PASSENGER_DEFAULT_LEAIVING_TIME;
-		}
-		this.intemHandler.didProduceItem(this, new Passenger(enteringTime, leavingTime));
+		this.textFieldId.setText("" + (Passenger.nextPassengerId() + 1));
+		this.intemHandler.didProduceItem(this, new Passenger(this.sliderEntering.getValue() * 1000, this.sliderLeaving.getValue() * 1000));
 	}
 
 	@Override

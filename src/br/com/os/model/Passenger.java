@@ -160,7 +160,11 @@ public class Passenger extends Sprite implements Item {
 		this.travelPosition = this.controller.numberOfPassengersOnTheRollerCoaster();
 		Point targetPoint = new Point(this.controller.getXPositionOfRollerCoaster() + (Constants.ROLLER_COASTER_WIDTH / 2) * (this.controller.numberOfSeatsOfTheRollerCoaster() - this.travelPosition - 1),
 				this.controller.getYPositionOfRollerCoaster() + Constants.ROLLER_COASTER_HEIGHT - Constants.PASSENGER_HEIGHT);
-		this.move(targetPoint, Direction.LEFTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - (int) targetPoint.getX())));
+		int time = this.enteringTime;
+		if(Constants.PASSENGER_DEFAULT_TIMES) {
+			time = Sprite.awesomeTime(Math.abs(this.getX() - (int) targetPoint.getX()));
+		}
+		this.move(targetPoint, Direction.LEFTWARDS, time);
 
 		// Entering on the roller coaster
 		this.setY((this.getY() + this.getHeight()) - Constants.ROLLER_COASTER_HEIGHT - 30);
@@ -170,10 +174,14 @@ public class Passenger extends Sprite implements Item {
 
 	/** Makes the passenger to leave the roller coaster and stays above the exiting ladder. */
 	private void leaveRollerCoaster() {
-		int target;
+		int target, time;
 		this.setY((this.getY() + 30) + (Constants.ROLLER_COASTER_HEIGHT - this.getHeight()));
 		target = Constants.TILE_SIZE * 2;
-		this.move(new Point(target, this.getY()), Direction.LEFTWARDS, Sprite.awesomeTime(Math.abs(target - this.getX())));
+		time = this.leavingTime;
+		if(Constants.PASSENGER_DEFAULT_TIMES) {
+			time = Sprite.awesomeTime(Math.abs(target - this.getX()));
+		}
+		this.move(new Point(target, this.getY()), Direction.LEFTWARDS, time);
 	}
 	
 	/** Makes this passenger to go down the ladder */
