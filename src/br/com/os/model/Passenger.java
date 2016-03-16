@@ -35,6 +35,7 @@ public class Passenger extends Sprite implements Item {
 		
 		while(true) {
 			
+			// Positioning correctly on the line
 			this.goToTheEndOfLine();
 			
 			// Waiting up on the line
@@ -43,6 +44,9 @@ public class Passenger extends Sprite implements Item {
 			// Entering the roller coaster
 			this.controller.downMutex();
 			
+			// Just for making sure to be on the bottom of the entrance ladder
+			this.moveToTheEntranceLadder();
+			
 			this.climbUpTheLadder();
 			this.enterRollerCoaster();
 			
@@ -50,7 +54,6 @@ public class Passenger extends Sprite implements Item {
 			this.setTravelling(true);
 			
 			// Organizing the line
-			System.out.println(this.id + "   " + this.position);
 			this.controller.organizeLineWithPosition(this.position);
 			
 			// Giving permission for the roller coaster to move
@@ -129,13 +132,20 @@ public class Passenger extends Sprite implements Item {
 		
 		this.controller.downMutex();
 		this.position = this.controller.numberOfPassengersOnTheLine();
-		System.out.println("Passenger: " + this.id + "   Position: " + this.position);
 		this.controller.upMutex();
 		
 		int target = Constants.WINDOW_WIDTH - (5 + this.position) * Constants.TILE_SIZE;
 		this.move(new Point(target, this.getY()), Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
 	}
 
+	/** Makes the passenger to go to bottom of the entrance ladder. */
+	private void moveToTheEntranceLadder() {
+		int target = Constants.LADDER_ENTRANCE_X_POSITION;
+		this.move(new Point(target, this.getY()),
+				Direction.RIGHTWARDS,
+				Sprite.awesomeTime(Math.abs(this.getX() - target)));
+	};
+	
 	/** Moves this passenger from the bottom to top of the ladder. */
 	private void climbUpTheLadder() {
 		int target = this.getY() - (Constants.LADDER_HEIGHT + Constants.TILE_SIZE);

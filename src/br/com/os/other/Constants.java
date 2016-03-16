@@ -21,7 +21,7 @@ public class Constants {
 	
 	// Tiles
 	public static final int TILE_SIZE = 50;
-	public static final int LADDER_X_POSITION = WINDOW_WIDTH - 5 * TILE_SIZE;
+	public static final int LADDER_ENTRANCE_X_POSITION = WINDOW_WIDTH - 5 * TILE_SIZE;
 	public static final int LADDER_HEIGHT = 3 * TILE_SIZE;
 	
 }
