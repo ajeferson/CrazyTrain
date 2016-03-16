@@ -18,6 +18,7 @@ public class Passenger extends Sprite implements Item {
 	private int enteringTime;
 	private int leavingTime;
 	private int position;
+	private boolean travelling = false;
 
 	private SemaphoreController controller;
 
@@ -50,6 +51,7 @@ public class Passenger extends Sprite implements Item {
 			this.enterRollerCoaster();
 			
 			this.controller.incrementNumberOfPassengersOnRollerCoaster();
+			this.setTravelling(true);
 			
 			// Giving permission for the roller coaster to move
 			if(this.controller.isRollerCoasterFull()) {
@@ -71,6 +73,7 @@ public class Passenger extends Sprite implements Item {
 			this.climbDownTheLadder();
 			
 			this.controller.decrementNumberOfPassengersOnRollerCoaster();
+			this.setTravelling(false);
 			
 			// Checking to release roller coaster
 			if(this.controller.isRollerCoasterEmpty()) {
@@ -212,6 +215,14 @@ public class Passenger extends Sprite implements Item {
 
 	public void setPosition(int position) {
 		this.position = position;
+	}
+	
+	public boolean isTravelling() {
+		return travelling;
+	}
+
+	public void setTravelling(boolean travelling) {
+		this.travelling = travelling;
 	}
 
 	@Override

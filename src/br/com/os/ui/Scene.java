@@ -214,8 +214,10 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	@Override
 	public void spriteDidChangeDirectionTo(Direction direction) {
-		for(Passenger passenger : this.passengersTravelling) {
-			passenger.setDirection(direction);
+		for(Passenger passenger : this.passengers) {
+			if(passenger.isTravelling()) {
+				passenger.setDirection(direction);
+			}
 		}
 	}
 
