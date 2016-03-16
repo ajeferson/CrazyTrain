@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 import br.com.os.enums.Direction;
 import br.com.os.interfaces.Item;
-import br.com.os.interfaces.SemaphoreController;
-import br.com.os.other.Sprite;
-import br.com.os.other.BufferedImageLoader;
+import br.com.os.interfaces.Controller;
 import br.com.os.other.Constants;
+import br.com.os.sprite.BufferedImageLoader;
+import br.com.os.sprite.Sprite;
 
 /** This class describes the train, take takes passengers along a trail and takes
  * travellingTime (ms) to make an entire lap. */
@@ -18,17 +18,10 @@ public class RollerCoaster extends Sprite implements Item {
 
 	private final int maxSeats;
 	private int occupiedSeats;
-
 	private long travelingTime;
-
 	private boolean travelling = false;
 
-	//Constants
-	public static final int TRAIN_WIDTH = 100;
-	public static final int TRAIN_HEIGHT = 50;
-	public static final Point TRAIN_POSITION = new Point((Constants.WINDOW_WIDTH / 2) - (TRAIN_WIDTH / 2),Constants.WINDOW_HEIGHT - 200);
-
-	private SemaphoreController controller;
+	private Controller controller;
 
 	/** Creates a train
 	 * @param maxSeats Max amount of seats on the train
@@ -62,17 +55,19 @@ public class RollerCoaster extends Sprite implements Item {
 
 	}
 
+	/** Builds the roller coaster by setting the sprites. */
 	public void build() {
 		BufferedImage image = BufferedImageLoader.loadImage("roller-coaster.png");
 		ArrayList<BufferedImage> array = new ArrayList<BufferedImage>();
 		array.add(image);
-		super.build(array, null, null, null, 100,
+		super.build(array, null, null, 100,
 				Constants.WINDOW_WIDTH/2 - ((this.maxSeats/2) * Constants.ROLLER_COASTER_WIDTH)/2,
 				Constants.WINDOW_HEIGHT - 5*Constants.TILE_SIZE - Constants.ROLLER_COASTER_HEIGHT,
 				(this.maxSeats/2) * Constants.ROLLER_COASTER_WIDTH,
 				Constants.ROLLER_COASTER_HEIGHT);
 	}
 
+	/** Draws all the wagons of the roller coaster */
 	@Override
 	public void draw(Graphics g) {
 		for(int i = 0; i < this.maxSeats/2; i++) {
@@ -104,9 +99,10 @@ public class RollerCoaster extends Sprite implements Item {
 		
 	}
 
+	
 	// Getters and Setters
 
-	public void setController(SemaphoreController controller) {
+	public void setController(Controller controller) {
 		this.controller = controller;
 	}
 

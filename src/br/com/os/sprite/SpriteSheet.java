@@ -1,4 +1,4 @@
-package br.com.os.other;
+package br.com.os.sprite;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

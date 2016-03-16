@@ -4,11 +4,11 @@ import java.awt.Point;
 
 import br.com.os.enums.Direction;
 import br.com.os.interfaces.Item;
-import br.com.os.interfaces.SemaphoreController;
-import br.com.os.other.Sprite;
+import br.com.os.interfaces.Controller;
 import br.com.os.other.Constants;
-import br.com.os.other.SpriteSheet;
-import br.com.os.other.SpriteSheetCooordinate;
+import br.com.os.sprite.Sprite;
+import br.com.os.sprite.SpriteSheet;
+import br.com.os.sprite.SpriteSheetCooordinate;
 
 /** This class represents a passenger that can take a trip on the train. */
 public class Passenger extends Sprite implements Item {
@@ -20,7 +20,7 @@ public class Passenger extends Sprite implements Item {
 	private int position;
 	private boolean travelling = false;
 
-	private SemaphoreController controller;
+	private Controller controller;
 
 	public Passenger() {
 		this.id = ++lastId;
@@ -111,16 +111,10 @@ public class Passenger extends Sprite implements Item {
 				new SpriteSheetCooordinate(34, 96, 26, 32),
 				new SpriteSheetCooordinate(66, 96, 25, 32)
 		};
-		SpriteSheetCooordinate[] coordinatesDownwards = {
-				new SpriteSheetCooordinate(3, 0, 28, 32),
-				new SpriteSheetCooordinate(34, 0, 28, 32),
-				new SpriteSheetCooordinate(67, 0, 28, 32)
-		};
 
 		super.build(spriteSheet.getSpritesWithCoordinates(coordinatesRightwards),
 				spriteSheet.getSpritesWithCoordinates(coordinatesLeftwards),
 				spriteSheet.getSpritesWithCoordinates(coordinatesUpwards),
-				spriteSheet.getSpritesWithCoordinates(coordinatesDownwards),
 				200, -Constants.TILE_SIZE, Constants.WINDOW_HEIGHT - 2 * Constants.TILE_SIZE,
 				Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
 
@@ -185,7 +179,7 @@ public class Passenger extends Sprite implements Item {
 
 	// Getters and Setters
 
-	public void setController(SemaphoreController controller) {
+	public void setController(Controller controller) {
 		this.controller = controller;
 	}
 

@@ -1,7 +1,9 @@
 package br.com.os.interfaces;
 
-/** Tells which methods a semaphore controller must have. */
-public interface SemaphoreController {
+/** Defines useful methods for handling with semaphores and roller coaster. */
+public interface Controller {
+	
+	// Semaphore methods
 	
 	/** Ups the line semaphore. */
 	public void upLine(int permits);
@@ -33,6 +35,9 @@ public interface SemaphoreController {
 	
 	/** Downs the mutex semaphore. */
 	public void downMutex();
+	
+	
+	// Roller coaster methods
 	
 	/** Tells if the current roller coaster is full.
 	 * @return true if the roller coaster is full.

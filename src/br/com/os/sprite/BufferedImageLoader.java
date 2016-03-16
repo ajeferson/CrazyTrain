@@ -1,10 +1,11 @@
-package br.com.os.other;
+package br.com.os.sprite;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+/** Usage: load images from the resources */
 public class BufferedImageLoader {
 
 	/** Loads a BufferedImage from the images directory. */

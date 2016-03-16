@@ -2,29 +2,23 @@ package br.com.os.ui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import br.com.os.enums.Direction;
 import br.com.os.interfaces.Item;
 import br.com.os.interfaces.ItemHandler;
-import br.com.os.interfaces.SemaphoreController;
-import br.com.os.interfaces.SpriteDelegate;
+import br.com.os.interfaces.Controller;
 import br.com.os.model.Passenger;
 import br.com.os.model.RollerCoaster;
 import br.com.os.model.amazing.AmazingSemaphore;
-import br.com.os.other.BufferedImageLoader;
 import br.com.os.other.Constants;
-import br.com.os.other.Sprite;
+import br.com.os.sprite.BufferedImageLoader;
 
 /** It's the scenario. */
-public class Scene extends JPanel implements SemaphoreController, ItemHandler, ActionListener, SpriteDelegate {
+public class Scene extends JPanel implements Controller, ItemHandler {
 
 	private static final long serialVersionUID = 8905347569137169009L;
 
@@ -33,13 +27,13 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	private AmazingSemaphore semaphorePassengers = new AmazingSemaphore(0);
 	private AmazingSemaphore semaphoreMutex = new AmazingSemaphore(1);
 	private AmazingSemaphore semaphoreLine = new AmazingSemaphore(0);
-
+	
+	// Screen elements
 	private BufferedImage background;
-
 	private RollerCoaster rollerCoaster;
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
-	private ArrayList<Passenger> passengersTravelling = new ArrayList<Passenger>();
 
+	
 	// JPanel override
 	
 	@Override
@@ -56,21 +50,21 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		Toolkit.getDefaultToolkit().sync();
 	}
 
+	/** Iterates over the passengers array and draws each of them on the screen. */
 	private void drawPassengers(Graphics g) {
 		for(Passenger passenger : this.passengers) {
 			passenger.draw(g);
 		}
-		for(Passenger passenger : this.passengersTravelling) {
-			passenger.draw(g);
-		}
 	}
 
+	/** Draws the roller coaster on the screen. */
 	private void drawRollerCoaster(Graphics g) {
 		if(this.rollerCoaster != null) {
 			this.rollerCoaster.draw(g);
 		}
 	}
 
+	/** Draws the background on the screen. */
 	private void drawBackground(Graphics g) {
 		if(this.background == null) {
 			this.background = BufferedImageLoader.loadImage("awesome-background.png");
@@ -78,6 +72,7 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		g.drawImage(this.background, 0, 0, this.getWidth(), this.getHeight(), null);
 	}
 
+	
 	// ItemHandler implement
 
 	@Override
@@ -94,7 +89,6 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		this.rollerCoaster = rollerCoaster;
 		this.rollerCoaster.setController(this);
 		this.rollerCoaster.setScene(this);
-		this.rollerCoaster.setDelegate(this);
 		this.rollerCoaster.build();
 		this.rollerCoaster.play();
 		this.rollerCoaster.start();
@@ -111,13 +105,8 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 		passenger.start();
 	}
 
+	
 	// SemaphoreControllerImplement
-
-	@Override
-	/** Timer event. Called evertime the timer ends its counting. */
-	public void actionPerformed(ActionEvent e) {
-		this.repaint();
-	}
 
 	@Override
 	public void upPassengers(int permits) {
@@ -202,23 +191,6 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	@Override
 	public int getHeightOfRollerCoaster() {
 		return this.rollerCoaster.getHeight();
-	}
-
-	@Override
-	public void spriteDidUpdatePositionToPoint(Sprite sprite, Point point) {
-//		for(Passenger passenger : this.passengersTravelling) {
-//			passenger.setX(this.rollerCoaster.getX() + this.rollerCoaster.getWidth() - passenger.getPosition() * Constants.PASSENGER_WIDTH);
-//			passenger.setY(this.rollerCoaster.getY() - 30);
-//		}
-	}
-
-	@Override
-	public void spriteDidChangeDirectionTo(Direction direction) {
-		for(Passenger passenger : this.passengers) {
-			if(passenger.isTravelling()) {
-				passenger.setDirection(direction);
-			}
-		}
 	}
 
 	@Override

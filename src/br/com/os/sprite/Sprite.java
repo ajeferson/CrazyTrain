@@ -1,4 +1,4 @@
-package br.com.os.other;
+package br.com.os.sprite;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import br.com.os.enums.Direction;
-import br.com.os.interfaces.SpriteDelegate;
+import br.com.os.other.Constants;
 import br.com.os.ui.Scene;
 
 /** Encapsulates a set of sprites an animates them. */
@@ -16,17 +16,15 @@ public class Sprite extends Thread {
 	protected ArrayList<BufferedImage> spritesRightwards;
 	protected ArrayList<BufferedImage> spritesLeftwards;
 	protected ArrayList<BufferedImage> spritesUpwards;
-	protected ArrayList<BufferedImage> spritesDownwards;
 	protected BufferedImage lastSprite;
 	protected Scene scene;
 	
 	protected String text;
 
-	protected boolean playing = false; // Should be volatile?
+	// Statuses variables
+	protected boolean playing = false;
 	protected boolean moving = false;
 	protected boolean changeFrames = true;
-	
-	private SpriteDelegate delegate;
 
 	private long previousTime;
 	protected long interval;
@@ -62,12 +60,10 @@ public class Sprite extends Thread {
 	public void build(ArrayList<BufferedImage> spritesRightwards,
 			ArrayList<BufferedImage> spritesLeftwards,
 			ArrayList<BufferedImage> spritesUpwards,
-			ArrayList<BufferedImage> spritesDownwards,
 			long interval, int x, int y, int width, int height) {
 		this.spritesRightwards = spritesRightwards;
 		this.spritesLeftwards = spritesLeftwards;
 		this.spritesUpwards = spritesUpwards;
-		this.spritesDownwards = spritesDownwards;
 		this.lastSprite = spritesRightwards.get(0);
 		this.interval = interval;
 		this.x = x;
@@ -108,9 +104,6 @@ public class Sprite extends Thread {
 				double fraction = this.movingElapsedTime / this.movingDuration;
 				this.x = this.initialX + (int) (this.deltaX * fraction);
 				this.y = this.initialY + (int) (this.deltaY * fraction);
-				if(this.delegate != null) {
-					this.delegate.spriteDidUpdatePositionToPoint(this, new Point(this.x, this.y));
-				}
 				this.scene.repaint();
 			} else {
 				this.x = this.targetX;
@@ -153,8 +146,6 @@ public class Sprite extends Thread {
 			return this.spritesLeftwards.get(this.currentSpriteIndex);
 		case UPWARDS:
 			return this.spritesUpwards.get(this.currentSpriteIndex);
-		case DOWNWARDS:
-			return this.spritesDownwards.get(this.currentSpriteIndex);
 		default:
 			return this.lastSprite;
 		}
@@ -169,8 +160,6 @@ public class Sprite extends Thread {
 			return this.spritesLeftwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
 		case UPWARDS:
 			return this.spritesUpwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
-		case DOWNWARDS:
-			return this.spritesDownwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
 		default:
 			return this.spritesRightwards.get(Constants.PASSENGER_IDLE_SPRITE_INDEX);
 		}
@@ -228,21 +217,10 @@ public class Sprite extends Thread {
 	
 	public void setDirection(Direction direction) {
 		this.direction = direction;
-		if(this.delegate != null) {
-			this.delegate.spriteDidChangeDirectionTo(this.direction);
-		}
 	}
 
 	public void setScene(Scene scene) {
 		this.scene = scene;
-	}
-
-	public SpriteDelegate getDelegate() {
-		return delegate;
-	}
-
-	public void setDelegate(SpriteDelegate delegate) {
-		this.delegate = delegate;
 	}
 	
 	public boolean isMoving() {

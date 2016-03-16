@@ -6,7 +6,6 @@ public enum Direction {
 	LEFTWARDS("Leftwards"),
 	RIGHTWARDS("Rightwards"),
 	UPWARDS("Upwards"),
-	DOWNWARDS("Downwards"),
 	NONE("None");
 	
 	private String description;
