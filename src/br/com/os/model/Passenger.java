@@ -22,6 +22,8 @@ public class Passenger extends Sprite implements Item {
 	// Positions
 	private int linePosition;
 	private int travelPosition;
+	
+	private int delta = 0;
 
 	private Controller controller;
 
@@ -250,6 +252,24 @@ public class Passenger extends Sprite implements Item {
 		str += "\nEntering time: " + this.enteringTime;
 		str += "\nLeaving time: " + this.leavingTime;
 		return str;
+	}
+
+	public int getDelta() {
+		return delta;
+	}
+
+	public void setDelta(int delta) {
+		this.delta = delta;
+	}
+	
+	@Override
+	public void move(Point target, Direction direction, long time) {
+		super.move(target, direction, time);
+		if(this.delta > 0) {
+			Point point = new Point(this.getX() + delta, this.getY());
+			this.delta = 0;
+			this.move(point, Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - (int) point.getX())));
+		}
 	}
 
 }

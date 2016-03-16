@@ -234,8 +234,12 @@ public class Scene extends JPanel implements Controller, ItemHandler {
 		for(Passenger passenger : this.passengers) {
 			if(!passenger.isTravelling() && passenger.getPosition() > position) {
 				passenger.setPosition(passenger.getPosition() - 1);
-				passenger.move(new Point(passenger.getX() + Constants.TILE_SIZE, passenger.getY()),
-						Direction.RIGHTWARDS, Sprite.awesomeTime(Constants.TILE_SIZE));
+				if(passenger.isMoving()) {
+					passenger.setDelta(passenger.getDelta() + Constants.TILE_SIZE);
+				} else {
+					passenger.move(new Point(passenger.getX() + Constants.TILE_SIZE, passenger.getY()),
+							Direction.RIGHTWARDS, Sprite.awesomeTime(Constants.TILE_SIZE));
+				}
 			}
 		}
 	}
