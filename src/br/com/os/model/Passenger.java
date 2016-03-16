@@ -32,14 +32,10 @@ public class Passenger extends Sprite implements Item {
 
 	@Override
 	public void run() {
-
-		int target;
 		
 		while(true) {
 			
-			// Moving to the line
-			target = Constants.WINDOW_WIDTH - 5 * Constants.TILE_SIZE;
-			this.move(new Point(target, this.getY()), Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
+			this.goToTheEndOfLine();
 			
 			// Waiting up on the line
 			this.controller.downLine();
@@ -95,17 +91,21 @@ public class Passenger extends Sprite implements Item {
 
 	/** Sets the sprite frames to be used. */
 	public void build() {
-		SpriteSheet spriteSheet = new SpriteSheet(1);
+		
+		SpriteSheet spriteSheet = new SpriteSheet();
+		
 		SpriteSheetCooordinate[] coordinatesRightwards = {
 				new SpriteSheetCooordinate(4, 64, 25, 32),
 				new SpriteSheetCooordinate(36, 64, 25, 32),
 				new SpriteSheetCooordinate(68, 64, 25, 32)
 		};
+		
 		SpriteSheetCooordinate[] coordinatesLeftwards = {
 				new SpriteSheetCooordinate(2, 32, 27, 32),
 				new SpriteSheetCooordinate(34, 32, 27, 32),
 				new SpriteSheetCooordinate(66, 32, 27, 32)
 		};
+		
 		SpriteSheetCooordinate[] coordinatesUpwards = {
 				new SpriteSheetCooordinate(2, 96, 26, 32),
 				new SpriteSheetCooordinate(34, 96, 26, 32),
@@ -118,6 +118,12 @@ public class Passenger extends Sprite implements Item {
 				200, -Constants.TILE_SIZE, Constants.WINDOW_HEIGHT - 2 * Constants.TILE_SIZE,
 				Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
 
+	}
+	
+	/** Makes the passenger to go from its current position to the end of the line */
+	private void goToTheEndOfLine() {
+		int target = Constants.WINDOW_WIDTH - 5 * Constants.TILE_SIZE;
+		this.move(new Point(target, this.getY()), Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
 	}
 
 	/** Moves this passenger from the bottom to top of the ladder. */

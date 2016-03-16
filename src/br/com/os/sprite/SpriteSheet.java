@@ -8,11 +8,9 @@ public class SpriteSheet {
 	
 	public BufferedImage spriteSheet;
 	
-	/** Builds a sprite sheet.
-	 * @param The number of the sprite sheet file. E.G. spriteSheetNumber = 1 means loading the
-	 * image spriteSheet1.png. */
-	public SpriteSheet(int spriteSheetNumber) {
-		this.spriteSheet = BufferedImageLoader.loadImage("spriteSheet" + spriteSheetNumber + ".png");
+	/** Builds the sprite sheet. */
+	public SpriteSheet() {
+		this.spriteSheet = BufferedImageLoader.loadImage("spriteSheet1.png");
 	}
 	
 	/** Clip a spritesheet in a given region.
