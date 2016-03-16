@@ -206,10 +206,10 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	@Override
 	public void spriteDidUpdatePositionToPoint(Sprite sprite, Point point) {
-		for(Passenger passenger : this.passengersTravelling) {
-			passenger.setX(this.rollerCoaster.getX() + this.rollerCoaster.getWidth() - passenger.getPosition() * Constants.PASSENGER_WIDTH);
-			passenger.setY(this.rollerCoaster.getY() - 30);
-		}
+//		for(Passenger passenger : this.passengersTravelling) {
+//			passenger.setX(this.rollerCoaster.getX() + this.rollerCoaster.getWidth() - passenger.getPosition() * Constants.PASSENGER_WIDTH);
+//			passenger.setY(this.rollerCoaster.getY() - 30);
+//		}
 	}
 
 	@Override

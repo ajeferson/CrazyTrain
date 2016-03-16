@@ -147,7 +147,7 @@ public class Passenger extends Sprite implements Item {
 		
 	}
 
-	/** Makes the passenger to leave the roller coaster and stays above the exiting laadder. */
+	/** Makes the passenger to leave the roller coaster and stays above the exiting ladder. */
 	private void leaveRollerCoaster() {
 		int target;
 		this.setY((this.getY() + 30) + (Constants.ROLLER_COASTER_HEIGHT - this.getHeight()));
@@ -173,7 +173,7 @@ public class Passenger extends Sprite implements Item {
 			
 			this.text = "Enjoying";
 			
-			// Udating passenger position
+			// Updating passenger position
 			this.setX(this.controller.getXPositionOfRollerCoaster() + this.controller.getWidthOfRollerCoaster() - (this.position + 1) * Constants.PASSENGER_WIDTH);
 			this.setY(this.controller.getYPositionOfRollerCoaster() - 30);			
 			this.scene.repaint();
