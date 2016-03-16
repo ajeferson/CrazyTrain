@@ -86,11 +86,16 @@ public class RollerCoaster extends Sprite implements Item {
 		// Waking up passenger for enjoying the landscape
 		this.controller.upPassengers(this.maxSeats);
 
-		this.move(new Point(Constants.WINDOW_WIDTH + 2*this.getWidth(), this.getY()), Direction.RIGHTWARDS, 5000);
+		long time = this.travelingTime;
+		if(Constants.ROLLER_COASTER_DEFAULT_TIMES) {
+			time = Constants.ROLLER_COASTER_DEFAULT_TIME;
+		}
+		
+		this.move(new Point(Constants.WINDOW_WIDTH + 2*this.getWidth(), this.getY()), Direction.RIGHTWARDS, time/4);
 		this.setY(this.getY() - 3 * Constants.TILE_SIZE);
-		this.move(new Point(-2*this.getWidth(), this.getY()), Direction.LEFTWARDS, 5000);
+		this.move(new Point(-2*this.getWidth(), this.getY()), Direction.LEFTWARDS, 2 * (time/4));
 		this.setY(this.getY() + 3 * Constants.TILE_SIZE);
-		this.move(new Point((Constants.WINDOW_WIDTH / 2) - (this.getWidth() /2), this.getY()), Direction.RIGHTWARDS, 5000);
+		this.move(new Point((Constants.WINDOW_WIDTH / 2) - (this.getWidth() /2), this.getY()), Direction.RIGHTWARDS, time/4);
 		this.setDirection(Direction.RIGHTWARDS);
 
 		this.controller.downMutex();

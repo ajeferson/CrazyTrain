@@ -20,6 +20,8 @@ public class Constants {
 	public static final int ROLLER_COASTER_WIDTH = 100;
 	public static final int ROLLER_COASTER_HEIGHT = 71;
 	public static final int ALLOWED_ROLLER_COASTERS = 1;
+	public static final int ROLLER_COASTER_DEFAULT_TIME = 20000;
+	public static final boolean ROLLER_COASTER_DEFAULT_TIMES = false;
 	
 	// Tiles
 	public static final int TILE_SIZE = 50;
