@@ -186,6 +186,9 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	@Override
 	public int numberOfPassengersOnTheRollerCoaster() {
+		if(this.rollerCoaster == null) {
+			return 0;
+		}
 		return this.rollerCoaster.getOccupiedSeats();
 	}
 	
@@ -206,10 +209,10 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 
 	@Override
 	public void spriteDidUpdatePositionToPoint(Sprite sprite, Point point) {
-		for(Passenger passenger : this.passengersTravelling) {
-			passenger.setX(this.rollerCoaster.getX() + this.rollerCoaster.getWidth() - passenger.getPosition() * Constants.PASSENGER_WIDTH);
-			passenger.setY(this.rollerCoaster.getY() - 30);
-		}
+//		for(Passenger passenger : this.passengersTravelling) {
+//			passenger.setX(this.rollerCoaster.getX() + this.rollerCoaster.getWidth() - passenger.getPosition() * Constants.PASSENGER_WIDTH);
+//			passenger.setY(this.rollerCoaster.getY() - 30);
+//		}
 	}
 
 	@Override
@@ -242,6 +245,48 @@ public class Scene extends JPanel implements SemaphoreController, ItemHandler, A
 	@Override
 	public void downLine() {
 		this.semaphoreLine.down();
+	}
+
+	@Override
+	public int getLineSize() {
+		return this.passengers.size();
+	}
+
+	@Override
+	public void organizeLineWithId(int id) {
+		Passenger passenger;
+		int c = 0;
+		int target;
+		for(int i = 0; i < this.passengers.size(); i++) {
+			passenger = this.passengers.get(i);
+			if(!passenger.isTravelling()) {
+				target = Constants.LADDER_X_POSITION - c * Constants.TILE_SIZE;
+				passenger.move(new Point(target, passenger.getY()),
+						Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(passenger.getX() - target)));
+				c++;
+			}
+		}
+	}
+	
+	public void passengerDidEnter(int id) {
+		this.passengers.remove(0);
+	}
+
+	@Override
+	public void inlinePassenger(Passenger passenger) {
+		this.passengers.add(passenger);
+	}
+
+	@Override
+	public void removeTravellerWithId(int id) {
+		int index = -1;
+		int i = 0;
+		while(index < 0) {
+			if(this.passengersTravelling.get(i++).getPassengerId() == id) {
+				index = i;
+			}
+		}
+		this.passengersTravelling.remove(index);
 	}
 
 }

@@ -1,5 +1,7 @@
 package br.com.os.interfaces;
 
+import br.com.os.model.Passenger;
+
 /** Tells which methods a semaphore controller must have. */
 public interface SemaphoreController {
 	
@@ -75,5 +77,13 @@ public interface SemaphoreController {
 	
 	/** Must return the current Y position of the roller coaster. */
 	public int getYPositionOfRollerCoaster();
+	
+	public int getLineSize();
+	
+	public void organizeLineWithId(int id);
+	
+	public void inlinePassenger(Passenger passenger);
+	
+	public void removeTravellerWithId(int id);
 	
 }
