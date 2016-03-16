@@ -17,8 +17,11 @@ public class Passenger extends Sprite implements Item {
 	private final int id;
 	private int enteringTime;
 	private int leavingTime;
-	private int position;
 	private boolean travelling = false;
+	
+	// Positions
+	private int linePosition;
+	private int travelPosition;
 
 	private Controller controller;
 
@@ -54,11 +57,11 @@ public class Passenger extends Sprite implements Item {
 			this.setTravelling(true);
 			
 			// Organizing the line
-			this.controller.organizeLineWithPosition(this.position);
+			this.controller.organizeLineWithPosition(this.linePosition);
 			
 			// Giving permission for the roller coaster to move
 			if(this.controller.isRollerCoasterFull()) {
-//				this.controller.upRollerCoaster();
+				this.controller.upRollerCoaster();
 			}
 			
 			this.controller.upMutex();
@@ -129,12 +132,8 @@ public class Passenger extends Sprite implements Item {
 	
 	/** Makes the passenger to go from its current position to the end of the line */
 	private void goToTheEndOfLine() {
-		
-		this.controller.downMutex();
-		this.position = this.controller.numberOfPassengersOnTheLine();
-		this.controller.upMutex();
-		
-		int target = Constants.WINDOW_WIDTH - (5 + this.position) * Constants.TILE_SIZE;
+		this.linePosition = this.controller.numberOfPassengersOnTheLine();
+		int target = Constants.WINDOW_WIDTH - (5 + this.linePosition) * Constants.TILE_SIZE;
 		this.move(new Point(target, this.getY()), Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
 	}
 
@@ -156,8 +155,8 @@ public class Passenger extends Sprite implements Item {
 	private void enterRollerCoaster() {
 		
 		// Going in direction of the roller coaster
-		int pos = this.controller.numberOfPassengersOnTheRollerCoaster();
-		Point targetPoint = new Point(this.controller.getXPositionOfRollerCoaster() + (Constants.ROLLER_COASTER_WIDTH / 2) * (this.controller.numberOfSeatsOfTheRollerCoaster() - pos - 1),
+		this.travelPosition = this.controller.numberOfPassengersOnTheRollerCoaster();
+		Point targetPoint = new Point(this.controller.getXPositionOfRollerCoaster() + (Constants.ROLLER_COASTER_WIDTH / 2) * (this.controller.numberOfSeatsOfTheRollerCoaster() - this.travelPosition - 1),
 				this.controller.getYPositionOfRollerCoaster() + Constants.ROLLER_COASTER_HEIGHT - Constants.PASSENGER_HEIGHT);
 		this.move(targetPoint, Direction.LEFTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - (int) targetPoint.getX())));
 
@@ -194,7 +193,7 @@ public class Passenger extends Sprite implements Item {
 			this.text = "Enjoying";
 			
 			// Updating passenger position
-			this.setX(this.controller.getXPositionOfRollerCoaster() + this.controller.getWidthOfRollerCoaster() - (this.position + 1) * Constants.PASSENGER_WIDTH);
+			this.setX(this.controller.getXPositionOfRollerCoaster() + this.controller.getWidthOfRollerCoaster() - (this.travelPosition + 1) * Constants.PASSENGER_WIDTH);
 			this.setY(this.controller.getYPositionOfRollerCoaster() - 30);			
 			this.scene.repaint();
 			
@@ -230,11 +229,11 @@ public class Passenger extends Sprite implements Item {
 	}
 	
 	public int getPosition() {
-		return position;
+		return linePosition;
 	}
 
 	public void setPosition(int position) {
-		this.position = position;
+		this.linePosition = position;
 	}
 	
 	public boolean isTravelling() {
