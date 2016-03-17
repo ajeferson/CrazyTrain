@@ -1,5 +1,7 @@
 package br.com.os.interfaces;
 
+import br.com.os.model.Passenger;
+
 /** Defines useful methods for handling with semaphores and roller coaster. */
 public interface Controller {
 	
@@ -35,6 +37,12 @@ public interface Controller {
 	
 	/** Downs the mutex semaphore. */
 	public void downMutex();
+	
+	/** Downs the semaphore protector. */
+	public void downSemaphoreProtector();
+	
+	/** Ups the semaphore protector. */
+	public void upSemaphoreProtector();
 	
 	
 	// Roller coaster methods
@@ -87,5 +95,8 @@ public interface Controller {
 	/** Makes after the given position to advance one space.
 	 * @param position The reference position from which all passengers will move. */
 	public void organizeLineWithPosition(int position);
+	
+	/** Adds a passenger to the array os passengers. */
+	public void addPassenger(Passenger passenger);
 	
 }

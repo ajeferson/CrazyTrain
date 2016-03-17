@@ -38,6 +38,11 @@ public class Passenger extends Sprite implements Item {
 	@Override
 	public void run() {
 		
+		// Adding to the array of passengers
+		this.controller.downSemaphoreProtector();
+		this.controller.addPassenger(this);
+		this.controller.upSemaphoreProtector();
+		
 		while(true) {
 			
 			// Positioning correctly on the line
