@@ -264,7 +264,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	@Override
 	public int numberOfPassengersOnTheLine() {
 		if(this.rollerCoaster == null) {
-			return this.passengers.size() - 1;
+			return this.passengers.size() - this.deadPassengers - 1;
 		}
 		return this.passengers.size() - this.rollerCoaster.getOccupiedSeats() - this.deadPassengers - 1;
 	}
