@@ -1,4 +1,4 @@
-package br.com.os.ui;
+package br.com.os.viewcontroller;
 
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import br.com.os.interfaces.ViewControllerDelegate;
 import br.com.os.interfaces.ViewController;
 import br.com.os.model.amazing.AmazingJMenuItem;
+import br.com.os.ui.Scene;
 
 /** Represents the main window of the program. It contains the landscape and the menu items to do things. */
 public class MainViewController extends JFrame implements ViewController {

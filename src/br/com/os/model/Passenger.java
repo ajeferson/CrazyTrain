@@ -285,4 +285,9 @@ public class Passenger extends Sprite implements Item {
 		}
 	}
 
+	@Override
+	public String getItemId() {
+		return "" + this.id;
+	}
+
 }

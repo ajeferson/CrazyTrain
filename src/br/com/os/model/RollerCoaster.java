@@ -156,4 +156,9 @@ public class RollerCoaster extends Sprite implements Item {
 		return str;
 	}
 
+	@Override
+	public String getItemId() {
+		return "1";
+	}
+
 }

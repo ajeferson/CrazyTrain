@@ -1,4 +1,4 @@
-package br.com.os.ui;
+package br.com.os.viewcontroller;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
