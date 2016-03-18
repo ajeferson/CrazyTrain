@@ -232,17 +232,20 @@ public class Passenger extends Sprite implements Item {
 	private void enjoyLandscape() {
 		boolean travelling;
 		
+		long i = 0;
+		
 		do {
 			
 			this.controller.downMutex();
 			travelling = this.controller.isRollerCoasterTravelling();
 			this.controller.upMutex();
 			
-			this.text = "Enjoying";
+			this.text = "" + (i++);
 			
 			// Updating passenger position
 			this.setX(this.controller.getXPositionOfRollerCoaster() + this.controller.getWidthOfRollerCoaster() - (this.travelPosition + 1) * Constants.PASSENGER_WIDTH);
-			this.setY(this.controller.getYPositionOfRollerCoaster() - 30);			
+			this.setY(this.controller.getYPositionOfRollerCoaster() - 30);
+			this.setDirection(this.controller.getDirectionOfRollerCoaster());
 			this.scene.repaint();
 			
 		} while(travelling);

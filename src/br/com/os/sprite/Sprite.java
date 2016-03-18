@@ -215,6 +215,10 @@ public class Sprite extends Thread {
 		return height;
 	}
 	
+	public Direction getDirection() {
+		return direction;
+	}
+	
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}

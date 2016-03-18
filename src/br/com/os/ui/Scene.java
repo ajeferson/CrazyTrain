@@ -230,6 +230,11 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	public int getYPositionOfRollerCoaster() {
 		return this.rollerCoaster.getY();
 	}
+	
+	@Override
+	public Direction getDirectionOfRollerCoaster() {
+		return this.rollerCoaster.getDirection();
+	}
 
 	@Override
 	public void upLine(int permits) {

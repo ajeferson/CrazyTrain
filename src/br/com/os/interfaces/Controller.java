@@ -1,5 +1,6 @@
 package br.com.os.interfaces;
 
+import br.com.os.enums.Direction;
 import br.com.os.model.Passenger;
 
 /** Defines useful methods for handling with semaphores and roller coaster. */
@@ -98,6 +99,8 @@ public interface Controller {
 	
 	/** Must return the current Y position of the roller coaster. */
 	public int getYPositionOfRollerCoaster();
+	
+	public Direction getDirectionOfRollerCoaster();
 	
 	/** Must return the size of the line towards to the roller coaster. */
 	public int numberOfPassengersOnTheLine();
