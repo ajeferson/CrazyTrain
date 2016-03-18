@@ -34,6 +34,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	private AmazingSemaphore semaphoreMutex = new AmazingSemaphore(1);
 	private AmazingSemaphore semaphoreLine = new AmazingSemaphore(0);
 	private AmazingSemaphore semaphoreProtector = new AmazingSemaphore(1);
+	private AmazingSemaphore semaphoreArrayList = new AmazingSemaphore(1);
 
 	// Screen elements
 	private BufferedImage background;
@@ -243,6 +244,16 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	}
 
 	@Override
+	public void upArrayList() {
+		this.semaphoreArrayList.up();
+	}
+
+	@Override
+	public void downArrayList() {
+		this.semaphoreArrayList.down();
+	}
+	
+	@Override
 	public void drainLine() {
 		this.semaphoreLine.drainPermits();
 	}
@@ -257,7 +268,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 
 	@Override
 	public void organizeLineWithPosition(int position) {
-		this.semaphoreProtector.down();
+		this.semaphoreArrayList.down();
 		for(Passenger passenger : this.passengers) {
 			if(!passenger.isTravelling() && passenger.getPosition() > position) {
 				passenger.setPosition(passenger.getPosition() - 1);
@@ -269,7 +280,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 				}
 			}
 		}
-		this.semaphoreProtector.up();
+		this.semaphoreArrayList.up();
 	}
 
 	@Override

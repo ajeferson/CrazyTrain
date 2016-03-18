@@ -3,8 +3,8 @@ package br.com.os.model;
 import java.awt.Point;
 
 import br.com.os.enums.Direction;
-import br.com.os.interfaces.Item;
 import br.com.os.interfaces.Controller;
+import br.com.os.interfaces.Item;
 import br.com.os.other.Constants;
 import br.com.os.sprite.Sprite;
 import br.com.os.sprite.SpriteSheet;
@@ -39,9 +39,9 @@ public class Passenger extends Sprite implements Item {
 	public void run() {
 		
 		// Adding to the array of passengers
-		this.controller.downProtector();
+		this.controller.downArrayList();
 		this.controller.addPassenger(this);
-		this.controller.upProtector();
+		this.controller.upArrayList();
 		
 		while(true) {
 			

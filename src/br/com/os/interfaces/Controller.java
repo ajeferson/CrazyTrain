@@ -47,6 +47,10 @@ public interface Controller {
 	/** Ups the semaphore protector. */
 	public void upProtector();
 	
+	public void upArrayList();
+	
+	public void downArrayList();
+	
 	
 	// Roller coaster methods
 	
