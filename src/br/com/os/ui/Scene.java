@@ -235,6 +235,11 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	public void downLine() {
 		this.semaphoreLine.down();
 	}
+	
+	@Override
+	public void drainLine() {
+		this.semaphoreLine.drainPermits();
+	}
 
 	@Override
 	public int numberOfPassengersOnTheLine() {
@@ -273,6 +278,8 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 				this.rollerCoaster.setKeepAlive(false);
 				this.semaphoreRollerCoaster.up();
 			}
+		} else {
+			this.rollerCoaster.setKeepAlive(false);
 		}
 		this.semaphoreProtector.up();
 	}

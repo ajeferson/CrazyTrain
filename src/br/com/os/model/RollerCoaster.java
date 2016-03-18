@@ -64,9 +64,7 @@ public class RollerCoaster extends Sprite implements Item {
 		}
 		
 		this.controller.downProtector();
-		for(int i = this.maxSeats - this.occupiedSeats; i > 0; i--) {
-			this.controller.downLine();
-		}
+		this.controller.drainLine();
 		this.controller.upProtector();
 		this.controller.rollerCoasterDidDie();
 		System.out.println("Vagao is dead...");

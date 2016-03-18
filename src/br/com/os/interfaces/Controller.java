@@ -16,6 +16,9 @@ public interface Controller {
 	/** Downs the line semaphore */
 	public void downLine();
 	
+	/** Drains all the permits of the line sempaphore. */
+	public void drainLine();
+	
 	/** Ups the passengers semaphore.
 	 * @param permits The number to increment on the semaphore. */
 	public void upPassengers(int permits);
