@@ -115,4 +115,6 @@ public interface Controller {
 	/** Tells the controller that the roller coaster finished its execution. */
 	public void rollerCoasterDidDie();
 	
+	public void passengerDidDie(int id);
+	
 }

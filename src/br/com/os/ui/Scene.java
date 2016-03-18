@@ -42,7 +42,8 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 	private JButton createRollerCoasterButton;
 
-
+	private int deadPassengers = 0;
+	
 	// JPanel override
 
 	@Override
@@ -62,7 +63,9 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	/** Iterates over the passengers array and draws each of them on the screen. */
 	private void drawPassengers(Graphics g) {
 		for(Passenger passenger : this.passengers) {
-			passenger.draw(g);
+			if(passenger != null) {
+				passenger.draw(g);
+			}
 		}
 	}
 
@@ -263,14 +266,14 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 		if(this.rollerCoaster == null) {
 			return this.passengers.size() - 1;
 		}
-		return this.passengers.size() - this.rollerCoaster.getOccupiedSeats() - 1;
+		return this.passengers.size() - this.rollerCoaster.getOccupiedSeats() - this.deadPassengers - 1;
 	}
-
+	
 	@Override
 	public void organizeLineWithPosition(int position) {
 		this.semaphoreArrayList.down();
 		for(Passenger passenger : this.passengers) {
-			if(!passenger.isTravelling() && passenger.getPosition() > position) {
+			if(passenger != null && !passenger.isTravelling() && passenger.getPosition() > position) {
 				passenger.setPosition(passenger.getPosition() - 1);
 				if(passenger.isMoving()) {
 					passenger.setDelta(passenger.getDelta() + Constants.TILE_SIZE);
@@ -303,6 +306,23 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 			this.semaphoreProtector.up();
 		}
 	}
+	
+	public void killPassengerWithId(int id) {
+		id--;
+		this.semaphoreArrayList.down();
+		
+		if(id >= 0 && id < this.passengers.size()) {
+			Passenger passenger = this.passengers.get(id);
+			if(passenger != null) {
+				this.semaphoreArrayList.up();
+				passenger.setKeepAlive(false);
+				return;
+			}
+		}
+		
+		this.semaphoreArrayList.up();
+		JOptionPane.showMessageDialog(null, "Passageiro inválido");
+	}
 
 	@Override
 	public void rollerCoasterDidDie() {
@@ -311,4 +331,13 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 		this.repaint();
 	}
 
+	@Override
+	public void passengerDidDie(int id) {
+		this.semaphoreArrayList.down();
+		this.passengers.set(id - 1, null);
+		this.deadPassengers++;
+		this.semaphoreArrayList.up();
+		this.repaint();
+	}
+	
 }

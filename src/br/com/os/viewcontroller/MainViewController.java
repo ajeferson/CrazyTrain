@@ -76,6 +76,13 @@ public class MainViewController extends JFrame implements ViewController {
 
 		// New Passenger item
 		JMenuItem itemListPassenger = new JMenuItem("Passageiros");
+		itemListPassenger.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int id = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite o id do passageiro:"));
+				scene.killPassengerWithId(id);
+			}
+		});
 		itemListPassenger.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, ActionEvent.ALT_MASK));
 		subMenuList.add(itemListPassenger);
 

@@ -18,6 +18,7 @@ public class Passenger extends Sprite implements Item {
 	private int enteringTime;
 	private int leavingTime;
 	private boolean travelling = false;
+	private boolean keepAlive = true;
 	
 	// Positions
 	private int linePosition;
@@ -43,7 +44,7 @@ public class Passenger extends Sprite implements Item {
 		this.controller.addPassenger(this);
 		this.controller.upArrayList();
 		
-		while(true) {
+		while(this.keepAlive) {
 			
 			// Positioning correctly on the line
 			this.goToTheEndOfLine();
@@ -97,6 +98,8 @@ public class Passenger extends Sprite implements Item {
 			this.controller.upMutex();
 			
 		}
+		
+		this.controller.passengerDidDie(this.id);
 
 	}
 
@@ -140,7 +143,9 @@ public class Passenger extends Sprite implements Item {
 	
 	/** Makes the passenger to go from its current position to the end of the line */
 	private void goToTheEndOfLine() {
+		this.controller.downArrayList();
 		this.linePosition = this.controller.numberOfPassengersOnTheLine();
+		this.controller.upArrayList();
 		int target = Constants.WINDOW_WIDTH - (5 + this.linePosition) * Constants.TILE_SIZE;
 		this.move(new Point(target, this.getY()), Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
 	}
@@ -276,6 +281,19 @@ public class Passenger extends Sprite implements Item {
 		this.delta = delta;
 	}
 	
+	public boolean isKeepAlive() {
+		return keepAlive;
+	}
+
+	public void setKeepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
+	}
+	
+	@Override
+	public String getItemId() {
+		return "" + this.id;
+	}
+	
 	@Override
 	public void move(Point target, Direction direction, long time) {
 		super.move(target, direction, time);
@@ -284,11 +302,6 @@ public class Passenger extends Sprite implements Item {
 			this.delta = 0;
 			this.move(point, Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - (int) point.getX())));
 		}
-	}
-
-	@Override
-	public String getItemId() {
-		return "" + this.id;
 	}
 
 }
