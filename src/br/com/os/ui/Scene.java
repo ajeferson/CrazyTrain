@@ -308,20 +308,29 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	}
 	
 	public void killPassengerWithId(int id) {
-		id--;
-		this.semaphoreArrayList.down();
 		
-		if(id >= 0 && id < this.passengers.size()) {
-			Passenger passenger = this.passengers.get(id);
-			if(passenger != null) {
-				this.semaphoreArrayList.up();
-				passenger.setKeepAlive(false);
-				return;
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				final int i = id - 1;
+				semaphoreArrayList.down();
+				
+				if(id >= 0 && id < passengers.size()) {
+					Passenger passenger = passengers.get(i);
+					if(passenger != null) {
+						semaphoreArrayList.up();
+						passenger.setKeepAlive(false);
+						return;
+					}
+				}
+				
+				semaphoreArrayList.up();
+				JOptionPane.showMessageDialog(null, "Passageiro inválido");
 			}
-		}
+			
+		}).start();
 		
-		this.semaphoreArrayList.up();
-		JOptionPane.showMessageDialog(null, "Passageiro inválido");
 	}
 
 	@Override

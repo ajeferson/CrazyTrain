@@ -107,12 +107,12 @@ public class Passenger extends Sprite implements Item {
 			
 		}
 		
+		// Leaving the line
 		this.controller.downMutex();
 		this.controller.downArrayList();
 		this.leaveTheLine();
 		this.controller.organizeLineWithPosition(this.linePosition);
 		this.controller.upMutex();
-//		this.controller.upArrayList();
 		
 		this.controller.passengerDidDie(this.id);
 
