@@ -74,9 +74,6 @@ public class RollerCoaster extends Sprite implements Item {
 		}
 		
 		// Setting up for when the roller coaster dies
-		this.controller.downProtector();
-		this.controller.drainLine();
-		this.controller.upProtector();
 		this.controller.rollerCoasterDidDie();
 
 	}

@@ -57,8 +57,8 @@ public class Passenger extends Sprite implements Item {
 			// Entering the roller coaster
 			this.controller.downMutex();
 			
+			// When it is supposed to delete a passenger that is on the line
 			if(!this.keepAlive) {
-//				this.controller.upMutex();
 				this.controller.upLine();
 				continue;
 			}
@@ -104,6 +104,7 @@ public class Passenger extends Sprite implements Item {
 				this.controller.upRollerCoaster();
 			}
 			
+			// Gives the turn only if the passenger is getting back to the line
 			if(this.keepAlive) {
 				this.controller.upMutex();
 			}
@@ -111,15 +112,16 @@ public class Passenger extends Sprite implements Item {
 		}
 		
 		// Leaving the line
-//		this.controller.downMutex();
 		this.controller.downArrayList();
 		this.leaveTheLine();
 		
+		// Organizing the line only if the deleted passenger was not leaving the roller coaster
 		if(this.travelPosition < 0) { 
 			this.controller.organizeLineWithPosition(this.linePosition);
 		}
 		
 		this.controller.passengerDidDie(this.id);
+		
 		this.controller.upMutex();
 
 	}
