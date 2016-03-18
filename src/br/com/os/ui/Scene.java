@@ -278,18 +278,18 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	}
 
 	public void killRollerCoaster() {
-		this.semaphoreMutex.down();
+		this.semaphoreProtector.down();
 		if(this.rollerCoaster != null && this.rollerCoaster.isKeepAlive()) {
 			this.rollerCoaster.setKeepAlive(false);
 			if(!this.rollerCoaster.isTravelling() && this.semaphoreLine.availablePermits() == this.rollerCoaster.getMaxSeats()) {
-				this.semaphoreMutex.up();
 				this.semaphoreRollerCoaster.up();
+				this.semaphoreProtector.up();
 			} else {
-				this.semaphoreMutex.up();
+				this.semaphoreProtector.up();
 				JOptionPane.showMessageDialog(null, "O vagão será deletado ao fim da próxima viagem.");
 			}
 		} else {
-			this.semaphoreMutex.up();
+			this.semaphoreProtector.up();
 		}
 	}
 

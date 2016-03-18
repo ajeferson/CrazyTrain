@@ -48,16 +48,20 @@ public class RollerCoaster extends Sprite implements Item {
 			this.controller.downRollerCoaster();
 			
 			// Checking if it is still alive
+			this.controller.downProtector();
 			this.controller.downMutex();
 			if(!this.keepAlive) {
 				if(this.isEmpty()) {
 					this.controller.drainLine();
+					this.controller.upProtector();
 					this.controller.upMutex();
 					continue;
 				} else {
+					this.controller.upProtector();
 					this.controller.upMutex();
 				}
 			} else {
+				this.controller.upProtector();
 				this.controller.upMutex();
 			}
 
@@ -74,7 +78,6 @@ public class RollerCoaster extends Sprite implements Item {
 		this.controller.drainLine();
 		this.controller.upProtector();
 		this.controller.rollerCoasterDidDie();
-		System.out.println("Vagao is dead...");
 
 	}
 
