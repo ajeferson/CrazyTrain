@@ -56,7 +56,6 @@ public class RollerCoaster extends Sprite implements Item {
 					continue;
 				} else {
 					this.controller.upMutex();
-					this.controller.downRollerCoaster();
 				}
 			} else {
 				this.controller.upMutex();
@@ -71,9 +70,9 @@ public class RollerCoaster extends Sprite implements Item {
 		}
 		
 		// Setting up for when the roller coaster dies
-		this.controller.downMutex();
+		this.controller.downProtector();
 		this.controller.drainLine();
-		this.controller.upMutex();
+		this.controller.upProtector();
 		this.controller.rollerCoasterDidDie();
 		System.out.println("Vagao is dead...");
 

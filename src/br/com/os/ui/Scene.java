@@ -281,12 +281,16 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 		this.semaphoreMutex.down();
 		if(this.rollerCoaster != null && this.rollerCoaster.isKeepAlive()) {
 			this.rollerCoaster.setKeepAlive(false);
-			if(!this.rollerCoaster.isTravelling()) {
+			if(!this.rollerCoaster.isTravelling() && this.semaphoreLine.availablePermits() == this.rollerCoaster.getMaxSeats()) {
+				this.semaphoreMutex.up();
 				this.semaphoreRollerCoaster.up();
+			} else {
+				this.semaphoreMutex.up();
+				JOptionPane.showMessageDialog(null, "O vagão será deletado ao fim da próxima viagem.");
 			}
-			JOptionPane.showMessageDialog(null, "O vagão será deletado");
+		} else {
+			this.semaphoreMutex.up();
 		}
-		this.semaphoreMutex.up();
 	}
 
 	@Override
