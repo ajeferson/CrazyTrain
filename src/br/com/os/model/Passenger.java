@@ -22,7 +22,7 @@ public class Passenger extends Sprite implements Item {
 	
 	// Positions
 	private int linePosition;
-	private int travelPosition;
+	private int travelPosition = -1;
 	
 	private int delta = 0;
 
@@ -49,6 +49,8 @@ public class Passenger extends Sprite implements Item {
 			// Positioning correctly on the line
 			this.goToTheEndOfLine();
 			
+			this.travelPosition = -1;
+			
 			// Waiting up on the line
 			this.controller.downLine();
 			
@@ -56,7 +58,7 @@ public class Passenger extends Sprite implements Item {
 			this.controller.downMutex();
 			
 			if(!this.keepAlive) {
-				this.controller.upMutex();
+//				this.controller.upMutex();
 				this.controller.upLine();
 				continue;
 			}
@@ -85,7 +87,6 @@ public class Passenger extends Sprite implements Item {
 			// Waiting for the roller coaster to leave
 			this.controller.downPassengers();
 			
-
 			// Enjoying landscape
 			this.enjoyLandscape();
 
@@ -103,18 +104,23 @@ public class Passenger extends Sprite implements Item {
 				this.controller.upRollerCoaster();
 			}
 			
-			this.controller.upMutex();
+			if(this.keepAlive) {
+				this.controller.upMutex();
+			}
 			
 		}
 		
 		// Leaving the line
-		this.controller.downMutex();
+//		this.controller.downMutex();
 		this.controller.downArrayList();
 		this.leaveTheLine();
-		this.controller.organizeLineWithPosition(this.linePosition);
-		this.controller.upMutex();
+		
+		if(this.travelPosition < 0) { 
+			this.controller.organizeLineWithPosition(this.linePosition);
+		}
 		
 		this.controller.passengerDidDie(this.id);
+		this.controller.upMutex();
 
 	}
 

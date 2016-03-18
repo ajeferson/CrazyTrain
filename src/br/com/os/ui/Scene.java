@@ -313,6 +313,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 			
 			@Override
 			public void run() {
+				
 				final int i = id - 1;
 				semaphoreArrayList.down();
 				
@@ -327,6 +328,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 				
 				semaphoreArrayList.up();
 				JOptionPane.showMessageDialog(null, "Passageiro inválido");
+				
 			}
 			
 		}).start();
