@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import br.com.os.enums.Direction;
@@ -33,21 +34,21 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	private AmazingSemaphore semaphoreMutex = new AmazingSemaphore(1);
 	private AmazingSemaphore semaphoreLine = new AmazingSemaphore(0);
 	private AmazingSemaphore semaphoreProtector = new AmazingSemaphore(1);
-	
+
 	// Screen elements
 	private BufferedImage background;
 	private RollerCoaster rollerCoaster;
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 	private JButton createRollerCoasterButton;
 
-	
+
 	// JPanel override
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -79,7 +80,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 		g.drawImage(this.background, 0, 0, this.getWidth(), this.getHeight(), null);
 	}
 
-	
+
 	// ItemHandler implement
 
 	@Override
@@ -113,7 +114,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 		passenger.start();
 	}
 
-	
+
 	// Controller implement
 
 	@Override
@@ -150,7 +151,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	public void downMutex() {
 		this.semaphoreMutex.down();
 	}
-	
+
 	@Override
 	public void downProtector() {
 		this.semaphoreProtector.down();
@@ -170,7 +171,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	public boolean isRollerCoasterMoving() {
 		return this.rollerCoaster.isMoving();
 	}
-	
+
 	@Override
 	public boolean isRollerCoasterTravelling() {
 		return this.rollerCoaster.isTravelling();
@@ -179,6 +180,11 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	@Override
 	public boolean isRollerCoasterEmpty() {
 		return this.rollerCoaster.isEmpty();
+	}
+
+	@Override
+	public boolean isRollerCoasterAlive() {
+		return this.rollerCoaster != null && this.rollerCoaster.isKeepAlive();
 	}
 
 	@Override
@@ -195,7 +201,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	public int numberOfPassengersOnTheRollerCoaster() {
 		return this.rollerCoaster.getOccupiedSeats();
 	}
-	
+
 	@Override
 	public int numberOfSeatsOfTheRollerCoaster() {
 		return this.rollerCoaster.getMaxSeats();
@@ -205,7 +211,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	public int getWidthOfRollerCoaster() {
 		return this.rollerCoaster.getWidth();
 	}
-	
+
 	@Override
 	public int getHeightOfRollerCoaster() {
 		return this.rollerCoaster.getHeight();
@@ -235,7 +241,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	public void downLine() {
 		this.semaphoreLine.down();
 	}
-	
+
 	@Override
 	public void drainLine() {
 		this.semaphoreLine.drainPermits();
@@ -270,18 +276,17 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	public void addPassenger(Passenger passenger) {
 		this.passengers.add(passenger);
 	}
-	
+
 	public void killRollerCoaster() {
-		this.semaphoreProtector.down();
-		if(!this.rollerCoaster.isTravelling()) {
-			if(this.rollerCoaster.isEmpty()) {
-				this.rollerCoaster.setKeepAlive(false);
+		this.semaphoreMutex.down();
+		if(this.rollerCoaster != null && this.rollerCoaster.isKeepAlive()) {
+			this.rollerCoaster.setKeepAlive(false);
+			if(!this.rollerCoaster.isTravelling()) {
 				this.semaphoreRollerCoaster.up();
 			}
-		} else {
-			this.rollerCoaster.setKeepAlive(false);
+			JOptionPane.showMessageDialog(null, "O vagão será deletado");
 		}
-		this.semaphoreProtector.up();
+		this.semaphoreMutex.up();
 	}
 
 	@Override

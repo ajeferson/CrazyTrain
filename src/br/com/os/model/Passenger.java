@@ -75,6 +75,7 @@ public class Passenger extends Sprite implements Item {
 			
 			// Waiting for the roller coaster to leave
 			this.controller.downPassengers();
+			
 
 			// Enjoying landscape
 			this.enjoyLandscape();

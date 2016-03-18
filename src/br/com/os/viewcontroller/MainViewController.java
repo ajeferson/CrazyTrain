@@ -69,7 +69,6 @@ public class MainViewController extends JFrame implements ViewController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				scene.killRollerCoaster();
-				JOptionPane.showMessageDialog(null, "O vagão será deletado");
 			}
 		});
 		itemListRollerCoaster.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, ActionEvent.ALT_MASK));

@@ -68,6 +68,9 @@ public interface Controller {
 	 * @return false otherwise. */
 	public boolean isRollerCoasterEmpty();
 	
+	/** Must return whether or not the roller coaster was deleted. */
+	public boolean isRollerCoasterAlive();
+	
 	/** Increases the number of passengers on the roller coaster by 1. */
 	public void incrementNumberOfPassengersOnRollerCoaster();
 	
