@@ -271,7 +271,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	
 	@Override
 	public void organizeLineWithPosition(int position) {
-		this.semaphoreArrayList.down();
+//		this.semaphoreArrayList.down();
 		for(Passenger passenger : this.passengers) {
 			if(passenger != null && !passenger.isTravelling() && passenger.getPosition() > position) {
 				passenger.setPosition(passenger.getPosition() - 1);
@@ -283,7 +283,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 				}
 			}
 		}
-		this.semaphoreArrayList.up();
+//		this.semaphoreArrayList.up();
 	}
 
 	@Override
@@ -333,7 +333,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 
 	@Override
 	public void passengerDidDie(int id) {
-		this.semaphoreArrayList.down();
+//		this.semaphoreArrayList.down();
 		this.passengers.set(id - 1, null);
 		this.deadPassengers++;
 		this.semaphoreArrayList.up();

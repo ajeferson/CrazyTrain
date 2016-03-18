@@ -55,6 +55,12 @@ public class Passenger extends Sprite implements Item {
 			// Entering the roller coaster
 			this.controller.downMutex();
 			
+			if(!this.keepAlive) {
+				this.controller.upMutex();
+				this.controller.upLine();
+				continue;
+			}
+			
 			// Just for making sure to be on the bottom of the entrance ladder
 			this.moveToTheEntranceLadder();
 			
@@ -65,7 +71,9 @@ public class Passenger extends Sprite implements Item {
 			this.setTravelling(true);
 			
 			// Organizing the line
+			this.controller.downArrayList();
 			this.controller.organizeLineWithPosition(this.linePosition);
+			this.controller.upArrayList();
 			
 			// Giving permission for the roller coaster to move
 			if(this.controller.isRollerCoasterFull()) {
@@ -98,6 +106,13 @@ public class Passenger extends Sprite implements Item {
 			this.controller.upMutex();
 			
 		}
+		
+		this.controller.downMutex();
+		this.controller.downArrayList();
+		this.leaveTheLine();
+		this.controller.organizeLineWithPosition(this.linePosition);
+		this.controller.upMutex();
+//		this.controller.upArrayList();
 		
 		this.controller.passengerDidDie(this.id);
 
@@ -148,6 +163,10 @@ public class Passenger extends Sprite implements Item {
 		this.controller.upArrayList();
 		int target = Constants.WINDOW_WIDTH - (5 + this.linePosition) * Constants.TILE_SIZE;
 		this.move(new Point(target, this.getY()), Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
+	}
+	
+	private void leaveTheLine() {
+		this.move(new Point(-Constants.PASSENGER_WIDTH, this.getY()), Direction.LEFTWARDS, Sprite.awesomeTime(this.getX() + Constants.PASSENGER_WIDTH));
 	}
 
 	/** Makes the passenger to go to bottom of the entrance ladder. */
