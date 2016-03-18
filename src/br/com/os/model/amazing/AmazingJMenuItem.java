@@ -36,7 +36,7 @@ public class AmazingJMenuItem extends JMenuItem implements ActionListener {
 	private void buildTargetClassWithName(String name, ViewControllerDelegate itemHandler) {
 		Class<?> klass;
 		try {
-			klass = Class.forName("br.com.os.ui." + name);
+			klass = Class.forName("br.com.os.viewcontroller." + name);
 			this.viewController = (ViewController) klass.newInstance();
 			this.viewController.build(itemHandler);
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e1) {

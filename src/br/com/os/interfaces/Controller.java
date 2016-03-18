@@ -39,10 +39,10 @@ public interface Controller {
 	public void downMutex();
 	
 	/** Downs the semaphore protector. */
-	public void downSemaphoreProtector();
+	public void downProtector();
 	
 	/** Ups the semaphore protector. */
-	public void upSemaphoreProtector();
+	public void upProtector();
 	
 	
 	// Roller coaster methods
@@ -98,5 +98,11 @@ public interface Controller {
 	
 	/** Adds a passenger to the array os passengers. */
 	public void addPassenger(Passenger passenger);
+	
+	
+	// Delegate methods
+	
+	/** Tells the controller that the roller coaster finished its execution. */
+	public void rollerCoasterDidDie();
 	
 }

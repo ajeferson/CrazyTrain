@@ -39,9 +39,9 @@ public class Passenger extends Sprite implements Item {
 	public void run() {
 		
 		// Adding to the array of passengers
-		this.controller.downSemaphoreProtector();
+		this.controller.downProtector();
 		this.controller.addPassenger(this);
-		this.controller.upSemaphoreProtector();
+		this.controller.upProtector();
 		
 		while(true) {
 			

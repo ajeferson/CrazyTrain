@@ -152,12 +152,12 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	}
 	
 	@Override
-	public void downSemaphoreProtector() {
+	public void downProtector() {
 		this.semaphoreProtector.down();
 	}
 
 	@Override
-	public void upSemaphoreProtector() {
+	public void upProtector() {
 		this.semaphoreProtector.up();
 	}
 
@@ -264,6 +264,24 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate 
 	@Override
 	public void addPassenger(Passenger passenger) {
 		this.passengers.add(passenger);
+	}
+	
+	public void killRollerCoaster() {
+		this.semaphoreProtector.down();
+		if(!this.rollerCoaster.isTravelling()) {
+			if(this.rollerCoaster.isEmpty()) {
+				this.rollerCoaster.setKeepAlive(false);
+				this.semaphoreRollerCoaster.up();
+			}
+		}
+		this.semaphoreProtector.up();
+	}
+
+	@Override
+	public void rollerCoasterDidDie() {
+		this.rollerCoaster = null;
+		this.createRollerCoasterButton.setEnabled(true);
+		this.repaint();
 	}
 
 }

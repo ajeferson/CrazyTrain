@@ -22,6 +22,8 @@ public class RollerCoaster extends Sprite implements Item {
 	private boolean travelling = false;
 
 	private Controller controller;
+	
+	private boolean keepAlive = true;
 
 	/** Creates a train
 	 * @param maxSeats Max amount of seats on the train
@@ -37,13 +39,21 @@ public class RollerCoaster extends Sprite implements Item {
 	@Override
 	public void run() {
 
-		while(true) {
+		while(keepAlive) {
 
 			// Saying: "Available seats"
 			this.controller.upLine(this.maxSeats);
 
 			// Sleeping while passengers do not enter
 			this.controller.downRollerCoaster();
+			
+			// Checking if it is still alive
+			this.controller.downProtector();
+			if(!this.keepAlive) {
+				this.controller.upProtector();
+				continue;
+			}
+			this.controller.upProtector();
 
 			// Moving
 			this.makeCircuit();
@@ -52,6 +62,14 @@ public class RollerCoaster extends Sprite implements Item {
 			this.controller.downRollerCoaster();
 
 		}
+		
+		this.controller.downProtector();
+		for(int i = this.maxSeats - this.occupiedSeats; i > 0; i--) {
+			this.controller.downLine();
+		}
+		this.controller.upProtector();
+		this.controller.rollerCoasterDidDie();
+		System.out.println("Vagao is dead...");
 
 	}
 
@@ -159,6 +177,14 @@ public class RollerCoaster extends Sprite implements Item {
 	@Override
 	public String getItemId() {
 		return "1";
+	}
+
+	public boolean isKeepAlive() {
+		return keepAlive;
+	}
+
+	public void setKeepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
 	}
 
 }
