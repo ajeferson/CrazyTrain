@@ -381,7 +381,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	@Override
 	public void passengerDidDie(int id) {
 		this.passengers.set(id - 1, null);
-		this.passengerIds.remove(id - 1);
+		this.passengerIds.remove(id + "*");
 		this.deadPassengers++;
 		this.passengerListViewController.updateListView();
 		this.repaint();
@@ -412,6 +412,8 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	public void didSelectRowAtIndex(ListViewController listViewController, int index) {
 		if(listViewController.getIdentifier() == this.passengerListViewController.getIdentifier()) {
 			this.killPassengerWithId(Integer.parseInt(this.passengerIds.get(index)) - 1);
+			String id = this.passengerIds.get(index);
+			this.passengerIds.set(index, id + "*");
 		} else {
 			this.killRollerCoaster();
 		}

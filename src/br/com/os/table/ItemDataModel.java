@@ -4,7 +4,6 @@ import javax.swing.table.DefaultTableModel;
 
 import br.com.os.interfaces.ListViewController;
 import br.com.os.interfaces.ListViewControllerDataSource;
-import br.com.os.interfaces.ListViewControllerDelegate;
 
 public class ItemDataModel extends DefaultTableModel {
 
@@ -12,7 +11,6 @@ public class ItemDataModel extends DefaultTableModel {
 
 	private String columnNames[] = {"ID", "Excluir"};
 	private ListViewControllerDataSource dataSource;
-	private ListViewControllerDelegate delegate;
 	private ListViewController listViewController;
 	
 	public ItemDataModel(ListViewControllerDataSource dataSource, ListViewController listViewController) {
@@ -53,12 +51,5 @@ public class ItemDataModel extends DefaultTableModel {
 	public void setValueAt(Object aValue, int row, int column) {
 		fireTableCellUpdated(row, column);
 	}
-	
-//	@Override
-//	public void removeRow(int row) {
-//		if(this.delegate != null) {
-//			this.delegate.didSelectRowAtIndex(row);
-//		}
-//	}
 	
 }
