@@ -16,12 +16,14 @@ public class ButtonColumnEditor extends DefaultCellEditor implements ActionListe
 	protected JButton button;
 	private String label;
 	private boolean isPushed;
+	private ListViewControllerDelegate delegate;
 	
-	public ButtonColumnEditor(JCheckBox checkbox) {
-		super(checkbox);
+	public ButtonColumnEditor(ListViewControllerDelegate delegate) {
+		super(new JCheckBox());
 		this.button = new JButton();
 		this.button.setOpaque(true);
 		this.button.addActionListener(this);
+		this.delegate = delegate;
 	}
 	
 	@Override
@@ -37,6 +39,7 @@ public class ButtonColumnEditor extends DefaultCellEditor implements ActionListe
 		
 		if(value != null) {
 			label = value.toString();
+			this.delegate.didSelectRowAtIndex(row);
 		} else {
 			label = "";
 		}
@@ -50,7 +53,6 @@ public class ButtonColumnEditor extends DefaultCellEditor implements ActionListe
 	@Override
 	public Object getCellEditorValue() {
 		if(this.isPushed) {
-			System.out.println("Bode");
 		}
 		this.isPushed = false;
 		return label;

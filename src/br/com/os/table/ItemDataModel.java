@@ -45,8 +45,14 @@ public class ItemDataModel extends DefaultTableModel {
 		
 	}
 	
-	public Class getColumnClass(int c) {
-        return getValueAt(0, c).getClass();
-    }
+	@Override
+	public void setValueAt(Object aValue, int row, int column) {
+		fireTableCellUpdated(row, column);
+	}
+	
+	@Override
+	public void removeRow(int row) {
+		this.items.remove(row);
+	}
 	
 }

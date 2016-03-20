@@ -3,17 +3,17 @@ package br.com.os.table;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import br.com.os.interfaces.Item;
 import br.com.os.model.Passenger;
 
-public class PassengerListListViewController extends JFrame {
+public class PassengerListListViewController extends JFrame implements ListViewControllerDelegate {
 
 	private static final long serialVersionUID = -2654082844290897483L;
 	
@@ -24,7 +24,8 @@ public class PassengerListListViewController extends JFrame {
 		super("Lista de passageiros");
 		this.dataModel = new ItemDataModel(items);
 		this.build();
-		this.pack();
+		this.setSize(250, 250);
+		this.setResizable(false);
 		this.setVisible(true);
 	}
 	
@@ -41,7 +42,7 @@ public class PassengerListListViewController extends JFrame {
 		
 		// Making the deletion column to be rendered as button
 		this.table.getColumn("Excluir").setCellRenderer(new ButtonColumnRenderer());
-		this.table.getColumn("Excluir").setCellEditor(new ButtonColumnEditor(new JCheckBox()));
+		this.table.getColumn("Excluir").setCellEditor(new ButtonColumnEditor(this));
 		
 		this.table.setPreferredScrollableViewportSize(this.table.getPreferredSize());
 		
@@ -59,25 +60,36 @@ public class PassengerListListViewController extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		ArrayList<Item> passengers = new ArrayList<Item>();
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		passengers.add(new Passenger(100, 100));
-		new PassengerListListViewController(passengers);
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				ArrayList<Item> passengers = new ArrayList<Item>();
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				passengers.add(new Passenger(100, 100));
+				new PassengerListListViewController(passengers);
+			}
+		});
+	}
+
+	@Override
+	public void didSelectRowAtIndex(int index) {
+		((ItemDataModel) this.table.getModel()).removeRow(index);
 	}
 	
 }
