@@ -48,8 +48,10 @@ public interface Controller {
 	/** Ups the semaphore protector. */
 	public void upProtector();
 	
+	/** Ups the ArrayList semaphore. */
 	public void upArrayList();
 	
+	/** Downs the ArrayList semaphore. */
 	public void downArrayList();
 	
 	
@@ -100,6 +102,7 @@ public interface Controller {
 	/** Must return the current Y position of the roller coaster. */
 	public int getYPositionOfRollerCoaster();
 	
+	/** Must return the direction in which the roller coaster is moving */
 	public Direction getDirectionOfRollerCoaster();
 	
 	/** Must return the size of the line towards to the roller coaster. */
@@ -118,6 +121,8 @@ public interface Controller {
 	/** Tells the controller that the roller coaster finished its execution. */
 	public void rollerCoasterDidDie();
 	
+	/** Tells that the passenger with the given id has just died.
+	 * @param id The id of the dead passenger. */
 	public void passengerDidDie(int id);
 	
 }

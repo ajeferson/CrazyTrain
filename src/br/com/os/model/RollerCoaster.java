@@ -114,9 +114,9 @@ public class RollerCoaster extends Sprite implements Item {
 			time = Constants.ROLLER_COASTER_DEFAULT_TIME;
 		}
 		
-		this.move(new Point(Constants.WINDOW_WIDTH + 2*this.getWidth(), this.getY()), Direction.RIGHTWARDS, time/4);
+		this.move(new Point(Constants.WINDOW_WIDTH, this.getY()), Direction.RIGHTWARDS, time/4);
 		this.setY(this.getY() - 3 * Constants.TILE_SIZE);
-		this.move(new Point(-2*this.getWidth(), this.getY()), Direction.LEFTWARDS, 2 * (time/4));
+		this.move(new Point(-this.getWidth(), this.getY()), Direction.LEFTWARDS, 2 * (time/4));
 		this.setY(this.getY() + 3 * Constants.TILE_SIZE);
 		this.move(new Point((Constants.WINDOW_WIDTH / 2) - (this.getWidth() /2), this.getY()), Direction.RIGHTWARDS, time/4);
 		this.setDirection(Direction.RIGHTWARDS);

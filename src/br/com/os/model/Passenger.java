@@ -49,6 +49,7 @@ public class Passenger extends Sprite implements Item {
 			// Positioning correctly on the line
 			this.goToTheEndOfLine();
 			
+			// Saying that this passenger is waiting on the line
 			this.travelPosition = -1;
 			
 			// Waiting up on the line
@@ -59,7 +60,7 @@ public class Passenger extends Sprite implements Item {
 			
 			// When it is supposed to delete a passenger that is on the line
 			if(!this.keepAlive) {
-				this.controller.upLine();
+				this.controller.upLine(); // ups because this passenger is going to leave the line
 				continue;
 			}
 			
@@ -120,8 +121,11 @@ public class Passenger extends Sprite implements Item {
 			this.controller.organizeLineWithPosition(this.linePosition);
 		}
 		
+		// Telling the controller that this passenger has just died
 		this.controller.passengerDidDie(this.id);
 		
+		// Releasing the semaphores
+		this.controller.upArrayList();
 		this.controller.upMutex();
 
 	}
