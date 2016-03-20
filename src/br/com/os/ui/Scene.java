@@ -377,14 +377,19 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	// ListViewControllerDataSource implement
 	
 	@Override
-	public int getItemCount() {
-		return this.passengerIds.size();
+	public int getItemCount(ListViewController listViewController) {
+		if(listViewController.getIdentifier() == this.passengerListViewController.getIdentifier()) {
+			return this.passengerIds.size();
+		}
+		return 0;
 	}
 
 	@Override
-	public String getValueAtIndex(int index) {
-		return this.passengerIds.get(index);
-		
+	public String getValueAtIndex(ListViewController listViewController, int index) {
+		if(listViewController.getIdentifier() == this.passengerListViewController.getIdentifier()) {
+			return this.passengerIds.get(index);
+		}
+		return null;
 	}
 	
 	// ListViewControllerDelegate
@@ -393,17 +398,11 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	public void didSelectRowAtIndex(int index) {
 		this.killPassengerWithId(Integer.parseInt(this.passengerIds.get(index)) - 1);
 		this.passengerIds.remove(index);
-//		this.passengerListViewController.updateListView();
 	}
 
 	@Override
 	public void didAddedPassenger() {
 		this.passengerListViewController.updateListView();
-	}
-
-	@Override
-	public boolean activatedButtonAtIndex(int index) {
-		return this.passengers.get(index) != null;
 	}
 
 }

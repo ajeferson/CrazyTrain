@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+/** Renders the button column on the JTable. */
 public class ButtonColumnRenderer extends JButton implements TableCellRenderer {
 
 	private static final long serialVersionUID = -8593043358660067333L;

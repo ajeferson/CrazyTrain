@@ -11,6 +11,7 @@ import javax.swing.JTable;
 
 import br.com.os.interfaces.ListViewControllerDelegate;
 
+/** Represents the editor of the JTable. It's kind of a delegate for when editing the JTable. */
 public class ButtonColumnEditor extends DefaultCellEditor implements ActionListener {
 	
 	private static final long serialVersionUID = -6301739509935019237L;
@@ -34,6 +35,9 @@ public class ButtonColumnEditor extends DefaultCellEditor implements ActionListe
 		if(isSelected) {
 			this.button.setForeground(table.getSelectionForeground());
 			this.button.setBackground(table.getSelectionBackground());
+			if(this.delegate != null) {
+				this.delegate.didSelectRowAtIndex(row);
+			}
 		} else {
 			this.button.setForeground(table.getForeground());
 			this.button.setBackground(table.getBackground());
@@ -41,9 +45,6 @@ public class ButtonColumnEditor extends DefaultCellEditor implements ActionListe
 		
 		if(value != null) {
 			label = value.toString();
-			if(this.delegate != null) {
-				this.delegate.didSelectRowAtIndex(row);
-			}
 		} else {
 			label = "";
 		}

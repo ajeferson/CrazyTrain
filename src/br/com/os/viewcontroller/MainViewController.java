@@ -80,9 +80,9 @@ public class MainViewController extends JFrame implements ViewController {
 		subMenuList.add(itemListRollerCoaster);
 
 		// New Passenger item
-		PassengerListViewController passengerListViewController = new PassengerListViewController(this.scene);
-		passengerListViewController.build(this.scene);
+		PassengerListViewController passengerListViewController = new PassengerListViewController("Lista de passageiros", "PassengersList", this.scene);
 		this.scene.setPassengerListViewController(passengerListViewController);
+		passengerListViewController.build(this.scene);
 		JMenuItem itemListPassenger = new AmazingJMenuItem("Passageiros", passengerListViewController);
 		itemListPassenger.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, ActionEvent.ALT_MASK));
 		subMenuList.add(itemListPassenger);

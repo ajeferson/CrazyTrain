@@ -20,13 +20,15 @@ import br.com.os.table.ItemDataModel;
 public class PassengerListViewController extends JFrame implements ListViewController {
 
 	private static final long serialVersionUID = -2654082844290897483L;
+	private final String identifier;
 	
 	private JTable table;
 	private ItemDataModel dataModel;
 	
-	public PassengerListViewController(ListViewControllerDataSource dataSource) {
-		super("Lista de passageiros");
-		this.dataModel = new ItemDataModel(dataSource);
+	public PassengerListViewController(String title, String identifier, ListViewControllerDataSource dataSource) {
+		super(title);
+		this.identifier = identifier;
+		this.dataModel = new ItemDataModel(dataSource, this);
 	}
 
 	@Override
@@ -83,6 +85,13 @@ public class PassengerListViewController extends JFrame implements ListViewContr
 	@Override
 	public void updateListView() {
 		this.table.updateUI();
+	}
+
+	
+	// Getters and Setters
+	@Override
+	public String getIdentifier() {
+		return this.identifier;
 	}
 	
 }
