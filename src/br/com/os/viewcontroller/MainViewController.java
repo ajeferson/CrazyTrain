@@ -10,7 +10,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
 import br.com.os.interfaces.ViewControllerDelegate;
 import br.com.os.interfaces.ViewController;
@@ -28,7 +27,7 @@ public class MainViewController extends JFrame implements ViewController {
 	private Scene scene = new Scene();
 
 	public MainViewController() {
-		super("Montanha Russa");
+		super("Vagão Maluco");
 	}
 
 	/** Adds the menu items. */
@@ -45,7 +44,7 @@ public class MainViewController extends JFrame implements ViewController {
 		// New Roller Coaster item
 		RollerCoasterViewController rollerCoasterViewController = new RollerCoasterViewController();
 		rollerCoasterViewController.build(this.scene);
-		AmazingJMenuItem itemNewRollerCoaster = new AmazingJMenuItem("Montanha Russa", rollerCoasterViewController);
+		AmazingJMenuItem itemNewRollerCoaster = new AmazingJMenuItem("Vagão", rollerCoasterViewController);
 		itemNewRollerCoaster.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
 		subMenuNew.add(itemNewRollerCoaster);
 		rollerCoasterViewController = null;
@@ -71,7 +70,7 @@ public class MainViewController extends JFrame implements ViewController {
 		ItemListViewController rollerCoasterListViewController = new ItemListViewController("Lista de vagões", "RollerCoasterList", this.scene);
 		this.scene.setRollerCoasterListViewController(rollerCoasterListViewController);
 		rollerCoasterListViewController.build(this.scene);
-		JMenuItem itemListRollerCoaster = new AmazingJMenuItem("Vagãos", rollerCoasterListViewController);
+		JMenuItem itemListRollerCoaster = new AmazingJMenuItem("Vagões", rollerCoasterListViewController);
 		itemListRollerCoaster.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, ActionEvent.ALT_MASK));
 		subMenuList.add(itemListRollerCoaster);
 		rollerCoasterListViewController = null;
@@ -87,21 +86,6 @@ public class MainViewController extends JFrame implements ViewController {
 
 		menuEdit.add(subMenuList);
 		menuBar.add(menuEdit);
-
-		// Help menu
-		JMenu menuHelp = new JMenu("Ajuda");
-
-		// Help item
-		JMenuItem itemHelp = new JMenuItem("Ajuda");
-		itemHelp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, ActionEvent.ALT_MASK));
-		menuHelp.add(itemHelp);
-
-		// About item
-		JMenuItem itemAbout = new JMenuItem("Sobre");
-		itemAbout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_6, ActionEvent.ALT_MASK));
-		menuHelp.add(itemAbout);
-
-		menuBar.add(menuHelp);
 
 		this.setJMenuBar(menuBar);
 
@@ -136,19 +120,6 @@ public class MainViewController extends JFrame implements ViewController {
 	@Override
 	public JButton getActionButton() {
 		return null;
-	}
-	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				MainViewController main = new MainViewController();
-				main.build(null);
-				main.open();
-			}
-			
-		});
 	}
 
 }
