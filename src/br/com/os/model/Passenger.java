@@ -3,12 +3,12 @@ package br.com.os.model;
 import java.awt.Point;
 
 import br.com.os.enums.Direction;
-import br.com.os.interfaces.Controller;
 import br.com.os.interfaces.Item;
 import br.com.os.other.Constants;
 import br.com.os.sprite.Sprite;
 import br.com.os.sprite.SpriteSheet;
 import br.com.os.sprite.SpriteSheetCooordinate;
+import br.com.os.ui.Scene;
 
 /** This class represents a passenger that can take a trip on the train. */
 public class Passenger extends Sprite implements Item {
@@ -19,14 +19,14 @@ public class Passenger extends Sprite implements Item {
 	private int leavingTime;
 	private boolean travelling = false;
 	private boolean keepAlive = true;
-	
+
 	// Positions
 	private int linePosition;
-	private int travelPosition = -1;
-	
+	public int travelPosition = -1;
+
 	private int delta = 0;
 
-	private Controller controller;
+	private Scene controller;
 
 	public Passenger(int enteringTime, int leavingTime) {
 		this.id = ++lastId;
@@ -38,90 +38,115 @@ public class Passenger extends Sprite implements Item {
 
 	@Override
 	public void run() {
-		
+
 		// Adding to the array of passengers
 		this.controller.downArrayList();
 		this.controller.addPassenger(this);
 		this.controller.upArrayList();
-		
-		while(this.keepAlive) {
-			
-			// Positioning correctly on the line
-			this.goToTheEndOfLine();
-			
-			this.travelPosition = -1;
-			
-			// Waiting up on the line
-			this.controller.downLine();
-			
-			// Entering the roller coaster
-			this.controller.downMutex();
-			
-			// When it is supposed to delete a passenger that is on the line
-			if(!this.keepAlive) {
-				this.controller.upLine();
-				continue;
-			}
-			
-			// Just for making sure to be on the bottom of the entrance ladder
-			this.moveToTheEntranceLadder();
-			
-			this.climbUpTheLadder();
-			this.enterRollerCoaster();
-			
-			this.controller.incrementNumberOfPassengersOnRollerCoaster();
-			this.setTravelling(true);
-			
-			// Organizing the line
-			this.controller.downArrayList();
-			this.controller.organizeLineWithPosition(this.linePosition);
-			this.controller.upArrayList();
-			
-			// Giving permission for the roller coaster to move
-			if(this.controller.isRollerCoasterFull()) {
-				this.controller.upRollerCoaster();
-			}
-			
-			this.controller.upMutex();
-			
-			// Waiting for the roller coaster to leave
-			this.controller.downPassengers();
-			
-			// Enjoying landscape
-			this.enjoyLandscape();
 
-			// Leaving Roller Coaster
-			this.controller.downMutex();
-			
-			this.leaveRollerCoaster();
-			this.climbDownTheLadder();
-			
-			this.controller.decrementNumberOfPassengersOnRollerCoaster();
-			this.setTravelling(false);
-			
-			// Checking to release roller coaster
-			if(this.controller.isRollerCoasterEmpty()) {
-				this.controller.upRollerCoaster();
-			}
-			
-			// Gives the turn only if the passenger is getting back to the line
-			if(this.keepAlive) {
+		outer:
+			while(this.keepAlive) {
+
+				// Positioning correctly on the line
+				this.goToTheEndOfLine();
+
+				this.travelPosition = -1;
+
+				boolean shouldWait;
+				
+				do {
+					
+					shouldWait = false;
+					
+					// Waiting up on the line
+					this.controller.downLine();
+					
+					this.controller.downMutex();
+					
+					if(this.controller.passengerKilled) {
+						if(this.keepAlive) {
+							this.controller.upMutex();
+							this.controller.semaphoreKilling.down();
+							this.controller.semaphoreMutex.down();
+							if(this.controller.semaphoreKilling.availablePermits() == 0) {
+								this.controller.passengerKilled = false;
+							}
+							this.controller.semaphoreMutex.up();
+							shouldWait = true;
+						} else {
+							continue outer;
+						}
+					} else {
+						this.controller.upMutex();
+					}
+					
+				} while(shouldWait);
+				
+				this.controller.downMutex();
+
+				// Just for making sure to be on the bottom of the entrance ladder
+				this.moveToTheEntranceLadder();
+
+				this.climbUpTheLadder();
+				this.enterRollerCoaster();
+
+				this.controller.incrementNumberOfPassengersOnRollerCoaster();
+				this.setTravelling(true);
+
+				// Organizing the line
+				this.controller.downArrayList();
+				this.controller.organizeLineWithPosition(this.linePosition);
+				this.controller.upArrayList();
+
+				// Giving permission for the roller coaster to move
+				if(this.controller.isRollerCoasterFull()) {
+					this.controller.upRollerCoaster();
+				}
+
 				this.controller.upMutex();
+
+				// Waiting for the roller coaster to leave
+				this.controller.downPassengers();
+
+				// Enjoying landscape
+				this.enjoyLandscape();
+
+				// Leaving Roller Coaster
+				this.controller.downMutex();
+
+				this.leaveRollerCoaster();
+				this.climbDownTheLadder();
+
+				this.controller.decrementNumberOfPassengersOnRollerCoaster();
+				this.setTravelling(false);
+
+				// Checking to release roller coaster
+				if(this.controller.isRollerCoasterEmpty()) {
+					this.controller.upRollerCoaster();
+				}
+
+				// Gives the turn only if the passenger is getting back to the line
+				if(this.keepAlive) {
+					this.controller.upMutex();
+				}
+
 			}
-			
-		}
-		
+
 		// Leaving the line
 		this.controller.downArrayList();
-		this.leaveTheLine();
 		
+		this.leaveTheLine();
+
 		// Organizing the line only if the deleted passenger was not leaving the roller coaster
 		if(this.travelPosition < 0) { 
 			this.controller.organizeLineWithPosition(this.linePosition);
+			this.controller.semaphoreKilling.up(this.controller.numberOfPassengersOnTheLine());
 		}
 		
+		this.controller.deadPassengers++;
 		this.controller.passengerDidDie(this.id);
-		
+		this.controller.upArrayList();
+
 		this.controller.upMutex();
 
 	}
@@ -135,21 +160,21 @@ public class Passenger extends Sprite implements Item {
 
 	/** Sets the sprite frames to be used. */
 	public void build() {
-		
+
 		SpriteSheet spriteSheet = new SpriteSheet();
-		
+
 		SpriteSheetCooordinate[] coordinatesRightwards = {
 				new SpriteSheetCooordinate(4, 64, 25, 32),
 				new SpriteSheetCooordinate(36, 64, 25, 32),
 				new SpriteSheetCooordinate(68, 64, 25, 32)
 		};
-		
+
 		SpriteSheetCooordinate[] coordinatesLeftwards = {
 				new SpriteSheetCooordinate(2, 32, 27, 32),
 				new SpriteSheetCooordinate(34, 32, 27, 32),
 				new SpriteSheetCooordinate(66, 32, 27, 32)
 		};
-		
+
 		SpriteSheetCooordinate[] coordinatesUpwards = {
 				new SpriteSheetCooordinate(2, 96, 26, 32),
 				new SpriteSheetCooordinate(34, 96, 26, 32),
@@ -163,7 +188,7 @@ public class Passenger extends Sprite implements Item {
 				Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
 
 	}
-	
+
 	/** Makes the passenger to go from its current position to the end of the line */
 	private void goToTheEndOfLine() {
 		this.controller.downArrayList();
@@ -172,7 +197,7 @@ public class Passenger extends Sprite implements Item {
 		int target = Constants.WINDOW_WIDTH - (5 + this.linePosition) * Constants.TILE_SIZE;
 		this.move(new Point(target, this.getY()), Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
 	}
-	
+
 	private void leaveTheLine() {
 		this.move(new Point(-Constants.PASSENGER_WIDTH, this.getY()), Direction.LEFTWARDS, Sprite.awesomeTime(this.getX() + Constants.PASSENGER_WIDTH));
 	}
@@ -184,7 +209,7 @@ public class Passenger extends Sprite implements Item {
 				Direction.RIGHTWARDS,
 				Sprite.awesomeTime(Math.abs(this.getX() - target)));
 	};
-	
+
 	/** Moves this passenger from the bottom to top of the ladder. */
 	private void climbUpTheLadder() {
 		int target = this.getY() - (Constants.LADDER_HEIGHT + Constants.TILE_SIZE);
@@ -193,7 +218,7 @@ public class Passenger extends Sprite implements Item {
 
 	/** Moves this passenger to its appropriate spot on the train, according to the position. */
 	private void enterRollerCoaster() {
-		
+
 		// Going in direction of the roller coaster
 		this.travelPosition = this.controller.numberOfPassengersOnTheRollerCoaster();
 		Point targetPoint = new Point(this.controller.getXPositionOfRollerCoaster() + (Constants.ROLLER_COASTER_WIDTH / 2) * (this.controller.numberOfSeatsOfTheRollerCoaster() - this.travelPosition - 1),
@@ -207,7 +232,7 @@ public class Passenger extends Sprite implements Item {
 		// Entering on the roller coaster
 		this.setY((this.getY() + this.getHeight()) - Constants.ROLLER_COASTER_HEIGHT - 30);
 		this.setDirection(Direction.RIGHTWARDS);
-		
+
 	}
 
 	/** Makes the passenger to leave the roller coaster and stays above the exiting ladder. */
@@ -221,7 +246,7 @@ public class Passenger extends Sprite implements Item {
 		}
 		this.move(new Point(target, this.getY()), Direction.LEFTWARDS, time);
 	}
-	
+
 	/** Makes this passenger to go down the ladder */
 	private void climbDownTheLadder() {
 		int target = Constants.WINDOW_HEIGHT - 2 * Constants.TILE_SIZE;
@@ -231,31 +256,31 @@ public class Passenger extends Sprite implements Item {
 	/** Enjoys the landscape while the roller coaster is travelling */
 	private void enjoyLandscape() {
 		boolean travelling;
-		
+
 		long i = 0;
-		
+
 		do {
-			
+
 			this.controller.downMutex();
 			travelling = this.controller.isRollerCoasterTravelling();
 			this.controller.upMutex();
-			
+
 			this.text = "" + (i++);
-			
+
 			// Updating passenger position
 			this.setX(this.controller.getXPositionOfRollerCoaster() + this.controller.getWidthOfRollerCoaster() - (this.travelPosition + 1) * Constants.PASSENGER_WIDTH);
 			this.setY(this.controller.getYPositionOfRollerCoaster() - 30);
 			this.setDirection(this.controller.getDirectionOfRollerCoaster());
 			this.scene.repaint();
-			
+
 		} while(travelling);
-		
+
 		this.text = "" + this.id;
 	}
 
 	// Getters and Setters
 
-	public void setController(Controller controller) {
+	public void setController(Scene controller) {
 		this.controller = controller;
 	}
 
@@ -278,7 +303,7 @@ public class Passenger extends Sprite implements Item {
 	public void setLeavingTime(int leavingTime) {
 		this.leavingTime = leavingTime;
 	}
-	
+
 	public int getPosition() {
 		return linePosition;
 	}
@@ -286,7 +311,7 @@ public class Passenger extends Sprite implements Item {
 	public void setPosition(int position) {
 		this.linePosition = position;
 	}
-	
+
 	public boolean isTravelling() {
 		return travelling;
 	}
@@ -310,7 +335,7 @@ public class Passenger extends Sprite implements Item {
 	public void setDelta(int delta) {
 		this.delta = delta;
 	}
-	
+
 	public boolean isKeepAlive() {
 		return keepAlive;
 	}
@@ -318,12 +343,12 @@ public class Passenger extends Sprite implements Item {
 	public void setKeepAlive(boolean keepAlive) {
 		this.keepAlive = keepAlive;
 	}
-	
+
 	@Override
 	public String getItemId() {
 		return "" + this.id;
 	}
-	
+
 	@Override
 	public void move(Point target, Direction direction, long time) {
 		super.move(target, direction, time);
