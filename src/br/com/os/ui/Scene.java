@@ -411,9 +411,11 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	@Override
 	public void didSelectRowAtIndex(ListViewController listViewController, int index) {
 		if(listViewController.getIdentifier() == this.passengerListViewController.getIdentifier()) {
-			this.killPassengerWithId(Integer.parseInt(this.passengerIds.get(index)) - 1);
-			String id = this.passengerIds.get(index);
-			this.passengerIds.set(index, id + "*");
+			try {
+				this.killPassengerWithId(Integer.parseInt(this.passengerIds.get(index)) - 1);
+				String id = this.passengerIds.get(index);
+				this.passengerIds.set(index, id + "*");
+			} catch(Exception e) {}
 		} else {
 			this.killRollerCoaster();
 		}

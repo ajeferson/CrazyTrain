@@ -52,4 +52,9 @@ public class ItemDataModel extends DefaultTableModel {
 		fireTableCellUpdated(row, column);
 	}
 	
+	@Override
+	public boolean isCellEditable(int row, int column) {
+		return column == 0 ? false : true;
+	}
+	
 }
