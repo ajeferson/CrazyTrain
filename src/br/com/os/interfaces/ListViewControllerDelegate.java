@@ -1,4 +1,4 @@
-package br.com.os.table;
+package br.com.os.interfaces;
 
 public interface ListViewControllerDelegate {
 

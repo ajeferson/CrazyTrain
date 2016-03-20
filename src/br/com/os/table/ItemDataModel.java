@@ -1,25 +1,26 @@
 package br.com.os.table;
 
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
-import br.com.os.interfaces.Item;
+import br.com.os.interfaces.ListViewControllerDataSource;
+import br.com.os.interfaces.ListViewControllerDelegate;
 
 public class ItemDataModel extends DefaultTableModel {
 
 	private static final long serialVersionUID = 7149681284011968966L;
 
 	private String columnNames[] = {"ID", "Excluir"};
-	private ArrayList<Item> items;
+	private ListViewControllerDataSource dataSource;
+	private ListViewControllerDelegate delegate;
 	
-	public ItemDataModel(ArrayList<Item> items) {
-		this.items = items;
+	public ItemDataModel(ListViewControllerDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 	@Override
 	public int getRowCount() {
-		if(this.items != null) {
-			return this.items.size();
+		if(this.dataSource != null) {
+			return this.dataSource.getItemCount();
 		}
 		return 0;
 	}
@@ -38,7 +39,7 @@ public class ItemDataModel extends DefaultTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return this.items.get(rowIndex).getItemId();
+			return this.dataSource.getValueAtIndex(rowIndex);
 		default:
 			return "Excluir";
 		}
@@ -52,7 +53,9 @@ public class ItemDataModel extends DefaultTableModel {
 	
 	@Override
 	public void removeRow(int row) {
-		this.items.remove(row);
+		if(this.delegate != null) {
+			this.delegate.didSelectRowAtIndex(row);
+		}
 	}
 	
 }

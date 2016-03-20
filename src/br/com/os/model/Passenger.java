@@ -43,6 +43,7 @@ public class Passenger extends Sprite implements Item {
 		this.controller.downArrayList();
 		this.controller.addPassenger(this);
 		this.controller.upArrayList();
+		this.controller.didAddedPassenger();
 		
 		while(this.keepAlive) {
 			

@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
@@ -45,14 +44,20 @@ public class MainViewController extends JFrame implements ViewController {
 		JMenu subMenuNew = new JMenu("Novo");
 
 		// New Roller Coaster item
-		AmazingJMenuItem itemNewRollerCoaster = new AmazingJMenuItem("Montanha Russa", "RollerCoasterViewController", this.scene);
+		RollerCoasterViewController rollerCoasterViewController = new RollerCoasterViewController();
+		rollerCoasterViewController.build(this.scene);
+		AmazingJMenuItem itemNewRollerCoaster = new AmazingJMenuItem("Montanha Russa", rollerCoasterViewController);
 		itemNewRollerCoaster.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
 		subMenuNew.add(itemNewRollerCoaster);
+		rollerCoasterViewController = null;
 
 		// New Passenger item
-		JMenuItem itemNewPassenger = new AmazingJMenuItem("Passageiro", "PassengerViewController", this.scene);
+		PassengerViewController passengerViewController = new PassengerViewController();
+		passengerViewController.build(this.scene);
+		JMenuItem itemNewPassenger = new AmazingJMenuItem("Passageiro", passengerViewController);
 		itemNewPassenger.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
 		subMenuNew.add(itemNewPassenger);
+		passengerViewController = null;
 
 		menuFile.add(subMenuNew);
 		menuBar.add(menuFile);
@@ -75,18 +80,13 @@ public class MainViewController extends JFrame implements ViewController {
 		subMenuList.add(itemListRollerCoaster);
 
 		// New Passenger item
-		JMenuItem itemListPassenger = new JMenuItem("Passageiros");
-		itemListPassenger.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					int id = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite o id do passageiro:"));
-					scene.killPassengerWithId(id);
-				} catch(Exception e1) {}
-			}
-		});
+		PassengerListViewController passengerListViewController = new PassengerListViewController(this.scene);
+		passengerListViewController.build(this.scene);
+		this.scene.setPassengerListViewController(passengerListViewController);
+		JMenuItem itemListPassenger = new AmazingJMenuItem("Passageiros", passengerListViewController);
 		itemListPassenger.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, ActionEvent.ALT_MASK));
 		subMenuList.add(itemListPassenger);
+		passengerListViewController = null;
 
 		menuEdit.add(subMenuList);
 		menuBar.add(menuEdit);
@@ -150,6 +150,7 @@ public class MainViewController extends JFrame implements ViewController {
 				main.build(null);
 				main.open();
 			}
+			
 		});
 	}
 

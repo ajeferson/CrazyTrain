@@ -16,32 +16,15 @@ public class AmazingJMenuItem extends JMenuItem implements ActionListener {
 	private static final long serialVersionUID = 3247851999765489253L;
 
 	private ViewController viewController;
-	private String viewControllerName;
-	private ViewControllerDelegate itemHandler;
 
 	/** Builds an AmazingJMenuItem.
 	 * @param text The text that is going to appear on the menu.
 	 * @param viewControllerName The name of the ViewController that is going to open when a click happen on this menu.
 	 * @param itemHandler The ItemHandler that the ViewController will use. */
-	public AmazingJMenuItem(String text, String viewControllerName, ViewControllerDelegate itemHandler) {
+	public AmazingJMenuItem(String text, ViewController viewController) {
 		super(text);
+		this.viewController = viewController;
 		this.addActionListener(this);
-		this.viewControllerName = viewControllerName;
-		this.itemHandler = itemHandler;
-	}
-	
-	/** Builds the ViewController associated with this menu.
-	 * @param name The ViewController name to instantiate.
-	 * @param itemHandler The ItemHandler associated to the ViewController. */
-	private void buildTargetClassWithName(String name, ViewControllerDelegate itemHandler) {
-		Class<?> klass;
-		try {
-			klass = Class.forName("br.com.os.viewcontroller." + name);
-			this.viewController = (ViewController) klass.newInstance();
-			this.viewController.build(itemHandler);
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e1) {
-			e1.printStackTrace();
-		}
 	}
 
 	
@@ -49,11 +32,6 @@ public class AmazingJMenuItem extends JMenuItem implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(this.viewController == null) {
-			this.buildTargetClassWithName(this.viewControllerName, this.itemHandler);
-			this.viewControllerName = null;
-			this.itemHandler = null;
-		}
 		if(this.viewController.getFrame().isVisible()) {
 			this.viewController.getFrame().requestFocus();
 		} else {

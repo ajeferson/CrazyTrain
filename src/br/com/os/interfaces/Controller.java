@@ -125,4 +125,7 @@ public interface Controller {
 	 * @param id The id of the dead passenger. */
 	public void passengerDidDie(int id);
 	
+	/** Called when a passenger adds itself to the array */
+	public void didAddedPassenger();
+	
 }

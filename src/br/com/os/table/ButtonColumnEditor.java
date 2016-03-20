@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
+import br.com.os.interfaces.ListViewControllerDelegate;
+
 public class ButtonColumnEditor extends DefaultCellEditor implements ActionListener {
 	
 	private static final long serialVersionUID = -6301739509935019237L;
@@ -39,7 +41,9 @@ public class ButtonColumnEditor extends DefaultCellEditor implements ActionListe
 		
 		if(value != null) {
 			label = value.toString();
-			this.delegate.didSelectRowAtIndex(row);
+			if(this.delegate != null) {
+				this.delegate.didSelectRowAtIndex(row);
+			}
 		} else {
 			label = "";
 		}
