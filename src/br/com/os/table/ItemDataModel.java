@@ -54,11 +54,11 @@ public class ItemDataModel extends DefaultTableModel {
 		fireTableCellUpdated(row, column);
 	}
 	
-	@Override
-	public void removeRow(int row) {
-		if(this.delegate != null) {
-			this.delegate.didSelectRowAtIndex(row);
-		}
-	}
+//	@Override
+//	public void removeRow(int row) {
+//		if(this.delegate != null) {
+//			this.delegate.didSelectRowAtIndex(row);
+//		}
+//	}
 	
 }

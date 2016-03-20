@@ -17,7 +17,7 @@ import br.com.os.table.ButtonColumnEditor;
 import br.com.os.table.ButtonColumnRenderer;
 import br.com.os.table.ItemDataModel;
 
-public class PassengerListViewController extends JFrame implements ListViewController {
+public class ItemListViewController extends JFrame implements ListViewController {
 
 	private static final long serialVersionUID = -2654082844290897483L;
 	private final String identifier;
@@ -25,7 +25,7 @@ public class PassengerListViewController extends JFrame implements ListViewContr
 	private JTable table;
 	private ItemDataModel dataModel;
 	
-	public PassengerListViewController(String title, String identifier, ListViewControllerDataSource dataSource) {
+	public ItemListViewController(String title, String identifier, ListViewControllerDataSource dataSource) {
 		super(title);
 		this.identifier = identifier;
 		this.dataModel = new ItemDataModel(dataSource, this);
@@ -64,7 +64,7 @@ public class PassengerListViewController extends JFrame implements ListViewContr
 		
 		// Making the deletion column to be rendered as button
 		this.table.getColumn("Excluir").setCellRenderer(new ButtonColumnRenderer());
-		this.table.getColumn("Excluir").setCellEditor(new ButtonColumnEditor((ListViewControllerDelegate) itemHandler));
+		this.table.getColumn("Excluir").setCellEditor(new ButtonColumnEditor(this, (ListViewControllerDelegate) itemHandler));
 		
 		this.table.setPreferredScrollableViewportSize(this.table.getPreferredSize());
 		

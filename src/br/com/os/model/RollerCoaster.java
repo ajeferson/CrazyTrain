@@ -181,7 +181,7 @@ public class RollerCoaster extends Sprite implements Item {
 
 	@Override
 	public String getItemId() {
-		return "1";
+		return "Vagão";
 	}
 
 	public boolean isKeepAlive() {

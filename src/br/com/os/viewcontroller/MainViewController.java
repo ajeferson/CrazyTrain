@@ -2,7 +2,6 @@ package br.com.os.viewcontroller;
 
 import java.awt.Container;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
@@ -69,18 +68,16 @@ public class MainViewController extends JFrame implements ViewController {
 		JMenu subMenuList = new JMenu("Lista");
 
 		// List Roller Coaster item
-		JMenuItem itemListRollerCoaster = new JMenuItem("Montanhas Russas");
-		itemListRollerCoaster.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				scene.killRollerCoaster();
-			}
-		});
+		ItemListViewController rollerCoasterListViewController = new ItemListViewController("Lista de vagões", "RollerCoasterList", this.scene);
+		this.scene.setRollerCoasterListViewController(rollerCoasterListViewController);
+		rollerCoasterListViewController.build(this.scene);
+		JMenuItem itemListRollerCoaster = new AmazingJMenuItem("Vagãos", rollerCoasterListViewController);
 		itemListRollerCoaster.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, ActionEvent.ALT_MASK));
 		subMenuList.add(itemListRollerCoaster);
+		rollerCoasterListViewController = null;
 
 		// New Passenger item
-		PassengerListViewController passengerListViewController = new PassengerListViewController("Lista de passageiros", "PassengersList", this.scene);
+		ItemListViewController passengerListViewController = new ItemListViewController("Lista de passageiros", "PassengersList", this.scene);
 		this.scene.setPassengerListViewController(passengerListViewController);
 		passengerListViewController.build(this.scene);
 		JMenuItem itemListPassenger = new AmazingJMenuItem("Passageiros", passengerListViewController);

@@ -45,7 +45,8 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 	private ArrayList<String> passengerIds = new ArrayList<String>();
 	private JButton createRollerCoasterButton;
-	private ListViewController passengerListViewController;
+	
+	private ListViewController passengerListViewController, rollerCoasterListViewController;
 	
 	private int deadPassengers = 0;
 
@@ -106,6 +107,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	private void handleCreationOfRollerCoaster(RollerCoaster rollerCoaster) {
 		this.createRollerCoasterButton.setEnabled(false);
 		this.rollerCoaster = rollerCoaster;
+		this.rollerCoasterListViewController.updateListView();
 		this.rollerCoaster.setController(this);
 		this.rollerCoaster.setScene(this);
 		this.rollerCoaster.build();
@@ -249,6 +251,13 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 		this.passengerListViewController = passengerListViewController;
 	}
 
+	public ListViewController getRollerCoasterListViewController() {
+		return rollerCoasterListViewController;
+	}
+
+	public void setRollerCoasterListViewController(ListViewController rollerCoasterListViewController) {
+		this.rollerCoasterListViewController = rollerCoasterListViewController;
+	}
 
 	@Override
 	public void upLine(int permits) {
@@ -310,6 +319,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	}
 
 	public void killRollerCoaster() {
+		
 		new Thread(new Runnable() {
 
 			@Override
@@ -330,6 +340,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 			}
 
 		}).start();
+		
 	}
 
 	public void killPassengerWithId(int index) {
@@ -363,13 +374,16 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	public void rollerCoasterDidDie() {
 		this.rollerCoaster = null;
 		this.createRollerCoasterButton.setEnabled(true);
+		this.rollerCoasterListViewController.updateListView();
 		this.repaint();
 	}
 
 	@Override
 	public void passengerDidDie(int id) {
 		this.passengers.set(id - 1, null);
+		this.passengerIds.remove(id - 1);
 		this.deadPassengers++;
+		this.passengerListViewController.updateListView();
 		this.repaint();
 	}
 
@@ -378,10 +392,10 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	
 	@Override
 	public int getItemCount(ListViewController listViewController) {
-		if(listViewController.getIdentifier() == this.passengerListViewController.getIdentifier()) {
+		if(this.passengerListViewController != null && listViewController.getIdentifier() == this.passengerListViewController.getIdentifier()) {
 			return this.passengerIds.size();
 		}
-		return 0;
+		return this.rollerCoaster != null ? 1 : 0; // One wagon
 	}
 
 	@Override
@@ -389,15 +403,18 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 		if(listViewController.getIdentifier() == this.passengerListViewController.getIdentifier()) {
 			return this.passengerIds.get(index);
 		}
-		return null;
+		return this.rollerCoaster != null ? this.rollerCoaster.getItemId() : "";
 	}
 	
 	// ListViewControllerDelegate
 
 	@Override
-	public void didSelectRowAtIndex(int index) {
-		this.killPassengerWithId(Integer.parseInt(this.passengerIds.get(index)) - 1);
-		this.passengerIds.remove(index);
+	public void didSelectRowAtIndex(ListViewController listViewController, int index) {
+		if(listViewController.getIdentifier() == this.passengerListViewController.getIdentifier()) {
+			this.killPassengerWithId(Integer.parseInt(this.passengerIds.get(index)) - 1);
+		} else {
+			this.killRollerCoaster();
+		}
 	}
 
 	@Override

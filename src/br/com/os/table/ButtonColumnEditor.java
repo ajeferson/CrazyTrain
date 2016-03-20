@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
+import br.com.os.interfaces.ListViewController;
 import br.com.os.interfaces.ListViewControllerDelegate;
 
 /** Represents the editor of the JTable. It's kind of a delegate for when editing the JTable. */
@@ -20,9 +21,11 @@ public class ButtonColumnEditor extends DefaultCellEditor implements ActionListe
 	private String label;
 	private boolean isPushed;
 	private ListViewControllerDelegate delegate;
+	private ListViewController listViewController;
 	
-	public ButtonColumnEditor(ListViewControllerDelegate delegate) {
+	public ButtonColumnEditor(ListViewController listViewController, ListViewControllerDelegate delegate) {
 		super(new JCheckBox());
+		this.listViewController = listViewController;
 		this.button = new JButton();
 		this.button.setOpaque(true);
 		this.button.addActionListener(this);
@@ -36,7 +39,7 @@ public class ButtonColumnEditor extends DefaultCellEditor implements ActionListe
 			this.button.setForeground(table.getSelectionForeground());
 			this.button.setBackground(table.getSelectionBackground());
 			if(this.delegate != null) {
-				this.delegate.didSelectRowAtIndex(row);
+				this.delegate.didSelectRowAtIndex(this.listViewController, row);
 			}
 		} else {
 			this.button.setForeground(table.getForeground());

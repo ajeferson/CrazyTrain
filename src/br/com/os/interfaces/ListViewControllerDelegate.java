@@ -2,6 +2,6 @@ package br.com.os.interfaces;
 
 public interface ListViewControllerDelegate {
 
-	public void didSelectRowAtIndex(int index);
+	public void didSelectRowAtIndex(ListViewController listViewController, int index);
 	
 }
