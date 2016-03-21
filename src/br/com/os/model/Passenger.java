@@ -165,7 +165,8 @@ public class Passenger extends Sprite implements Item {
 		this.linePosition = this.controller.numberOfPassengersOnTheLine();
 		this.controller.upArrayList();
 		int target = Constants.WINDOW_WIDTH - (5 + this.linePosition) * Constants.TILE_SIZE;
-		this.move(new Point(target, this.getY()), Direction.RIGHTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
+		this.move(new Point(target, this.getY()), this.getX() < target ? Direction.RIGHTWARDS : Direction.LEFTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
+		this.setDirection(Direction.RIGHTWARDS);
 	}
 	
 	private void leaveTheLine() {
