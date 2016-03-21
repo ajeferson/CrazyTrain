@@ -7,7 +7,7 @@ public class Constants {
 	public static final int WINDOW_HEIGHT = 700;
 
 	// Sprite
-	public static final int SPRITE_SPEED_MULTIPLIER = 200;
+	public static final int SPRITE_SPEED_MULTIPLIER = 150;
 	
 	// Passenger
 	public static final int PASSENGER_WIDTH = 50;

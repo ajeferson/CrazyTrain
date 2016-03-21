@@ -1,18 +1,21 @@
 package br.com.os.model;
 
 import java.awt.Point;
+import java.util.Random;
 
 import br.com.os.enums.Direction;
 import br.com.os.interfaces.Controller;
 import br.com.os.interfaces.Item;
 import br.com.os.other.Constants;
+import br.com.os.sprite.PassengerCoordinates;
 import br.com.os.sprite.Sprite;
 import br.com.os.sprite.SpriteSheet;
-import br.com.os.sprite.SpriteSheetCooordinate;
 
 /** This class represents a passenger that can take a trip on the train. */
 public class Passenger extends Sprite implements Item {
 
+	private SpriteSheet spriteSheet = new SpriteSheet();
+	
 	private static int lastId = 0;
 	private final int id;
 	private int enteringTime;
@@ -141,31 +144,18 @@ public class Passenger extends Sprite implements Item {
 	/** Sets the sprite frames to be used. */
 	public void build() {
 		
-		SpriteSheet spriteSheet = new SpriteSheet();
+		Random randomGenerator = new Random();
 		
-		SpriteSheetCooordinate[] coordinatesRightwards = {
-				new SpriteSheetCooordinate(4, 64, 25, 32),
-				new SpriteSheetCooordinate(36, 64, 25, 32),
-				new SpriteSheetCooordinate(68, 64, 25, 32)
-		};
+		int codigoPassageiro = randomGenerator.nextInt(7);
 		
-		SpriteSheetCooordinate[] coordinatesLeftwards = {
-				new SpriteSheetCooordinate(2, 32, 27, 32),
-				new SpriteSheetCooordinate(34, 32, 27, 32),
-				new SpriteSheetCooordinate(66, 32, 27, 32)
-		};
-		
-		SpriteSheetCooordinate[] coordinatesUpwards = {
-				new SpriteSheetCooordinate(2, 96, 26, 32),
-				new SpriteSheetCooordinate(34, 96, 26, 32),
-				new SpriteSheetCooordinate(66, 96, 25, 32)
-		};
+		PassengerCoordinates passengerCoordinates = new PassengerCoordinates(codigoPassageiro +1);
 
-		super.build(spriteSheet.getSpritesWithCoordinates(coordinatesRightwards),
-				spriteSheet.getSpritesWithCoordinates(coordinatesLeftwards),
-				spriteSheet.getSpritesWithCoordinates(coordinatesUpwards),
-				200, -Constants.TILE_SIZE, Constants.WINDOW_HEIGHT - 2 * Constants.TILE_SIZE,
+		super.build(spriteSheet.getSpritesWithCoordinates(passengerCoordinates.getCoordinatesRightwards()),
+				spriteSheet.getSpritesWithCoordinates(passengerCoordinates.getCoordinatesLeftwards()),
+				spriteSheet.getSpritesWithCoordinates(passengerCoordinates.getCoordinatesUpwards()),
+				150, -Constants.TILE_SIZE, Constants.WINDOW_HEIGHT - 2 * Constants.TILE_SIZE,
 				Constants.PASSENGER_WIDTH, Constants.PASSENGER_HEIGHT);
+		
 
 	}
 	
