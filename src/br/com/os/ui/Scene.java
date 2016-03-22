@@ -45,9 +45,9 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 	private ArrayList<String> passengerIds = new ArrayList<String>();
 	private JButton createRollerCoasterButton;
-	
+
 	private ListViewController passengerListViewController, rollerCoasterListViewController;
-	
+
 	private int deadPassengers = 0;
 
 	// JPanel override
@@ -68,10 +68,13 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 
 	/** Iterates over the passengers array and draws each of them on the screen. */
 	private void drawPassengers(Graphics g) {
-		for(Passenger passenger : this.passengers) {
-			if(passenger != null) {
-				passenger.draw(g);
+		try {
+			for(Passenger passenger : this.passengers) {
+				if(passenger != null) {
+					passenger.draw(g);
+				}
 			}
+		} catch(Exception e) {
 		}
 	}
 
@@ -242,7 +245,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	public Direction getDirectionOfRollerCoaster() {
 		return this.rollerCoaster.getDirection();
 	}
-	
+
 	public ListViewController getPassengerListViewController() {
 		return passengerListViewController;
 	}
@@ -319,7 +322,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 	}
 
 	public void killRollerCoaster() {
-		
+
 		new Thread(new Runnable() {
 
 			@Override
@@ -340,10 +343,10 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 			}
 
 		}).start();
-		
+
 	}
 
-	public void killPassengerWithId(int index) {
+	public void killPassengerWithId(final int index) {
 
 		new Thread(new Runnable() {
 
@@ -387,9 +390,9 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 		this.repaint();
 	}
 
-	
+
 	// ListViewControllerDataSource implement
-	
+
 	@Override
 	public int getItemCount(ListViewController listViewController) {
 		if(this.passengerListViewController != null && listViewController.getIdentifier() == this.passengerListViewController.getIdentifier()) {
@@ -405,7 +408,7 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 		}
 		return this.rollerCoaster != null ? this.rollerCoaster.getItemId() : "";
 	}
-	
+
 	// ListViewControllerDelegate
 
 	@Override

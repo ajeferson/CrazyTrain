@@ -2,6 +2,7 @@ package br.com.os.viewcontroller;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -16,8 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import br.com.os.interfaces.ViewControllerDelegate;
 import br.com.os.interfaces.ViewController;
+import br.com.os.interfaces.ViewControllerDelegate;
 import br.com.os.model.RollerCoaster;
 
 public class RollerCoasterViewController extends JFrame implements ViewController, ChangeListener, ActionListener {
@@ -133,9 +134,72 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		this.container.add(this.createButton, BorderLayout.SOUTH);
 		
 		this.reset();
+		
+
+//		JPanel panel = new JPanel();
+//		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//
+//		// Travelling time
+//		JPanel panelTravelling = new JPanel();
+//		panelTravelling.setLayout(new BoxLayout(panelTravelling, BoxLayout.Y_AXIS));
+//		JPanel panelFlowTravelling = new JPanel();
+//		panelFlowTravelling.setLayout(new FlowLayout(FlowLayout.CENTER));
+//		panelFlowTravelling.add(new JLabel("Tempo de embarque:"));
+//		this.textFieldTravellingTime = this.coolTextField();
+//		panelFlowTravelling.add(this.textFieldTravellingTime);
+//		panelTravelling.add(panelFlowTravelling);
+//		this.sliderTravellingTime = this.coolSlider();
+//		panelTravelling.add(this.sliderTravellingTime);
+//		panel.add(panelTravelling);
+//
+//		panel.add(Box.createRigidArea(new Dimension(10, 20)));
+//
+//		// Leaving time
+//		JPanel panelSeats = new JPanel();
+//		panelSeats.setLayout(new BoxLayout(panelSeats, BoxLayout.Y_AXIS));
+//		JPanel panelFlowSeats = new JPanel();
+//		panelFlowSeats.setLayout(new FlowLayout(FlowLayout.CENTER));
+//		panelFlowSeats.add(new JLabel("Tempo de embarque:"));
+//		this.textFieldSeats = this.coolTextField();
+//		panelFlowSeats.add(this.textFieldSeats);
+//		panelSeats.add(panelFlowSeats);
+//		this.sliderSeats = this.coolSlider();
+//		panelSeats.add(this.sliderSeats);
+//		panel.add(panelSeats);
+//
+//		panel.add(Box.createRigidArea(new Dimension(10, 20)));
+//		
+//		this.container.add(panel, BorderLayout.CENTER);
+//
+//		// Create Passenger Button
+//		this.createButton = new JButton("Criar Vagão");
+//		this.createButton.addActionListener(this);
+//		this.container.add(this.createButton, BorderLayout.SOUTH);
+//		
+//		this.reset();
+
 
 	}
+	
+	/** Builds a formatted JTextField */
+	private JTextField coolTextField() {
+		JTextField textField = new JTextField(5);
+		textField.setEditable(false);
+		return textField;
+	}
 
+	/** Builds a setup slider */
+	private JSlider coolSlider() {
+		JSlider slider = new JSlider(1, 15, 1);
+		slider.setPaintTicks(true);
+		slider.setMajorTickSpacing(1);
+		slider.setMinorTickSpacing(1);
+		slider.setPaintLabels(true);
+		slider.setPreferredSize(new Dimension(500, 45));
+		slider.addChangeListener(this);
+		return slider;
+	}
+	
 	public static void main(String[] args) {
 		new RollerCoasterViewController();
 	}

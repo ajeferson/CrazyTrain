@@ -1,6 +1,5 @@
 package br.com.os.table;
 
-import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JButton;
@@ -25,7 +24,7 @@ public class ButtonColumnRenderer extends JButton implements TableCellRenderer {
 			this.setBackground(table.getSelectionBackground());
 		} else {
 			this.setForeground(table.getForeground());
-			this.setBackground(Color.RED);
+			this.setBackground(table.getBackground());
 		}
 		
 		if(value != null) {

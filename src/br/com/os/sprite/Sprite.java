@@ -1,6 +1,7 @@
 package br.com.os.sprite;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -12,6 +13,8 @@ import br.com.os.ui.Scene;
 
 /** Encapsulates a set of sprites an animates them. */
 public class Sprite extends Thread {
+	
+	private static final Font font = new Font("sans-serif", Font.PLAIN, 15);
 
 	protected ArrayList<BufferedImage> spritesRightwards;
 	protected ArrayList<BufferedImage> spritesLeftwards;
@@ -125,8 +128,9 @@ public class Sprite extends Thread {
 	public void draw(Graphics g) {
 		g.drawImage(this.getSprite(), this.x, this.y, this.width, this.height, null);
 		if(this.text != null) {
-			g.setColor(Color.WHITE);
-			g.drawString(this.text, this.x - 20, this.y);
+			g.setColor(Color.YELLOW);
+			g.setFont(font);
+			g.drawString(this.text, this.x + (this.width / 2) - (g.getFontMetrics(font).stringWidth(this.text)/2), this.y);
 		}
 	}
 
