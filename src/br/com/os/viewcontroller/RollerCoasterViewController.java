@@ -104,7 +104,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		panelSeats.add(this.sliderSeats);
 		panel.add(panelSeats);
 
-		panel.add(Box.createRigidArea(new Dimension(10, 30)));
+		panel.add(Box.createRigidArea(new Dimension(10, 20)));
 		
 		this.container.add(panel, BorderLayout.CENTER);
 
@@ -127,10 +127,11 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 
 	/** Builds a setup slider */
 	private JSlider coolSlider(int min, int max, int value) {
-		JSlider slider = new JSlider(min, max);
+		JSlider slider = new JSlider(min, max, value);
 		slider.setPaintTicks(true);
 		slider.setMajorTickSpacing(value);
 		slider.setMinorTickSpacing(value);
+		slider.setSnapToTicks(true);
 		slider.setPaintLabels(true);
 		slider.setPreferredSize(new Dimension(500, 45));
 		slider.addChangeListener(this);
