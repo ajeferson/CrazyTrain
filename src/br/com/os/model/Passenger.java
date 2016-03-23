@@ -244,7 +244,16 @@ public class Passenger extends Sprite implements Item {
 	private void enjoyLandscape() {
 		
 		boolean travelling;
-		long i = 0;
+		
+		int changeTime = 30;
+		int max = 5;
+		int initialY = this.getY();
+		Random random = new Random();
+		int delta = random.nextInt(max) + 1;
+		
+		long initialTime = System.currentTimeMillis();
+		long elapsedTime;
+		boolean up = true;
 		
 		do {
 			
@@ -252,17 +261,26 @@ public class Passenger extends Sprite implements Item {
 			travelling = this.controller.isRollerCoasterTravelling();
 			this.controller.upMutex();
 			
-			this.text = "" + (i++);
+			elapsedTime = System.currentTimeMillis() - initialTime;
+			if(elapsedTime >= changeTime) {
+				if(delta == max || delta == 0) {
+					up = !up;
+				}
+				delta += up ? 1 : -1;
+				initialTime = System.currentTimeMillis();
+			}
 			
 			// Updating passenger position
 			this.setX(this.controller.getXPositionOfRollerCoaster() + this.controller.getWidthOfRollerCoaster() - (this.travelPosition + 1) * Constants.PASSENGER_WIDTH);
-			this.setY(this.controller.getYPositionOfRollerCoaster() - 30);
+			this.setY(this.controller.getYPositionOfRollerCoaster() - 30 + delta);
 			this.setDirection(this.controller.getDirectionOfRollerCoaster());
 			this.scene.repaint();
 			
 		} while(travelling);
 		
-		this.text = "" + this.id;
+		this.setY(initialY);
+		this.scene.repaint();
+		
 	}
 
 	// Getters and Setters
