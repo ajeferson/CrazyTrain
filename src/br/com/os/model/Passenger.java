@@ -38,7 +38,7 @@ public class Passenger extends Sprite implements Item {
 		this.enteringTime = enteringTime;
 		this.leavingTime = leavingTime;
 		this.text = "" + this.id;
-		this.drawStatus = false;
+		this.drawStatus = true;
 	}
 
 	@Override

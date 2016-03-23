@@ -85,7 +85,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		this.textFieldTravellingTime = this.coolTextField();
 		panelFlowTravelling.add(this.textFieldTravellingTime);
 		panelTravelling.add(panelFlowTravelling);
-		this.sliderTravellingTime = this.coolSlider(5, 60, 5);
+		this.sliderTravellingTime = this.coolSlider(5, 60, 5, false);
 		panelTravelling.add(this.sliderTravellingTime);
 		panel.add(panelTravelling);
 
@@ -100,7 +100,7 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		this.textFieldSeats = this.coolTextField();
 		panelFlowSeats.add(this.textFieldSeats);
 		panelSeats.add(panelFlowSeats);
-		this.sliderSeats = this.coolSlider(2, 10, 2);
+		this.sliderSeats = this.coolSlider(2, 10, 2, true);
 		panelSeats.add(this.sliderSeats);
 		panel.add(panelSeats);
 
@@ -126,12 +126,12 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 	}
 
 	/** Builds a setup slider */
-	private JSlider coolSlider(int min, int max, int value) {
+	private JSlider coolSlider(int min, int max, int value, boolean snap) {
 		JSlider slider = new JSlider(min, max, value);
 		slider.setPaintTicks(true);
 		slider.setMajorTickSpacing(value);
 		slider.setMinorTickSpacing(value);
-		slider.setSnapToTicks(true);
+		slider.setSnapToTicks(snap);
 		slider.setPaintLabels(true);
 		slider.setPreferredSize(new Dimension(500, 45));
 		slider.addChangeListener(this);
