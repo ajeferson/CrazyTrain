@@ -10,7 +10,7 @@ public class SpriteSheet {
 	
 	/** Builds the sprite sheet. */
 	public SpriteSheet() {
-		this.spriteSheet = BufferedImageLoader.loadImage("spriteSheet1.png");
+		this.spriteSheet = BufferedImageLoader.loadImage("spritesheet1.png");
 	}
 	
 	/** Clip a spritesheet in a given region.

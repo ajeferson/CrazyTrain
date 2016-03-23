@@ -137,10 +137,6 @@ public class RollerCoasterViewController extends JFrame implements ViewControlle
 		slider.addChangeListener(this);
 		return slider;
 	}
-	
-	public static void main(String[] args) {
-		new RollerCoasterViewController();
-	}
 
 	// Change Listener
 
