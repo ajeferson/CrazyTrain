@@ -1,5 +1,6 @@
 package br.com.os.model;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
 
@@ -37,6 +38,7 @@ public class Passenger extends Sprite implements Item {
 		this.enteringTime = enteringTime;
 		this.leavingTime = leavingTime;
 		this.text = "" + this.id;
+		this.drawStatus = true;
 	}
 
 	@Override
@@ -50,17 +52,23 @@ public class Passenger extends Sprite implements Item {
 		
 		while(this.keepAlive) {
 			
+			this.setAwakenColor();
+			
 			// Positioning correctly on the line
 			this.goToTheEndOfLine();
 			
 			// Saying that this passenger is waiting on the line
 			this.travelPosition = -1;
 			
+			this.setSleepingColor();
+			
 			// Waiting up on the line
 			this.controller.downLine();
 			
 			// Entering the roller coaster
 			this.controller.downMutex();
+			
+			this.setAwakenColor();
 			
 			// When it is supposed to delete a passenger that is on the line
 			if(!this.keepAlive) {
@@ -89,14 +97,22 @@ public class Passenger extends Sprite implements Item {
 			
 			this.controller.upMutex();
 			
+			this.setSleepingColor();
+			
 			// Waiting for the roller coaster to leave
 			this.controller.downPassengers();
+			
+			this.setAwakenColor();
 			
 			// Enjoying landscape
 			this.enjoyLandscape();
 
+			this.setSleepingColor();
+			
 			// Leaving Roller Coaster
 			this.controller.downMutex();
+			
+			this.setAwakenColor();
 			
 			this.leaveRollerCoaster();
 			this.climbDownTheLadder();
@@ -226,8 +242,8 @@ public class Passenger extends Sprite implements Item {
 
 	/** Enjoys the landscape while the roller coaster is travelling */
 	private void enjoyLandscape() {
-		boolean travelling;
 		
+		boolean travelling;
 		long i = 0;
 		
 		do {
@@ -330,4 +346,12 @@ public class Passenger extends Sprite implements Item {
 		}
 	}
 
+	private void setSleepingColor() {
+		this.statusColor = Color.GREEN;
+	}
+	
+	private void setAwakenColor() {
+		this.statusColor = Color.YELLOW;
+	}
+	
 }

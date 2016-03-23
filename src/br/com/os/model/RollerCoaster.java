@@ -1,5 +1,6 @@
 package br.com.os.model;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -26,7 +27,7 @@ public class RollerCoaster extends Sprite implements Item {
 	private boolean keepAlive = true;
 
 	/** Creates a train
-	 * @param maxSeats Max amount of seats on the train
+	 * @param maxSeats Max amount of se™ats on the train
 	 * @param travelingTime The amount of time that the train takes to make a lap (in milliseconds)*/
 	public RollerCoaster(int maxSeats, long travelingTime) {
 		this.maxSeats = maxSeats;
@@ -34,6 +35,7 @@ public class RollerCoaster extends Sprite implements Item {
 		this.setTravelingTime(travelingTime);
 		this.occupiedSeats = 0;
 		this.changeFrames = false;
+		this.drawStatus = true;
 	}
 
 	@Override
@@ -41,6 +43,8 @@ public class RollerCoaster extends Sprite implements Item {
 
 		while(keepAlive) {
 
+			this.setSleepingColor();
+			
 			// Saying: "Available seats"
 			this.controller.upLine(this.maxSeats);
 
@@ -65,8 +69,12 @@ public class RollerCoaster extends Sprite implements Item {
 				this.controller.upMutex();
 			}
 
+			this.setAwakenColor();
+			
 			// Moving
 			this.makeCircuit();
+			
+			this.setSleepingColor();
 			
 			// Waiting for passengers to get out
 			this.controller.downRollerCoaster();
@@ -93,10 +101,17 @@ public class RollerCoaster extends Sprite implements Item {
 	/** Draws all the wagons of the roller coaster */
 	@Override
 	public void draw(Graphics g) {
+		
 		for(int i = 0; i < this.maxSeats/2; i++) {
 			g.drawImage(this.spritesRightwards.get(0), this.getX() + i * Constants.ROLLER_COASTER_WIDTH,
 					this.getY(), Constants.ROLLER_COASTER_WIDTH, Constants.ROLLER_COASTER_HEIGHT, null);
 		}
+		
+		if(this.drawStatus) {
+			g.setColor(this.statusColor);
+			g.fillOval(this.getX() + this.getWidth() - 26, this.getY() + 20, 15, 15);
+		}
+		
 	}
 
 	/** Makes the train to move around the mountains. */
@@ -190,6 +205,14 @@ public class RollerCoaster extends Sprite implements Item {
 
 	public void setKeepAlive(boolean keepAlive) {
 		this.keepAlive = keepAlive;
+	}
+	
+	private void setSleepingColor() {
+		this.statusColor = Color.GREEN;
+	}
+	
+	private void setAwakenColor() {
+		this.statusColor = Color.YELLOW;
 	}
 
 }

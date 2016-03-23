@@ -14,7 +14,7 @@ import br.com.os.ui.Scene;
 /** Encapsulates a set of sprites an animates them. */
 public class Sprite extends Thread {
 	
-	private static final Font font = new Font("sans-serif", Font.PLAIN, 15);
+	private static final Font font = new Font("sans-serif", Font.BOLD, 15);
 
 	protected ArrayList<BufferedImage> spritesRightwards;
 	protected ArrayList<BufferedImage> spritesLeftwards;
@@ -23,6 +23,8 @@ public class Sprite extends Thread {
 	protected Scene scene;
 	
 	protected String text;
+	protected Color statusColor;
+	protected boolean drawStatus = false;
 
 	// Statuses variables
 	protected boolean playing = false;
@@ -127,8 +129,8 @@ public class Sprite extends Thread {
 	 * @param g The Graphics in which to draw the current sprite. */
 	public void draw(Graphics g) {
 		g.drawImage(this.getSprite(), this.x, this.y, this.width, this.height, null);
-		if(this.text != null) {
-			g.setColor(Color.YELLOW);
+		if(this.drawStatus && this.text != null) {
+			g.setColor(this.statusColor);
 			g.setFont(font);
 			g.drawString(this.text, this.x + (this.width / 2) - (g.getFontMetrics(font).stringWidth(this.text)/2), this.y);
 		}
