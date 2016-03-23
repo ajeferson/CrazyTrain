@@ -35,7 +35,7 @@ public class RollerCoaster extends Sprite implements Item {
 		this.setTravelingTime(travelingTime);
 		this.occupiedSeats = 0;
 		this.changeFrames = false;
-		this.drawStatus = true;
+		this.drawStatus = false;
 	}
 
 	@Override

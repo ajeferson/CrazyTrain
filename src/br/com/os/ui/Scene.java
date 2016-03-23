@@ -426,7 +426,9 @@ public class Scene extends JPanel implements Controller, ViewControllerDelegate,
 
 	@Override
 	public void didAddedPassenger() {
-		this.passengerListViewController.updateListView();
+		try {
+			this.passengerListViewController.updateListView();
+		} catch(Exception e) {}
 	}
 
 }

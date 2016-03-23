@@ -38,7 +38,7 @@ public class Passenger extends Sprite implements Item {
 		this.enteringTime = enteringTime;
 		this.leavingTime = leavingTime;
 		this.text = "" + this.id;
-		this.drawStatus = true;
+		this.drawStatus = false;
 	}
 
 	@Override
@@ -47,8 +47,8 @@ public class Passenger extends Sprite implements Item {
 		// Adding to the array of passengers
 		this.controller.downArrayList();
 		this.controller.addPassenger(this);
-		this.controller.upArrayList();
 		this.controller.didAddedPassenger();
+		this.controller.upArrayList();
 		
 		while(this.keepAlive) {
 			
