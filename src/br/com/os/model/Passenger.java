@@ -47,6 +47,7 @@ public class Passenger extends Sprite implements Item {
 		// Adding to the array of passengers
 		this.controller.downArrayList();
 		this.controller.addPassenger(this);
+		this.linePosition = this.controller.numberOfPassengersOnTheLine();
 		this.controller.didAddedPassenger();
 		this.controller.upArrayList();
 		
@@ -103,6 +104,8 @@ public class Passenger extends Sprite implements Item {
 			this.controller.downPassengers();
 			
 			this.setAwakenColor();
+			
+			this.linePosition = -1;
 			
 			// Enjoying landscape
 			this.enjoyLandscape();
@@ -178,7 +181,9 @@ public class Passenger extends Sprite implements Item {
 	/** Makes the passenger to go from its current position to the end of the line */
 	private void goToTheEndOfLine() {
 		this.controller.downArrayList();
-		this.linePosition = this.controller.numberOfPassengersOnTheLine();
+		if(this.linePosition < 0) {
+			this.linePosition = this.controller.numberOfPassengersOnTheLine();
+		}
 		this.controller.upArrayList();
 		int target = Constants.WINDOW_WIDTH - (5 + this.linePosition) * Constants.TILE_SIZE;
 		this.move(new Point(target, this.getY()), this.getX() < target ? Direction.RIGHTWARDS : Direction.LEFTWARDS, Sprite.awesomeTime(Math.abs(this.getX() - target)));
